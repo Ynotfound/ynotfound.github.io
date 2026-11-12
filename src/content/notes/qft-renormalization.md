@@ -1,6 +1,6 @@
 ---
 title: 量子场论中的重整化：概念地图
-title_en: Renormalization in quantum field theory: a conceptual map
+title_en: 'Renormalization in quantum field theory: a conceptual map'
 description: 从正则化、反项与重整化群理解高阶微扰计算的组织方式。
 description_en: A conceptual map of regularization, counterterms and the renormalization group in perturbative quantum field theory.
 category: THEORETICAL PHYSICS
