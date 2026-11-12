@@ -1,6 +1,6 @@
 ---
 title: 费曼积分与周期：一个几何视角
-title_en: Feynman integrals and periods: a geometric viewpoint
+title_en: 'Feynman integrals and periods: a geometric viewpoint'
 description: 从参数表示、Symanzik 多项式与微分方程理解费曼积分为何携带几何信息。
 description_en: A first map of the geometric information encoded by parametric representations, Symanzik polynomials and differential equations.
 category: MATHEMATICAL PHYSICS
