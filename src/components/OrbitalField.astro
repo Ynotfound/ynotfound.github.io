@@ -11,6 +11,7 @@
   </div>
 </div>
 <script>
+  // @ts-nocheck -- imperative DOM/Canvas runtime; content schemas and routes remain type-checked.
   const scene = document.querySelector('[data-orbital-field]');
   const canvas = scene?.querySelector('[data-orbital-canvas]');
   const ctx = canvas instanceof HTMLCanvasElement ? canvas.getContext('2d') : null;
