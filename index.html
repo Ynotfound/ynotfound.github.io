@@ -919,33 +919,36 @@
 
   function paint(dt) {
     ctx.clearRect(0,0,width,height);
-    if (reducedMotion.matches || !state.visible) return;
+    if (reducedMotion.matches) return;
 
     // A tapered, silky wake: the nodes follow one another with progressively more lag.
-    ctx.save();
-    ctx.globalCompositeOperation = 'lighter';
-    const first = trail[0], last = trail[trail.length-1];
-    const gradient = ctx.createLinearGradient(first.x,first.y,last.x,last.y);
-    gradient.addColorStop(0,'rgba(255,241,202,.82)');
-    gradient.addColorStop(.22,'rgba(224,192,126,.48)');
-    gradient.addColorStop(.62,'rgba(137,183,211,.22)');
-    gradient.addColorStop(1,'rgba(137,183,211,0)');
-    ctx.beginPath();
-    ctx.moveTo(first.x,first.y);
-    for (let i=1;i<trail.length-1;i++) {
-      const midX=(trail[i].x+trail[i+1].x)*.5;
-      const midY=(trail[i].y+trail[i+1].y)*.5;
-      ctx.quadraticCurveTo(trail[i].x,trail[i].y,midX,midY);
+    // Stop drawing the wake when the pointer leaves, but keep updating sparks until they fade.
+    if (state.visible) {
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+      const first = trail[0], last = trail[trail.length-1];
+      const gradient = ctx.createLinearGradient(first.x,first.y,last.x,last.y);
+      gradient.addColorStop(0,'rgba(255,241,202,.82)');
+      gradient.addColorStop(.22,'rgba(224,192,126,.48)');
+      gradient.addColorStop(.62,'rgba(137,183,211,.22)');
+      gradient.addColorStop(1,'rgba(137,183,211,0)');
+      ctx.beginPath();
+      ctx.moveTo(first.x,first.y);
+      for (let i=1;i<trail.length-1;i++) {
+        const midX=(trail[i].x+trail[i+1].x)*.5;
+        const midY=(trail[i].y+trail[i+1].y)*.5;
+        ctx.quadraticCurveTo(trail[i].x,trail[i].y,midX,midY);
+      }
+      ctx.lineTo(last.x,last.y);
+      ctx.strokeStyle=gradient;
+      ctx.lineWidth=state.hovering ? 3.1 : 2.25;
+      ctx.lineCap='round';
+      ctx.lineJoin='round';
+      ctx.shadowBlur=state.hovering ? 16 : 11;
+      ctx.shadowColor='rgba(220,190,126,.62)';
+      ctx.stroke();
+      ctx.restore();
     }
-    ctx.lineTo(last.x,last.y);
-    ctx.strokeStyle=gradient;
-    ctx.lineWidth=state.hovering ? 3.1 : 2.25;
-    ctx.lineCap='round';
-    ctx.lineJoin='round';
-    ctx.shadowBlur=state.hovering ? 16 : 11;
-    ctx.shadowColor='rgba(220,190,126,.62)';
-    ctx.stroke();
-    ctx.restore();
 
     // Tiny motes shed from the sword tip, with a mix of warm gold and cool Avalon blue.
     ctx.save();
