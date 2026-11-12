@@ -1,36 +1,40 @@
 # Yu Zhehao — Personal Observatory
 
-A bilingual academic homepage and research notebook for Yu Zhehao, designed around physics, mathematics and AI.
+A bilingual personal academic website for **Yu Zhehao**, bringing together physics, mathematics, AI, research notes and computational projects.
 
 Live site: https://ynotfound.github.io/
-
-The complete Astro project is bundled in `avalon-observatory-v1.zip`. The GitHub Pages workflow unpacks the bundle, installs dependencies, runs the Astro check/build, and deploys the generated static site.
 
 ## Design
 
 - Midnight blue, ivory and champagne gold.
-- Chinese display typography with a Fangzheng Xiaobiao Song-style serif fallback stack; no proprietary font files are redistributed.
+- Chinese display typography prioritizes a Fangzheng Xiaobiao Song-style serif stack, with system fallbacks. No proprietary font file is redistributed.
 - Subtle orbital geometry and restrained Avalon-inspired details.
-- Chinese and English routes, dark/light themes, responsive navigation and quick search.
+- Chinese/English switch, dark/light theme, responsive navigation and a Ctrl+K section search.
 
-## Local development
+## Sections
 
-Download and extract `avalon-observatory-v1.zip`, enter the `avalon-observatory` directory, then run:
+- About
+- Research directions
+- Publications and preprints
+- Notes and knowledge archive
+- Research journal
+- Projects and code
+- Contact
+
+Publication entries and contact details are intentionally conservative: add only verified public information. Distinguish proved results, numerical checks, conjectures and work in progress. Keep private manuscripts, credentials and API keys out of this public repository.
+
+## Local preview
+
+No build tool or package installation is required. Clone the repository and run a local static server:
 
 ```bash
-npm install
-npm run dev
-npm run check
-npm run build
+python -m http.server 8000
 ```
 
-## Publish
+Then open http://localhost:8000.
 
-The repository is `Ynotfound/ynotfound.github.io`. Set repository Settings → Pages → Build and deployment → Source to **GitHub Actions** if it is not configured automatically. Pushes to `main` trigger deployment.
+## Deployment
 
-## Editorial policy
+GitHub Actions publishes the static site to GitHub Pages whenever a commit is pushed to `main`. The workflow is `.github/workflows/deploy.yml`.
 
-- Add only verified publications, preprints and public project URLs.
-- Distinguish proved results, numerical checks, conjectures and work in progress.
-- Keep private or unpublished research, credentials, API keys and personal contact details off the public site.
-- If embedding a licensed Fangzheng font file, verify that its licence permits public web distribution.
+Repository: https://github.com/Ynotfound/ynotfound.github.io
