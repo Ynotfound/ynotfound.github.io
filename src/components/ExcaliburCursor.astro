@@ -79,8 +79,9 @@
     function move(event) {
       if (event.pointerType === 'touch') return;
       const now = performance.now();
-      const dx = event.clientX - state.lastX;
-      const dy = event.clientY - state.lastY;
+      const firstMove = !state.visible;
+      const dx = firstMove ? 0 : event.clientX - state.lastX;
+      const dy = firstMove ? 0 : event.clientY - state.lastY;
       const dt = state.lastTime ? Math.max((now - state.lastTime) / 1000, .008) : .016;
 
       state.x = event.clientX;
@@ -92,12 +93,14 @@
       cursor.classList.add('is-visible');
 
       if (trailEnabled) {
-        if (nodes.length) {
+        if (firstMove) {
+          nodes.forEach((node) => { node.x = state.x; node.y = state.y; });
+        } else if (nodes.length) {
           nodes[0].x = state.x;
           nodes[0].y = state.y;
         }
         const speed = Math.hypot(dx, dy);
-        if (speed > 3) {
+        if (!firstMove && speed > 3) {
           const count = Math.min(4, Math.max(1, Math.floor(speed / 20)));
           for (let i = 0; i < count; i++) {
             const t = (i + 1) / (count + 1);
