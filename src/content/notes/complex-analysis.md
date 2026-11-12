@@ -1,6 +1,6 @@
 ---
 title: 复分析：解析性、分支与留数
-title_en: Complex analysis: analyticity, branches and residues
+title_en: 'Complex analysis: analyticity, branches and residues'
 description: 一份连接解析函数、多值函数、单值化与复积分的复分析导览。
 description_en: A compact guide connecting holomorphic functions, multivalued functions, monodromy and contour integration.
 category: MATHEMATICS
