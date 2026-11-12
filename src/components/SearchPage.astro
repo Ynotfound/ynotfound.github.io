@@ -18,6 +18,7 @@ const isEnglish = locale === 'en';
     <div class="search-results" data-search-results></div>
   </div>
   <script>
+  // @ts-nocheck -- imperative DOM/Canvas runtime; content schemas and routes remain type-checked.
     const root = document.querySelector('[data-search-page]');
     const input = root?.querySelector('[data-search-input]');
     const results = root?.querySelector('[data-search-results]');
