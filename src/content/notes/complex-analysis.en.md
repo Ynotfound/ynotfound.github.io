@@ -1,7 +1,7 @@
 ---
 translationKey: complex-analysis
 lang: en
-title: Complex analysis: analyticity, branches and residues
+title: 'Complex analysis: analyticity, branches and residues'
 description: A compact guide connecting holomorphic functions, multivalued functions, monodromy and contour integration.
 category: MATHEMATICS
 tags: [Complex analysis, Holomorphic functions, Branches, Residues]
