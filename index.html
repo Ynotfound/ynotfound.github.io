@@ -252,6 +252,73 @@
       .hero-art-immersive:hover .orbit-aura { opacity:1; transform:scale(1.28); }
     }
 
+  
+    /* Excalibur cursor: custom sword pointer and a restrained particle wake */
+    @media (hover:hover) and (pointer:fine) {
+      html.excalibur-cursor-enabled,
+      html.excalibur-cursor-enabled body,
+      html.excalibur-cursor-enabled body * {
+        cursor:none !important;
+      }
+      #excalibur-trail {
+        position:fixed;
+        inset:0;
+        width:100%;
+        height:100%;
+        z-index:10000;
+        pointer-events:none;
+        mix-blend-mode:screen;
+        opacity:.96;
+      }
+      #excalibur-cursor {
+        --cursor-angle:20deg;
+        --cursor-scale:1;
+        position:fixed;
+        left:0;
+        top:0;
+        width:0;
+        height:0;
+        z-index:10001;
+        pointer-events:none;
+        opacity:0;
+        transform:translate3d(var(--cursor-x, -100px),var(--cursor-y, -100px),0);
+        transition:opacity .16s ease;
+        will-change:transform;
+      }
+      #excalibur-cursor.is-visible { opacity:1; }
+      #excalibur-cursor svg {
+        position:absolute;
+        left:-19px;
+        top:-2px;
+        width:38px;
+        height:76px;
+        overflow:visible;
+        transform-origin:19px 3px;
+        transform:rotate(var(--cursor-angle)) scale(var(--cursor-scale));
+        filter:drop-shadow(0 0 5px rgba(234,207,151,.58)) drop-shadow(0 0 15px rgba(116,169,205,.23));
+        transition:filter .18s ease;
+      }
+      #excalibur-cursor.is-hovering svg {
+        filter:drop-shadow(0 0 8px rgba(245,221,168,.86)) drop-shadow(0 0 22px rgba(126,184,223,.42));
+      }
+      #excalibur-cursor.is-pressed svg { --cursor-scale:.88; }
+      #excalibur-cursor .cursor-blade { fill:url(#cursorBladeGold); }
+      #excalibur-cursor .cursor-blade-edge { fill:url(#cursorBladeEdge); opacity:.9; }
+      #excalibur-cursor .cursor-fuller { fill:url(#cursorFuller); opacity:.78; }
+      #excalibur-cursor .cursor-guard { fill:url(#cursorGuardGold); stroke:#8f7141; stroke-width:1; }
+      #excalibur-cursor .cursor-grip { fill:#17334a; stroke:#d9bd7d; stroke-width:1.25; }
+      #excalibur-cursor .cursor-wrap { fill:none; stroke:#d9bd7d; stroke-width:1.15; opacity:.92; }
+      #excalibur-cursor .cursor-gem { fill:#9fc6dc; stroke:#f3dfad; stroke-width:1; }
+      #excalibur-cursor .cursor-pommel { fill:url(#cursorGuardGold); stroke:#8f7141; stroke-width:.8; }
+      html[data-theme="dark"] #excalibur-cursor svg {
+        filter:drop-shadow(0 0 7px rgba(246,221,166,.78)) drop-shadow(0 0 20px rgba(139,196,230,.38));
+      }
+      @media (prefers-reduced-motion:reduce) {
+        #excalibur-trail { display:none; }
+        #excalibur-cursor svg { transition:none; }
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -693,6 +760,290 @@
   window.addEventListener('resize', fit, { passive:true });
   fit();
   if (reducedMotion.matches) paint(0); else start();
+})();
+</script>
+
+
+<canvas id="excalibur-trail" aria-hidden="true"></canvas>
+<div id="excalibur-cursor" aria-hidden="true">
+  <svg viewBox="0 0 80 160">
+    <defs>
+      <linearGradient id="cursorBladeGold" x1="27" y1="4" x2="54" y2="88" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#fff9e6"/>
+        <stop offset=".28" stop-color="#f1dfb1"/>
+        <stop offset=".68" stop-color="#d5b875"/>
+        <stop offset="1" stop-color="#9e7d49"/>
+      </linearGradient>
+      <linearGradient id="cursorBladeEdge" x1="30" y1="8" x2="46" y2="85" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#ffffff"/>
+        <stop offset=".55" stop-color="#dcecf2"/>
+        <stop offset="1" stop-color="#8eafc2"/>
+      </linearGradient>
+      <linearGradient id="cursorFuller" x1="40" y1="16" x2="40" y2="83" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#a9d0e3"/>
+        <stop offset=".55" stop-color="#6f9eb9"/>
+        <stop offset="1" stop-color="#d9c28e"/>
+      </linearGradient>
+      <linearGradient id="cursorGuardGold" x1="8" y1="78" x2="72" y2="96" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#947443"/>
+        <stop offset=".48" stop-color="#f2dfad"/>
+        <stop offset="1" stop-color="#9a7948"/>
+      </linearGradient>
+    </defs>
+    <path class="cursor-blade" d="M40 3L53 61L48 86L32 86L27 61L40 3Z"/>
+    <path class="cursor-blade-edge" d="M40 7L44 61L40 80L36 61L40 7Z"/>
+    <path class="cursor-fuller" d="M40 16L42.5 62L40 77L37.5 62L40 16Z"/>
+    <path class="cursor-guard" d="M8 78Q20 84 34 79L40 84L46 79Q60 84 72 78L67 89Q54 98 42 89L40 87L38 89Q26 98 13 89Z"/>
+    <path class="cursor-grip" d="M35 89L45 89L44 130L36 130Z"/>
+    <path class="cursor-wrap" d="M35.5 98L44.5 104M35.5 108L44.5 114M35.5 118L44.5 124"/>
+    <path class="cursor-pommel" d="M34 129Q40 125 46 129L49 139L40 149L31 139Z"/>
+    <path class="cursor-gem" d="M40 132L44 138L40 144L36 138Z"/>
+    <path d="M40 151L42 155L46 156L42 158L40 162L38 158L34 156L38 155Z" fill="#e8d19a"/>
+  </svg>
+</div>
+
+
+<script>
+(() => {
+  const finePointer = window.matchMedia('(hover:hover) and (pointer:fine)');
+  if (!finePointer.matches) return;
+
+  const root = document.documentElement;
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const cursor = document.getElementById('excalibur-cursor');
+  const canvas = document.getElementById('excalibur-trail');
+  const ctx = canvas && canvas.getContext('2d', { alpha:true });
+  if (!cursor || !canvas || !ctx) return;
+
+  root.classList.add('excalibur-cursor-enabled');
+
+  const state = {
+    x: window.innerWidth * .5,
+    y: window.innerHeight * .5,
+    tx: window.innerWidth * .5,
+    ty: window.innerHeight * .5,
+    vx: 0,
+    vy: 0,
+    visible: false,
+    hovering: false,
+    lastX: window.innerWidth * .5,
+    lastY: window.innerHeight * .5,
+    lastTime: 0
+  };
+
+  const trail = Array.from({length: reducedMotion.matches ? 1 : 18}, () => ({x:state.x,y:state.y}));
+  const sparks = [];
+  let width = 0, height = 0, dpr = 1, raf = 0, lastFrame = 0;
+  const random = (min,max) => min + Math.random() * (max-min);
+  const clamp = (value,min,max) => Math.max(min,Math.min(max,value));
+
+  function resize() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.clearRect(0,0,width,height);
+  }
+
+  function spawnSpark(x,y,vx,vy,boost) {
+    const blue = Math.random() > .56;
+    sparks.push({
+      x,y,
+      vx: vx * random(-.12,.04) + random(-42,42) * boost,
+      vy: vy * random(-.12,.04) + random(-42,42) * boost,
+      life: random(.38,.82),
+      maxLife: random(.5,.9),
+      size: random(1.1,2.6) * boost,
+      blue
+    });
+    if (sparks.length > 90) sparks.splice(0,sparks.length-90);
+  }
+
+  function pointerMove(event) {
+    if (event.pointerType && event.pointerType === 'touch') return;
+    const now = performance.now();
+    const dx = event.clientX - state.lastX;
+    const dy = event.clientY - state.lastY;
+    const dt = state.lastTime ? Math.max((now-state.lastTime)/1000,.008) : .016;
+    state.vx = dx / dt;
+    state.vy = dy / dt;
+    state.tx = event.clientX;
+    state.ty = event.clientY;
+    state.visible = true;
+    cursor.classList.add('is-visible');
+
+    const speed = Math.hypot(dx,dy);
+    const angle = 20 + clamp(state.vx * .018,-13,13) - clamp(state.vy * .006,-5,5);
+    cursor.style.setProperty('--cursor-angle', angle.toFixed(2) + 'deg');
+    cursor.style.setProperty('--cursor-scale', state.hovering ? '1.13' : '1');
+
+    if (!reducedMotion.matches && speed > 2) {
+      const count = Math.min(5,Math.max(1,Math.floor(speed/12)));
+      for (let i=0;i<count;i++) {
+        const t = (i+1)/(count+1);
+        spawnSpark(state.lastX+dx*t,state.lastY+dy*t,state.vx,state.vy,clamp(speed/16,.55,1.6));
+      }
+    }
+
+    state.lastX = event.clientX;
+    state.lastY = event.clientY;
+    state.lastTime = now;
+    start();
+  }
+
+  function drawStar(x,y,r,alpha,color) {
+    ctx.save();
+    ctx.translate(x,y);
+    ctx.rotate(Math.PI/4);
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = color;
+    ctx.shadowBlur = 9;
+    ctx.shadowColor = color;
+    ctx.beginPath();
+    ctx.moveTo(0,-r*1.8);
+    ctx.lineTo(r*.42,-r*.42);
+    ctx.lineTo(r*1.8,0);
+    ctx.lineTo(r*.42,r*.42);
+    ctx.lineTo(0,r*1.8);
+    ctx.lineTo(-r*.42,r*.42);
+    ctx.lineTo(-r*1.8,0);
+    ctx.lineTo(-r*.42,-r*.42);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function paint(dt) {
+    ctx.clearRect(0,0,width,height);
+    if (reducedMotion.matches || !state.visible) return;
+
+    // A tapered, silky wake: the nodes follow one another with progressively more lag.
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    const first = trail[0], last = trail[trail.length-1];
+    const gradient = ctx.createLinearGradient(first.x,first.y,last.x,last.y);
+    gradient.addColorStop(0,'rgba(255,241,202,.82)');
+    gradient.addColorStop(.22,'rgba(224,192,126,.48)');
+    gradient.addColorStop(.62,'rgba(137,183,211,.22)');
+    gradient.addColorStop(1,'rgba(137,183,211,0)');
+    ctx.beginPath();
+    ctx.moveTo(first.x,first.y);
+    for (let i=1;i<trail.length-1;i++) {
+      const midX=(trail[i].x+trail[i+1].x)*.5;
+      const midY=(trail[i].y+trail[i+1].y)*.5;
+      ctx.quadraticCurveTo(trail[i].x,trail[i].y,midX,midY);
+    }
+    ctx.lineTo(last.x,last.y);
+    ctx.strokeStyle=gradient;
+    ctx.lineWidth=state.hovering ? 3.1 : 2.25;
+    ctx.lineCap='round';
+    ctx.lineJoin='round';
+    ctx.shadowBlur=state.hovering ? 16 : 11;
+    ctx.shadowColor='rgba(220,190,126,.62)';
+    ctx.stroke();
+    ctx.restore();
+
+    // Tiny motes shed from the sword tip, with a mix of warm gold and cool Avalon blue.
+    ctx.save();
+    ctx.globalCompositeOperation='lighter';
+    for (let i=sparks.length-1;i>=0;i--) {
+      const p=sparks[i];
+      p.life -= dt;
+      if (p.life <= 0) { sparks.splice(i,1); continue; }
+      p.x += p.vx*dt;
+      p.y += p.vy*dt;
+      p.vx *= .982;
+      p.vy *= .982;
+      const alpha = Math.max(0,p.life / p.maxLife);
+      const color = p.blue ? '176,218,244' : '255,224,163';
+      const glow = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.size*5);
+      glow.addColorStop(0,'rgba('+color+','+(alpha*.82)+')');
+      glow.addColorStop(.35,'rgba('+color+','+(alpha*.28)+')');
+      glow.addColorStop(1,'rgba('+color+',0)');
+      ctx.fillStyle=glow;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.size*5,0,Math.PI*2);
+      ctx.fill();
+      if (p.size > 1.6 && alpha > .28) drawStar(p.x,p.y,p.size*.75,alpha*.7,'rgba('+color+',.9)');
+    }
+    ctx.restore();
+  }
+
+  function tick(stamp) {
+    raf = 0;
+    const dt = lastFrame ? Math.min((stamp-lastFrame)/1000,.04) : .016;
+    lastFrame = stamp;
+    const easing = reducedMotion.matches ? 1 : .48;
+    state.x += (state.tx-state.x)*easing;
+    state.y += (state.ty-state.y)*easing;
+    cursor.style.setProperty('--cursor-x',state.x.toFixed(2)+'px');
+    cursor.style.setProperty('--cursor-y',state.y.toFixed(2)+'px');
+
+    trail[0].x = state.x;
+    trail[0].y = state.y;
+    let unsettled = Math.hypot(state.tx-state.x,state.ty-state.y) > .15;
+    for (let i=1;i<trail.length;i++) {
+      const p=trail[i], prev=trail[i-1];
+      const follow = Math.max(.12,.38-i*.012);
+      const dx=(prev.x-p.x)*follow, dy=(prev.y-p.y)*follow;
+      p.x += dx; p.y += dy;
+      if (Math.abs(dx)+Math.abs(dy)>.12) unsettled=true;
+    }
+
+    paint(dt);
+    const hasSparks = sparks.length > 0;
+    if (unsettled || hasSparks) raf=requestAnimationFrame(tick);
+    else lastFrame=0;
+  }
+
+  function start() {
+    if (!raf) raf=requestAnimationFrame(tick);
+  }
+
+  function hide() {
+    state.visible=false;
+    cursor.classList.remove('is-visible');
+    if (!raf && sparks.length) start();
+  }
+
+  document.addEventListener('pointermove',pointerMove,{passive:true});
+  document.addEventListener('pointerover',event => {
+    const target=event.target && event.target.closest && event.target.closest('a,button,[role="button"],input,textarea,select,summary,label,[data-cursor-hover]');
+    if (target) {
+      state.hovering=true;
+      cursor.classList.add('is-hovering');
+      cursor.style.setProperty('--cursor-scale','1.13');
+    }
+  },true);
+  document.addEventListener('pointerout',event => {
+    const from=event.target && event.target.closest && event.target.closest('a,button,[role="button"],input,textarea,select,summary,label,[data-cursor-hover]');
+    const to=event.relatedTarget && event.relatedTarget.closest && event.relatedTarget.closest('a,button,[role="button"],input,textarea,select,summary,label,[data-cursor-hover]');
+    if (from && !to) {
+      state.hovering=false;
+      cursor.classList.remove('is-hovering');
+      cursor.style.setProperty('--cursor-scale','1');
+    }
+  },true);
+  document.addEventListener('pointerdown',() => {
+    cursor.classList.add('is-pressed');
+    if (!reducedMotion.matches && state.visible) {
+      for (let i=0;i<9;i++) {
+        const a=(Math.PI*2*i)/9;
+        spawnSpark(state.x,state.y,Math.cos(a)*80,Math.sin(a)*80,1.15);
+      }
+      start();
+    }
+  },true);
+  document.addEventListener('pointerup',() => cursor.classList.remove('is-pressed'),true);
+  window.addEventListener('pointerout',event => { if (!event.relatedTarget) hide(); });
+  window.addEventListener('blur',hide);
+  window.addEventListener('resize',resize,{passive:true});
+  document.addEventListener('visibilitychange',() => { if (document.hidden) hide(); });
+  resize();
 })();
 </script>
 
