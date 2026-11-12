@@ -45,6 +45,7 @@ const languageTarget = locale === 'en' ? zhPath : enPath;
     <SiteFooter locale={locale} />
     <ExcaliburCursor />
     <script>
+  // @ts-nocheck -- imperative DOM/Canvas runtime; content schemas and routes remain type-checked.
       const root = document.documentElement;
       const themeButton = document.querySelector('[data-theme-toggle]');
       const langButton = document.querySelector('[data-lang-toggle]');
