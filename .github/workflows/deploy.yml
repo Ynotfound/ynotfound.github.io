@@ -33,6 +33,7 @@ jobs:
           cp index.html _site/index.html
           cp 404.html _site/404.html
           cp robots.txt _site/robots.txt
+          cp sitemap.xml _site/sitemap.xml
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
