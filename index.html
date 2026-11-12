@@ -635,8 +635,10 @@
     const delta = last ? Math.min((stamp - last) / 1000, .04) : 0;
     last = stamp;
     elapsed += delta;
-    pointer.tx += (pointer.x / Math.max(width,1) - .5 - pointer.tx) * .045;
-    pointer.ty += (pointer.y / Math.max(height,1) - .5 - pointer.ty) * .045;
+    const targetX = pointer.active ? pointer.x / Math.max(width,1) - .5 : 0;
+    const targetY = pointer.active ? pointer.y / Math.max(height,1) - .5 : 0;
+    pointer.tx += (targetX - pointer.tx) * .045;
+    pointer.ty += (targetY - pointer.ty) * .045;
     paint(elapsed);
     raf = requestAnimationFrame(tick);
   }
