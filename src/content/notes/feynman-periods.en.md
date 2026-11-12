@@ -1,7 +1,7 @@
 ---
 translationKey: feynman-periods
 lang: en
-title: Feynman integrals and periods: a geometric viewpoint
+title: 'Feynman integrals and periods: a geometric viewpoint'
 description: A first map of the geometric information encoded by parametric representations, Symanzik polynomials and differential equations.
 category: MATHEMATICAL PHYSICS
 tags: [Feynman integrals, Periods, Geometry, QFT]
