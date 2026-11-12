@@ -165,13 +165,79 @@
     }
     @media(max-width:420px){.tools{gap:4px}.tool-btn,.lang-btn,.menu-btn{min-width:31px;padding:0 8px}.brand-mark{width:34px;height:34px}.brand-wordmark strong{font-size:10px}.research-grid{grid-template-columns:1fr}.research-card{min-height:0}.card-top{margin-bottom:18px}.blog-row{grid-template-columns:1fr auto}.blog-date{grid-column:1/-1}.blog-row p{display:none}}
     @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+  
+    /* v2 refinements: clearer night palette, quieter hero, animated orbital geometry */
+    html[data-theme="dark"] {
+      --paper:#081521;
+      --paper-2:#102438;
+      --surface:rgba(17,37,54,.9);
+      --ink:#f5f1e8;
+      --muted:#c5d0d8;
+      --line:rgba(196,215,228,.22);
+      --blue:#a9c8dc;
+      --blue-2:#e5d09b;
+      --gold:#e2c88d;
+      --gold-2:#f1dfb4;
+      --shadow:0 22px 60px rgba(0,0,0,.34);
+      color-scheme:dark;
+    }
+    .brand-mark { border:0; border-radius:0; }
+    .brand-mark svg { width:27px; height:34px; overflow:visible; }
+    .brand-mark-sword .sword-blade { fill:currentColor; stroke:none; }
+    .brand-mark-sword .sword-guard { fill:currentColor; stroke:none; }
+    .brand-mark-sword .sword-grip { fill:none; stroke:currentColor; stroke-width:1.5; }
+    .brand-mark-sword .sword-pommel { fill:currentColor; stroke:none; }
+    .hero { grid-template-columns:1fr 1.05fr; gap:22px; }
+    .hero-desc { max-width:430px; font-size:16px; line-height:1.9; }
+    .hero-note,.art-caption,.coord { display:none !important; }
+    .hero-art { min-height:520px; cursor:default; }
+    .hero-art:before { width:82%; background:radial-gradient(circle,rgba(130,166,190,.17),transparent 68%); }
+    .orbit-glow { position:absolute; width:55%; aspect-ratio:1; border-radius:50%; background:radial-gradient(circle,rgba(205,177,119,.2),transparent 70%); filter:blur(18px); pointer-events:none; }
+    .orbit-wrap { --px:0px; --py:0px; --pr:0deg; position:relative; z-index:1; width:100%; display:grid; place-items:center; transform:translate3d(var(--px),var(--py),0) rotate(var(--pr)); transition:transform .35s ease-out; will-change:transform; }
+    .orbit { width:100%; max-width:590px; overflow:visible; color:var(--gold); }
+    .orbit-back { transform-origin:310px 260px; animation:orbit-drift-a 26s ease-in-out infinite alternate; }
+    .orbit-flow { transform-origin:310px 260px; animation:orbit-drift-b 19s ease-in-out infinite alternate; }
+    .orbit-core { transform-origin:310px 260px; animation:orbit-core-breathe 8s ease-in-out infinite alternate; }
+    .orbit-path-a { stroke-dasharray:820; stroke-dashoffset:0; animation:orbit-dash 23s linear infinite; }
+    .orbit-path-b { stroke-dasharray:760; stroke-dashoffset:0; animation:orbit-dash-reverse 27s linear infinite; }
+    .orbit-star { transform-box:fill-box; transform-origin:center; animation:star-pulse 4.8s ease-in-out infinite; }
+    .star-two { animation-delay:.7s; }.star-three { animation-delay:1.4s; }.star-four { animation-delay:2.1s; }.star-five { animation-delay:2.8s; }
+    .sword-blade { filter:drop-shadow(0 0 12px rgba(226,200,141,.42)); }
+    @keyframes orbit-drift-a { from{transform:rotate(-2deg) translateY(2px)} to{transform:rotate(2deg) translateY(-8px)} }
+    @keyframes orbit-drift-b { from{transform:rotate(1deg) translateX(-5px)} to{transform:rotate(-2deg) translateX(5px)} }
+    @keyframes orbit-core-breathe { from{transform:translateY(1px)} to{transform:translateY(-3px)} }
+    @keyframes orbit-dash { to{stroke-dashoffset:-820} }
+    @keyframes orbit-dash-reverse { to{stroke-dashoffset:760} }
+    @keyframes star-pulse { 0%,100%{opacity:.65;transform:scale(.9)} 50%{opacity:1;transform:scale(1.35)} }
+    .contact { background:#17364d; color:#f7f2e7; }
+    .contact .section-kicker { color:#e4cb91; }
+    .contact h2 { color:#fffaf0; }
+    .contact p { color:#d6e0e6; }
+    .contact-links a { color:#fffaf0; border-color:rgba(245,241,232,.5); }
+    .contact-links a:hover { color:#f0d69b; border-color:#f0d69b; }
+    html[data-theme="dark"] .contact { background:#0d2940; color:#f7f2e7; border:1px solid #3a5b73; }
+    html[data-theme="dark"] .contact h2 { color:#fffaf0; }
+    html[data-theme="dark"] .contact p { color:#dce6ec; }
+    html[data-theme="dark"] .contact-links a { color:#fffaf0; border-color:#7894a8; }
+    html[data-theme="dark"] .contact-links a:hover { color:#f0d69b; border-color:#f0d69b; }
+    html[data-theme="dark"] footer { color:#b9c8d2; }
+    @media(max-width:720px) {
+      .hero { grid-template-columns:1fr; }
+      .hero-art { min-height:360px; margin-top:4px; }
+      .orbit-wrap { max-width:520px; }
+    }
+    @media(prefers-reduced-motion:reduce) {
+      .orbit-back,.orbit-flow,.orbit-core,.orbit-path-a,.orbit-path-b,.orbit-star { animation:none !important; }
+      .orbit-wrap { transition:none !important; transform:none !important; }
+    }
+
   </style>
 </head>
 <body>
 <header class="site-header">
   <div class="wrap header-inner">
     <a class="brand" href="#home" aria-label="Yu Zhehao home">
-      <span class="brand-mark"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="16.2"/><path d="M20 5.7v28.6M12.8 13.1l7.2-7.4 7.2 7.4M15 26.8l5-5 5 5"/><path d="M20 2.7l1.1 2.1 2.3.4-1.7 1.6.4 2.3L20 8l-2.1 1.1.4-2.3-1.7-1.6 2.3-.4z"/></svg></span>
+      <span class="brand-mark brand-mark-sword" aria-hidden="true"><svg viewBox="0 0 40 44"><path class="sword-blade" d="M20 2.8L23.2 16.5L20 29.4L16.8 16.5L20 2.8Z"/><path class="sword-guard" d="M10.5 17.2Q20 21 29.5 17.2L27.2 20.4Q20 23.1 12.8 20.4Z"/><path class="sword-grip" d="M20 21.4V34.7"/><path class="sword-pommel" d="M17.4 34.7H22.6L20 40.7Z"/></svg></span>
       <span class="brand-wordmark"><strong>YU ZHEHAO</strong><small>PERSONAL OBSERVATORY</small></span>
     </a>
     <nav class="nav" id="nav">
@@ -196,32 +262,49 @@
   <div class="wrap">
     <section class="hero">
       <div class="hero-copy">
-        <p class="eyebrow">PHYSICS · MATHEMATICS · ARTIFICIAL INTELLIGENCE</p>
+        <p class="eyebrow">PHYSICS · MATHEMATICS · AI</p>
         <h1><span data-zh="在数学结构与" data-en="Between mathematics">在数学结构与</span><br><em data-zh="基本物理之间" data-en="and fundamental physics">基本物理之间</em><span class="period">.</span></h1>
-        <p class="hero-desc" data-zh="一个持续生长的个人研究空间。记录问题、构造工具，并追寻量子场论、几何与数论之间的深层联系。" data-en="A growing space for research and reflection: recording questions, building tools, and exploring deep connections between quantum field theory, geometry and number theory.">一个持续生长的个人研究空间。记录问题、构造工具，并追寻量子场论、几何与数论之间的深层联系。</p>
+        <p class="hero-desc" data-zh="探索基本物理背后的数学结构。" data-en="Exploring the mathematical structures underlying fundamental physics.">探索基本物理背后的数学结构。</p>
         <div class="actions">
           <a class="btn primary" href="#research"><span data-zh="探索研究" data-en="Explore research">探索研究</span><span>↗</span></a>
           <a class="btn quiet" href="#notes"><span data-zh="阅读笔记" data-en="Read notes">阅读笔记</span><span>→</span></a>
         </div>
-        <div class="hero-note">INDEPENDENT STUDY · RESEARCH IN PROGRESS · NOTES IN PUBLIC</div>
       </div>
-      <div class="hero-art" aria-label="Orbital geometry illustration">
-        <span class="art-caption art-top">FIG. 01 / ORBITAL STUDY</span>
-        <span class="coord left">α = 0.137…</span><span class="coord right">D = 4 − ε</span>
-        <span class="star s1"></span><span class="star s2"></span><span class="star s3"></span>
-        <svg class="orbit" viewBox="0 0 620 520" fill="none">
-          <defs><linearGradient id="gold" x1="90" y1="40" x2="520" y2="450"><stop stop-color="#d8c18c"/><stop offset="1" stop-color="#6e91ad" stop-opacity=".35"/></linearGradient><linearGradient id="blue" x1="30" y1="400" x2="560" y2="100"><stop stop-color="#89a9c2" stop-opacity=".18"/><stop offset=".52" stop-color="#d7c18f"/><stop offset="1" stop-color="#89a9c2" stop-opacity=".12"/></linearGradient></defs>
-          <ellipse cx="310" cy="260" rx="238" ry="104" transform="rotate(-28 310 260)" stroke="url(#gold)" stroke-width="1.2"/>
-          <ellipse cx="310" cy="260" rx="190" ry="150" transform="rotate(54 310 260)" stroke="url(#blue)"/>
-          <ellipse cx="310" cy="260" rx="252" ry="178" transform="rotate(8 310 260)" stroke="currentColor" stroke-opacity=".12" stroke-dasharray="2 8"/>
-          <path d="M80 350C185 275 223 111 347 101C451 92 500 204 538 303" stroke="url(#gold)" stroke-width="1.4"/>
-          <path d="M104 148C204 209 234 356 358 382C455 402 508 322 537 247" stroke="url(#blue)"/>
-          <path d="M310 57V463M91 260H529" stroke="currentColor" stroke-opacity=".1" stroke-dasharray="3 8"/>
-          <circle cx="310" cy="260" r="72" stroke="currentColor" stroke-opacity=".18"/><circle cx="310" cy="260" r="50" stroke="url(#gold)" stroke-width="1.5"/>
-          <path d="M310 205L321 249L310 315L299 249L310 205Z" fill="url(#gold)" fill-opacity=".82"/><path d="M292 249H328M310 232V266" stroke="#f5f0e4"/>
-          <circle cx="115" cy="151" r="3" fill="#d9c48f"/><circle cx="505" cy="333" r="3" fill="#9bb7ca"/><circle cx="442" cy="115" r="2.5" fill="#d9c48f"/><circle cx="191" cy="390" r="2" fill="#9bb7ca"/>
-        </svg>
-        <span class="art-caption art-bottom">A FIELD OF QUESTIONS · 2026—</span>
+      <div class="hero-art hero-art-immersive" data-orbit-scene aria-label="Interactive orbital geometry with a stylized sword at its center">
+        <div class="orbit-glow"></div>
+        <div class="orbit-wrap">
+          <svg class="orbit" viewBox="0 0 620 520" fill="none" aria-hidden="true">
+            <defs>
+              <linearGradient id="gold" x1="90" y1="40" x2="520" y2="450"><stop stop-color="#ead5a0"/><stop offset="1" stop-color="#b7d1e0" stop-opacity=".4"/></linearGradient>
+              <linearGradient id="blue" x1="30" y1="400" x2="560" y2="100"><stop stop-color="#a8c6d8" stop-opacity=".22"/><stop offset=".52" stop-color="#e3cc94"/><stop offset="1" stop-color="#a8c6d8" stop-opacity=".2"/></linearGradient>
+            </defs>
+            <g class="orbit-back">
+              <ellipse cx="310" cy="260" rx="238" ry="104" transform="rotate(-28 310 260)" stroke="url(#gold)" stroke-width="1.3"/>
+              <ellipse cx="310" cy="260" rx="190" ry="150" transform="rotate(54 310 260)" stroke="url(#blue)" stroke-width="1.1"/>
+              <ellipse cx="310" cy="260" rx="252" ry="178" transform="rotate(8 310 260)" stroke="currentColor" stroke-opacity=".17" stroke-dasharray="2 10"/>
+            </g>
+            <g class="orbit-flow">
+              <path class="orbit-path orbit-path-a" d="M80 350C185 275 223 111 347 101C451 92 500 204 538 303" stroke="url(#gold)" stroke-width="1.6" stroke-linecap="round"/>
+              <path class="orbit-path orbit-path-b" d="M104 148C204 209 234 356 358 382C455 402 508 322 537 247" stroke="url(#blue)" stroke-width="1.2" stroke-linecap="round"/>
+              <path d="M310 57V463M91 260H529" stroke="currentColor" stroke-opacity=".12" stroke-dasharray="3 10"/>
+            </g>
+            <g class="orbit-core">
+              <circle cx="310" cy="260" r="72" stroke="currentColor" stroke-opacity=".19"/>
+              <circle cx="310" cy="260" r="50" stroke="url(#gold)" stroke-width="1.6"/>
+              <path class="sword-blade" d="M310 188L322 245L310 321L298 245L310 188Z" fill="#e2ca91"/>
+              <path class="sword-guard" d="M286 246Q310 254 334 246L328 255Q310 261 292 255Z" fill="#f0dfb7"/>
+              <path class="sword-grip" d="M310 257V286" stroke="#f5f0e4" stroke-width="2.2" stroke-linecap="round"/>
+              <path class="sword-pommel" d="M305 286H315L310 295Z" fill="#d7bd83"/>
+            </g>
+            <g class="orbit-stars">
+              <circle class="orbit-star star-one" cx="115" cy="151" r="3" fill="#e3cf97"/>
+              <circle class="orbit-star star-two" cx="505" cy="333" r="3.2" fill="#a9c5d8"/>
+              <circle class="orbit-star star-three" cx="442" cy="115" r="2.5" fill="#e3cf97"/>
+              <circle class="orbit-star star-four" cx="191" cy="390" r="2.2" fill="#9fbcd0"/>
+              <circle class="orbit-star star-five" cx="500" cy="170" r="2.1" fill="#e3cf97"/>
+            </g>
+          </svg>
+        </div>
       </div>
     </section>
 
@@ -371,5 +454,31 @@
     });
   });
 </script>
+
+<script>
+(() => {
+  const scene = document.querySelector('[data-orbit-scene]');
+  const wrap = scene?.querySelector('.orbit-wrap');
+  if (!scene || !wrap || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  let frame = 0;
+  scene.addEventListener('pointermove', (event) => {
+    if (frame) cancelAnimationFrame(frame);
+    frame = requestAnimationFrame(() => {
+      const rect = scene.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / rect.width - .5;
+      const y = (event.clientY - rect.top) / rect.height - .5;
+      wrap.style.setProperty('--px', (x * 18).toFixed(2) + 'px');
+      wrap.style.setProperty('--py', (y * 13).toFixed(2) + 'px');
+      wrap.style.setProperty('--pr', (x * 4).toFixed(2) + 'deg');
+    });
+  });
+  scene.addEventListener('pointerleave', () => {
+    wrap.style.setProperty('--px','0px');
+    wrap.style.setProperty('--py','0px');
+    wrap.style.setProperty('--pr','0deg');
+  });
+})();
+</script>
+
 </body>
 </html>
