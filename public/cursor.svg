@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="56" height="44" viewBox="0 0 56 44">
+  <defs>
+    <linearGradient id="blade" x1="27" y1="0" x2="37" y2="38" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fff8e8"/>
+      <stop offset=".38" stop-color="#e8d29e"/>
+      <stop offset="1" stop-color="#9d7c49"/>
+    </linearGradient>
+    <linearGradient id="guard" x1="8" y1="78" x2="72" y2="98" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#947443"/>
+      <stop offset=".5" stop-color="#f2dfad"/>
+      <stop offset="1" stop-color="#9a7948"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(17 7) rotate(-45) scale(.26) translate(-40 -3)">
+    <path d="M40 3L53 61L48 86H32L27 61Z" fill="url(#blade)" stroke="#9d7c49" stroke-width="1.2"/>
+    <path d="M40 7L44 61L40 80L36 61Z" fill="#fff" fill-opacity=".5"/>
+    <path d="M8 78Q20 84 34 79L40 84L46 79Q60 84 72 78L67 89Q54 98 42 89L40 87L38 89Q26 98 13 89Z" fill="url(#guard)" stroke="#8f7141" stroke-width="1.6"/>
+    <path d="M35 89H45L44 130H36Z" fill="#17334a" stroke="#d9bd7d" stroke-width="2"/>
+    <path d="M35.5 98L44.5 104M35.5 108L44.5 114M35.5 118L44.5 124" stroke="#d9bd7d" stroke-width="2"/>
+    <path d="M34 129Q40 125 46 129L49 139L40 149L31 139Z" fill="url(#guard)" stroke="#8f7141" stroke-width="1.4"/>
+    <path d="M40 132L44 138L40 144L36 138Z" fill="#9fc6dc" stroke="#f3dfad" stroke-width="1.8"/>
+  </g>
+</svg>
