@@ -12,7 +12,7 @@ const posts = (await getCollection('journal', ({ data }) => !data.draft)).sort((
     </header>
     {posts.length ? (
       <div class="note-list">
-        {posts.map((post) => <a class="note-row" href={'/journal/' + post.slug + '/'}>
+        {posts.map((post) => <a class="note-row" href={'/journal/' + post.id + '/'}>
           <div><div class="note-row-meta">{post.data.date.toLocaleDateString('en-CA')} · {post.data.tags.join(' / ')}</div><h2 data-zh={post.data.title} data-en={post.data.title_en}>{post.data.title}</h2><p data-zh={post.data.description} data-en={post.data.description_en}>{post.data.description}</p></div>
           <span class="card-arrow">Read ↗</span>
         </a>)}
