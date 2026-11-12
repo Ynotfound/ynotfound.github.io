@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f3ed">
+  <meta name="description" content="Yu Zhehao — Physics, Mathematics, AI. A personal observatory for research, notes and ideas.">
+  <meta property="og:title" content="Yu Zhehao — Personal Observatory">
+  <meta property="og:description" content="Exploring mathematical structures underlying fundamental physics.">
+  <title>Yu Zhehao — Personal Observatory</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='17' fill='%231a3043'/%3E%3Cpath d='M20 6 L23 17 L20 34 L17 17 Z' fill='%23d5bd87'/%3E%3Cpath d='M12 16 Q20 10 28 16' fill='none' stroke='%23d5bd87'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      --paper:#f5f3ed; --paper-2:#ebe8df; --surface:rgba(255,255,255,.68);
+      --ink:#172b3c; --muted:#63717b; --line:rgba(27,48,64,.14);
+      --blue:#1b354b; --blue-2:#294d68; --gold:#b99a60; --gold-2:#d9c79e;
+      --shadow:0 22px 60px rgba(26,43,57,.09);
+      --display-font:"FZ XiaoBiaoSong-B05S","FZXiaoBiaoSong-B05S","方正小标宋简体","STSong","Songti SC","Noto Serif CJK SC","SimSun",serif;
+      --body-font:Inter,"Aptos","PingFang SC","Microsoft YaHei",sans-serif;
+      color-scheme:light;
+    }
+    html[data-theme="dark"] {
+      --paper:#101c28; --paper-2:#172737; --surface:rgba(27,44,59,.78);
+      --ink:#e8e7df; --muted:#a5b1b9; --line:rgba(218,222,220,.15);
+      --blue:#d8e2e8; --blue-2:#b5c8d5; --gold:#d8bd83; --gold-2:#9c8354;
+      --shadow:0 22px 60px rgba(0,0,0,.24); color-scheme:dark;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth;scroll-padding-top:90px}
+    body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body-font);line-height:1.7;transition:background .3s,color .3s}
+    a{color:inherit;text-decoration:none}
+    button{font:inherit}
+    .wrap{width:min(1160px,calc(100% - 48px));margin:auto}
+    .site-header{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+    .header-inner{height:76px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+    .brand{display:flex;align-items:center;gap:12px;min-width:210px}
+    .brand-mark{width:39px;height:39px;border:1px solid var(--gold);border-radius:50%;display:grid;place-items:center;color:var(--gold);position:relative}
+    .brand-mark svg{width:25px;height:25px;stroke:currentColor;fill:none;stroke-width:1.1}
+    .brand-wordmark{display:grid;line-height:1.1;gap:5px}
+    .brand-wordmark strong{font:600 12px/1 var(--body-font);letter-spacing:.2em}
+    .brand-wordmark small{font:9px/1 var(--body-font);letter-spacing:.18em;color:var(--muted)}
+    .nav{display:flex;align-items:center;gap:clamp(12px,2vw,27px);font-size:12px;color:var(--muted)}
+    .nav a{padding:10px 0;position:relative;white-space:nowrap}
+    .nav a:after{content:"";position:absolute;bottom:3px;left:0;width:0;height:1px;background:var(--gold);transition:width .25s}
+    .nav a:hover,.nav a.active{color:var(--ink)}
+    .nav a:hover:after,.nav a.active:after{width:100%}
+    .tools{display:flex;align-items:center;gap:7px}
+    .tool-btn,.lang-btn,.menu-btn{border:1px solid var(--line);background:transparent;color:var(--ink);height:34px;min-width:35px;padding:0 10px;border-radius:3px;cursor:pointer;font-size:11px;transition:.2s}
+    .tool-btn:hover,.lang-btn:hover,.menu-btn:hover{border-color:var(--gold);color:var(--gold)}
+    .menu-btn{display:none}
+    .hero{min-height:620px;display:grid;grid-template-columns:1.03fr .97fr;align-items:center;gap:35px;padding:78px 0 62px;position:relative}
+    .hero-copy{position:relative;z-index:1}
+    .eyebrow{font-size:10px;letter-spacing:.19em;color:var(--gold);font-weight:600;text-transform:uppercase;display:flex;align-items:center;gap:10px;margin:0 0 22px}
+    .eyebrow:before{content:"";width:25px;height:1px;background:var(--gold)}
+    h1,h2,h3,p{margin-top:0}
+    h1{font:500 clamp(44px,5.2vw,70px)/1.23 var(--display-font);letter-spacing:.015em;margin:0 0 23px}
+    h1 em{font-style:normal;color:var(--gold)}
+    .period{color:var(--gold);font-family:Georgia,serif}
+    .hero-desc{font-size:14px;line-height:2.05;color:var(--muted);max-width:500px;margin-bottom:30px}
+    .actions{display:flex;gap:12px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:18px;padding:12px 17px;border:1px solid var(--line);font-size:12px;transition:.22s}
+    .btn.primary{background:var(--blue);border-color:var(--blue);color:var(--paper)}
+    .btn.primary:hover{background:var(--blue-2);transform:translateY(-2px)}
+    .btn.quiet:hover{border-color:var(--gold);color:var(--gold)}
+    .hero-note{margin-top:44px;color:var(--muted);font-size:9px;letter-spacing:.15em;display:flex;align-items:center;gap:12px}
+    .hero-note:before{content:"";width:35px;height:1px;background:var(--gold)}
+    .hero-art{position:relative;min-height:475px;display:grid;place-items:center;isolation:isolate}
+    .hero-art:before{content:"";position:absolute;width:72%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(185,154,96,.15),transparent 68%);filter:blur(8px);z-index:-1}
+    .orbit{width:100%;max-width:570px;overflow:visible;color:var(--gold)}
+    .art-caption{position:absolute;font-size:9px;letter-spacing:.18em;color:var(--muted)}
+    .art-top{top:30px;right:20px}.art-bottom{bottom:23px;left:12px}
+    .coord{position:absolute;font:italic 12px Georgia,serif;color:var(--muted)}
+    .coord.left{left:5px;top:48%}.coord.right{right:5px;bottom:28%}
+    .star{position:absolute;width:4px;height:4px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px var(--gold)}
+    .star.s1{left:18%;top:25%}.star.s2{right:17%;top:32%;width:3px;height:3px}.star.s3{right:25%;bottom:18%;width:3px;height:3px}
+    .intro{display:grid;grid-template-columns:55px 1fr auto;gap:18px;align-items:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:25px 0;margin:8px 0 105px}
+    .intro-mark{font:30px var(--display-font);color:var(--gold);text-align:center}
+    .intro p{margin:0;max-width:760px;font-size:12px;line-height:1.95;color:var(--muted)}
+    .text-link{font-size:11px;color:var(--gold);white-space:nowrap;display:inline-flex;gap:10px;align-items:center}
+    .section{padding:0 0 108px}
+    .section-head{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-bottom:31px}
+    .section-kicker{font-size:9px;letter-spacing:.2em;color:var(--gold);margin:0 0 10px}
+    h2{font:500 clamp(30px,3vw,39px)/1.35 var(--display-font);margin:0}
+    .lead{font-size:12px;color:var(--muted);margin:11px 0 0}
+    .research-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}
+    .research-card{border:1px solid var(--line);background:var(--surface);padding:23px 20px 21px;min-height:270px;display:flex;flex-direction:column;transition:transform .25s,border-color .25s,box-shadow .25s}
+    .research-card:hover{transform:translateY(-5px);border-color:var(--gold);box-shadow:var(--shadow)}
+    .card-top{display:flex;justify-content:space-between;color:var(--gold);font:12px Georgia,serif;margin-bottom:27px}
+    .card-arrow{font-size:16px}
+    .research-card h3{font:500 19px/1.5 var(--display-font);margin:0 0 3px}
+    .card-en{font-size:9px;letter-spacing:.1em;color:var(--muted);margin-bottom:15px}
+    .card-desc{font-size:11px;line-height:1.9;color:var(--muted);margin:0 0 18px}
+    .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto}
+    .tag{border:1px solid var(--line);border-radius:20px;padding:3px 8px;font-size:9px;color:var(--muted)}
+    .focus{display:grid;grid-template-columns:1fr 1fr;background:var(--paper-2);margin-bottom:108px;min-height:350px}
+    .focus-visual{background:var(--blue);color:#e9e5d9;display:grid;place-items:center;position:relative;overflow:hidden;min-height:350px}
+    .focus-visual:after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(214,190,137,.16),transparent 55%)}
+    .focus-visual svg{width:min(85%,430px);position:relative;z-index:1}
+    .focus-label,.focus-caption{position:absolute;z-index:2;font-size:9px;letter-spacing:.18em;color:#d5c18e}
+    .focus-label{top:24px;left:27px}.focus-caption{bottom:23px;right:26px}
+    .focus-copy{padding:45px clamp(28px,5vw,65px);align-self:center}
+    .focus-copy h2{margin-bottom:13px}
+    .focus-copy>p:not(.section-kicker){font-size:12px;color:var(--muted);line-height:2}
+    .focus-points{display:grid;gap:13px;margin:25px 0}
+    .focus-point{display:grid;grid-template-columns:32px 1fr;gap:9px;align-items:center}
+    .focus-point>span{font:italic 12px Georgia,serif;color:var(--gold)}
+    .focus-point strong{font:500 14px var(--display-font);display:block}
+    .focus-point small{display:block;color:var(--muted);font-size:10px}
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:55px}
+    .list-card{border-top:1px solid var(--line)}
+    .list-item{display:grid;grid-template-columns:48px 1fr auto;gap:12px;align-items:start;padding:18px 0;border-bottom:1px solid var(--line)}
+    .list-no{font:italic 12px Georgia,serif;color:var(--gold);padding-top:3px}
+    .list-item h3{font:500 16px var(--display-font);margin:0 0 4px}
+    .list-item p{font-size:10px;color:var(--muted);margin:0;line-height:1.8}
+    .status{font-size:9px;color:var(--gold);border:1px solid var(--line);padding:3px 7px;white-space:nowrap}
+    .notes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
+    .note-card{padding:22px;border:1px solid var(--line);background:var(--surface);min-height:190px;display:flex;flex-direction:column}
+    .note-meta{font-size:9px;letter-spacing:.12em;color:var(--gold);margin-bottom:17px}
+    .note-card h3{font:500 18px/1.5 var(--display-font);margin:0 0 8px}
+    .note-card p{font-size:11px;line-height:1.85;color:var(--muted);margin:0 0 18px}
+    .note-card .text-link{margin-top:auto}
+    .blog-row{display:grid;grid-template-columns:100px 1fr auto;gap:20px;align-items:center;padding:18px 0;border-bottom:1px solid var(--line)}
+    .blog-date{font:italic 12px Georgia,serif;color:var(--gold)}
+    .blog-row h3{font:500 17px var(--display-font);margin:0 0 4px}
+    .blog-row p{font-size:10px;color:var(--muted);margin:0}
+    .project-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}
+    .project{border:1px solid var(--line);padding:22px;display:grid;grid-template-columns:42px 1fr auto;gap:13px;align-items:start;background:var(--surface)}
+    .project-icon{width:38px;height:38px;border:1px solid var(--line);display:grid;place-items:center;color:var(--gold);font:18px var(--display-font)}
+    .project h3{font:500 17px var(--display-font);margin:0 0 5px}
+    .project p{font-size:10px;color:var(--muted);line-height:1.8;margin:0}
+    .project a{font-size:10px;color:var(--gold)}
+    .contact{background:var(--blue);color:#f4f0e5;padding:48px clamp(25px,6vw,70px);display:flex;align-items:center;justify-content:space-between;gap:30px}
+    .contact .section-kicker{color:#d7c18f}
+    .contact h2{font-size:36px;margin-bottom:10px}
+    .contact p{font-size:11px;color:#c3cbd0;margin:0}
+    .contact-links{display:flex;gap:10px;flex-wrap:wrap}
+    .contact-links a{border:1px solid rgba(255,255,255,.28);padding:10px 14px;font-size:11px;color:#f4f0e5}
+    .contact-links a:hover{border-color:#d7c18f;color:#d7c18f}
+    footer{padding:25px 0 35px;color:var(--muted);font-size:9px;letter-spacing:.08em}
+    .footer-inner{display:flex;justify-content:space-between;gap:20px;align-items:center}
+    .footer-mark{color:var(--gold);font-family:var(--display-font)}
+    .modal{position:fixed;inset:0;background:rgba(8,17,25,.56);z-index:50;display:none;place-items:start center;padding:15vh 20px 20px}
+    .modal.open{display:grid}
+    .modal-box{width:min(560px,100%);background:var(--paper);border:1px solid var(--line);box-shadow:0 30px 90px rgba(0,0,0,.25);padding:20px}
+    .search-input{width:100%;padding:14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);outline:none;font:13px var(--body-font)}
+    .search-results{display:grid;gap:4px;margin-top:12px}
+    .search-results a{padding:10px 12px;font-size:12px;color:var(--muted);display:flex;justify-content:space-between}
+    .search-results a:hover{background:var(--paper-2);color:var(--ink)}
+    .modal-hint{font-size:9px;color:var(--muted);margin:12px 2px 0}
+    .reveal{opacity:0;transform:translateY(14px);transition:opacity .7s,transform .7s}
+    .reveal.visible{opacity:1;transform:none}
+    @media(max-width:980px){.nav{gap:12px}.nav a{font-size:11px}.brand{min-width:auto}.research-grid{grid-template-columns:repeat(2,1fr)}.hero{min-height:550px}}
+    @media(max-width:720px){
+      .wrap{width:min(100% - 34px,560px)}.header-inner{height:66px}.brand-wordmark small{font-size:8px}
+      .nav{display:none;position:absolute;top:66px;left:0;right:0;padding:15px 22px 20px;background:var(--paper);border-bottom:1px solid var(--line);grid-template-columns:repeat(4,1fr);gap:8px 14px}
+      .nav.open{display:grid}.nav a{padding:8px 0}.menu-btn{display:block}.hero{grid-template-columns:1fr;padding:65px 0 35px;gap:5px;min-height:0}
+      h1{font-size:48px}.hero-art{min-height:330px}.orbit{max-width:420px}.art-top{top:7px}.art-bottom{bottom:8px}
+      .intro{grid-template-columns:35px 1fr;margin:8px 0 75px}.intro .text-link{grid-column:2}
+      .section{padding-bottom:75px}.section-head{align-items:start;flex-direction:column}.research-grid{grid-template-columns:1fr 1fr}
+      .research-card{padding:18px 15px;min-height:290px}.research-card h3{font-size:17px}.focus{grid-template-columns:1fr;margin-bottom:75px}
+      .focus-visual{min-height:270px}.focus-copy{padding:32px 25px}.two-col{grid-template-columns:1fr;gap:48px}
+      .notes-grid{grid-template-columns:1fr}.note-card{min-height:0}.blog-row{grid-template-columns:70px 1fr auto;gap:10px}
+      .blog-row h3{font-size:15px}.project-grid{grid-template-columns:1fr}.contact{align-items:flex-start;flex-direction:column;padding:34px 25px}
+      .contact h2{font-size:30px}.footer-inner{align-items:flex-start;flex-direction:column}
+    }
+    @media(max-width:420px){.tools{gap:4px}.tool-btn,.lang-btn,.menu-btn{min-width:31px;padding:0 8px}.brand-mark{width:34px;height:34px}.brand-wordmark strong{font-size:10px}.research-grid{grid-template-columns:1fr}.research-card{min-height:0}.card-top{margin-bottom:18px}.blog-row{grid-template-columns:1fr auto}.blog-date{grid-column:1/-1}.blog-row p{display:none}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+  </style>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="#home" aria-label="Yu Zhehao home">
+      <span class="brand-mark"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="16.2"/><path d="M20 5.7v28.6M12.8 13.1l7.2-7.4 7.2 7.4M15 26.8l5-5 5 5"/><path d="M20 2.7l1.1 2.1 2.3.4-1.7 1.6.4 2.3L20 8l-2.1 1.1.4-2.3-1.7-1.6 2.3-.4z"/></svg></span>
+      <span class="brand-wordmark"><strong>YU ZHEHAO</strong><small>PERSONAL OBSERVATORY</small></span>
+    </a>
+    <nav class="nav" id="nav">
+      <a href="#about"><span data-zh="关于" data-en="About">关于</span></a>
+      <a href="#research"><span data-zh="研究" data-en="Research">研究</span></a>
+      <a href="#publications"><span data-zh="论文" data-en="Papers">论文</span></a>
+      <a href="#notes"><span data-zh="笔记" data-en="Notes">笔记</span></a>
+      <a href="#blog"><span data-zh="随笔" data-en="Journal">随笔</span></a>
+      <a href="#projects"><span data-zh="项目" data-en="Projects">项目</span></a>
+      <a href="#contact"><span data-zh="联系" data-en="Contact">联系</span></a>
+    </nav>
+    <div class="tools">
+      <button class="tool-btn" id="searchBtn" aria-label="Search" title="Search (Ctrl+K)">⌕</button>
+      <button class="lang-btn" id="langBtn" aria-label="Switch language">EN</button>
+      <button class="tool-btn" id="themeBtn" aria-label="Toggle theme" title="Toggle theme">☾</button>
+      <button class="menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
+    </div>
+  </div>
+</header>
+
+<main id="home">
+  <div class="wrap">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">PHYSICS · MATHEMATICS · ARTIFICIAL INTELLIGENCE</p>
+        <h1><span data-zh="在数学结构与" data-en="Between mathematical">在数学结构与</span><br><em data-zh="基本物理之间" data-en="structures and">基本物理之间</em><span class="period">.</span></h1>
+        <p class="hero-desc" data-zh="一个持续生长的个人研究空间。记录问题、构造工具，并追寻量子场论、几何与数论之间的深层联系。" data-en="A growing space for research and reflection: recording questions, building tools, and exploring deep connections between quantum field theory, geometry and number theory.">一个持续生长的个人研究空间。记录问题、构造工具，并追寻量子场论、几何与数论之间的深层联系。</p>
+        <div class="actions">
+          <a class="btn primary" href="#research"><span data-zh="探索研究" data-en="Explore research">探索研究</span><span>↗</span></a>
+          <a class="btn quiet" href="#notes"><span data-zh="阅读笔记" data-en="Read notes">阅读笔记</span><span>→</span></a>
+        </div>
+        <div class="hero-note">INDEPENDENT STUDY · RESEARCH IN PROGRESS · NOTES IN PUBLIC</div>
+      </div>
+      <div class="hero-art" aria-label="Orbital geometry illustration">
+        <span class="art-caption art-top">FIG. 01 / ORBITAL STUDY</span>
+        <span class="coord left">α = 0.137…</span><span class="coord right">D = 4 − ε</span>
+        <span class="star s1"></span><span class="star s2"></span><span class="star s3"></span>
+        <svg class="orbit" viewBox="0 0 620 520" fill="none">
+          <defs><linearGradient id="gold" x1="90" y1="40" x2="520" y2="450"><stop stop-color="#d8c18c"/><stop offset="1" stop-color="#6e91ad" stop-opacity=".35"/></linearGradient><linearGradient id="blue" x1="30" y1="400" x2="560" y2="100"><stop stop-color="#89a9c2" stop-opacity=".18"/><stop offset=".52" stop-color="#d7c18f"/><stop offset="1" stop-color="#89a9c2" stop-opacity=".12"/></linearGradient></defs>
+          <ellipse cx="310" cy="260" rx="238" ry="104" transform="rotate(-28 310 260)" stroke="url(#gold)" stroke-width="1.2"/>
+          <ellipse cx="310" cy="260" rx="190" ry="150" transform="rotate(54 310 260)" stroke="url(#blue)"/>
+          <ellipse cx="310" cy="260" rx="252" ry="178" transform="rotate(8 310 260)" stroke="currentColor" stroke-opacity=".12" stroke-dasharray="2 8"/>
+          <path d="M80 350C185 275 223 111 347 101C451 92 500 204 538 303" stroke="url(#gold)" stroke-width="1.4"/>
+          <path d="M104 148C204 209 234 356 358 382C455 402 508 322 537 247" stroke="url(#blue)"/>
+          <path d="M310 57V463M91 260H529" stroke="currentColor" stroke-opacity=".1" stroke-dasharray="3 8"/>
+          <circle cx="310" cy="260" r="72" stroke="currentColor" stroke-opacity=".18"/><circle cx="310" cy="260" r="50" stroke="url(#gold)" stroke-width="1.5"/>
+          <path d="M310 205L321 249L310 315L299 249L310 205Z" fill="url(#gold)" fill-opacity=".82"/><path d="M292 249H328M310 232V266" stroke="#f5f0e4"/>
+          <circle cx="115" cy="151" r="3" fill="#d9c48f"/><circle cx="505" cy="333" r="3" fill="#9bb7ca"/><circle cx="442" cy="115" r="2.5" fill="#d9c48f"/><circle cx="191" cy="390" r="2" fill="#9bb7ca"/>
+        </svg>
+        <span class="art-caption art-bottom">A FIELD OF QUESTIONS · 2026—</span>
+      </div>
+    </section>
+
+    <section class="intro reveal" id="about">
+      <div class="intro-mark">✳</div>
+      <p data-zh="这里同时容纳严谨的推导、计算实验、论文阅读，以及尚在形成中的问题。公开记录不意味着每个想法都已得到证明；我会尽量清楚地区分结论、证据与猜想。" data-en="This space holds derivations, computational experiments, paper notes and questions still taking shape. Public notes are not claims of proof: I aim to distinguish established results, evidence and conjectures clearly.">这里同时容纳严谨的推导、计算实验、论文阅读，以及尚在形成中的问题。公开记录不意味着每个想法都已得到证明；我会尽量清楚地区分结论、证据与猜想。</p>
+      <a class="text-link" href="#contact"><span data-zh="关于我与联系" data-en="About & contact">关于我与联系</span> ↗</a>
+    </section>
+
+    <section class="section reveal" id="research">
+      <div class="section-head">
+        <div><p class="section-kicker">RESEARCH DIRECTIONS</p><h2 data-zh="研究方向" data-en="Research directions">研究方向</h2><p class="lead" data-zh="几条彼此交汇的探索路径，而不是互不相关的兴趣清单。" data-en="Interconnected paths of inquiry, rather than a list of unrelated interests.">几条彼此交汇的探索路径，而不是互不相关的兴趣清单。</p></div>
+        <a class="text-link" href="#focus"><span data-zh="当前研究焦点" data-en="Current focus">当前研究焦点</span> ↗</a>
+      </div>
+      <div class="research-grid">
+        <article class="research-card"><div class="card-top"><span>01</span><span class="card-arrow">↗</span></div><h3 data-zh="费曼积分与周期" data-en="Feynman integrals & periods">费曼积分与周期</h3><div class="card-en">FEYNMAN INTEGRALS & PERIODS</div><p class="card-desc" data-zh="研究费曼图所定义的积分及其几何、代数与数论结构，关注周期分类、微分方程、单值性与图操作之间的联系。" data-en="Geometric, algebraic and arithmetic structures of Feynman integrals, including period classification, differential equations, monodromy and graph operations.">研究费曼图所定义的积分及其几何、代数与数论结构，关注周期分类、微分方程、单值性与图操作之间的联系。</p><div class="tags"><span class="tag">Periods</span><span class="tag">Graph Geometry</span><span class="tag">Picard–Fuchs</span></div></article>
+        <article class="research-card"><div class="card-top"><span>02</span><span class="card-arrow">↗</span></div><h3 data-zh="量子场论与重整化" data-en="Quantum field theory">量子场论与重整化</h3><div class="card-en">QUANTUM FIELD THEORY</div><p class="card-desc" data-zh="关注高圈费曼积分、重整化群、Ward 恒等式，以及计算结构如何服务于可检验的物理量。" data-en="High-loop Feynman integrals, renormalization group, Ward identities, and how computational structures support physical observables.">关注高圈费曼积分、重整化群、Ward 恒等式，以及计算结构如何服务于可检验的物理量。</p><div class="tags"><span class="tag">QFT</span><span class="tag">Renormalization</span><span class="tag">RG</span></div></article>
+        <article class="research-card"><div class="card-top"><span>03</span><span class="card-arrow">↗</span></div><h3 data-zh="几何、数论与数学物理" data-en="Geometry & mathematical physics">几何、数论与数学物理</h3><div class="card-en">GEOMETRY & MATHEMATICAL PHYSICS</div><p class="card-desc" data-zh="从复分析、代数几何和解析数论出发，寻找能解释物理计算中结构性现象的数学语言。" data-en="Complex analysis, algebraic geometry and analytic number theory as languages for structural phenomena in theoretical physics.">从复分析、代数几何和解析数论出发，寻找能解释物理计算中结构性现象的数学语言。</p><div class="tags"><span class="tag">Geometry</span><span class="tag">Number Theory</span></div></article>
+        <article class="research-card"><div class="card-top"><span>04</span><span class="card-arrow">↗</span></div><h3 data-zh="AI 与科学计算" data-en="AI & scientific computing">AI 与科学计算</h3><div class="card-en">AI FOR SCIENTIFIC DISCOVERY</div><p class="card-desc" data-zh="探索 AI、符号计算与高性能程序在数学物理研究中的作用，重视可复核的推导、测试和计算证书。" data-en="AI, symbolic computation and high-performance software for mathematical physics, with an emphasis on reproducible reasoning and verification.">探索 AI、符号计算与高性能程序在数学物理研究中的作用，重视可复核的推导、测试和计算证书。</p><div class="tags"><span class="tag">AI</span><span class="tag">Rust</span><span class="tag">Symbolic Computation</span></div></article>
+      </div>
+    </section>
+
+    <section class="focus reveal" id="focus">
+      <div class="focus-visual">
+        <span class="focus-label">CURRENT ORBIT / 01</span>
+        <svg viewBox="0 0 400 260" fill="none"><ellipse cx="200" cy="130" rx="164" ry="54" transform="rotate(-24 200 130)" stroke="currentColor" stroke-opacity=".35"/><ellipse cx="200" cy="130" rx="132" ry="92" transform="rotate(56 200 130)" stroke="#c9b27e" stroke-opacity=".7"/><path d="M200 38V222M58 130H342" stroke="currentColor" stroke-opacity=".15" stroke-dasharray="2 7"/><circle cx="200" cy="130" r="32" fill="#d7c18f" fill-opacity=".12" stroke="#d7c18f"/><path d="M200 99L209 128L200 160L191 128L200 99Z" fill="#d7c18f"/><circle cx="72" cy="83" r="4" fill="#d7c18f"/><circle cx="324" cy="174" r="3" fill="#9eb8c9"/></svg>
+        <span class="focus-caption">PERIODS · GEOMETRY · QFT</span>
+      </div>
+      <div class="focus-copy">
+        <p class="section-kicker">CURRENT FOCUS</p><h2 data-zh="当前关注" data-en="Current focus">当前关注</h2>
+        <p data-zh="从具体的费曼图出发，寻找可以迁移到更广泛理论中的数学结构。研究档案将记录问题、方法、证据与尚未解决的缺口。" data-en="Starting from concrete Feynman graphs, I look for mathematical structures that can transfer to broader classes of theories. Research notes record questions, methods, evidence and unresolved gaps.">从具体的费曼图出发，寻找可以迁移到更广泛理论中的数学结构。研究档案将记录问题、方法、证据与尚未解决的缺口。</p>
+        <div class="focus-points">
+          <div class="focus-point"><span>01</span><div><strong data-zh="图的结构" data-en="Graph structure">图的结构</strong><small data-zh="拓扑、子图与操作闭包" data-en="Topology, subgraphs and operational closure">拓扑、子图与操作闭包</small></div></div>
+          <div class="focus-point"><span>02</span><div><strong data-zh="周期的几何" data-en="Geometry of periods">周期的几何</strong><small data-zh="微分方程、单值性与分类" data-en="Differential equations, monodromy and classification">微分方程、单值性与分类</small></div></div>
+          <div class="focus-point"><span>03</span><div><strong data-zh="物理闭环" data-en="Physical closure">物理闭环</strong><small data-zh="重整化、RG 与可检验量" data-en="Renormalization, RG and observables">重整化、RG 与可检验量</small></div></div>
+        </div>
+        <a class="text-link" href="#projects"><span data-zh="查看研究项目" data-en="View research projects">查看研究项目</span> ↗</a>
+      </div>
+    </section>
+
+    <section class="section reveal" id="publications">
+      <div class="section-head"><div><p class="section-kicker">PUBLICATIONS & PREPRINTS</p><h2 data-zh="论文与学术成果" data-en="Publications & preprints">论文与学术成果</h2><p class="lead" data-zh="只列出已公开或正式发表的成果；工作手稿与未公开结果不会冒充论文。" data-en="Only public or formally published work belongs here; private manuscripts are not presented as publications.">只列出已公开或正式发表的成果；工作手稿与未公开结果不会冒充论文。</p></div></div>
+      <div class="list-card">
+        <div class="list-item"><span class="list-no">01</span><div><h3 data-zh="正式发表论文" data-en="Published papers">正式发表论文</h3><p data-zh="论文正式发表后，在此添加期刊、DOI、作者信息与 PDF 链接。" data-en="Journal details, DOI, author information and PDF links will be added after publication.">论文正式发表后，在此添加期刊、DOI、作者信息与 PDF 链接。</p></div><span class="status" data-zh="待更新" data-en="To be updated">待更新</span></div>
+        <div class="list-item"><span class="list-no">02</span><div><h3 data-zh="预印本与公开手稿" data-en="Preprints & public manuscripts">预印本与公开手稿</h3><p data-zh="公开预印本将提供 arXiv、版本记录与相关代码。" data-en="Public preprints will include arXiv links, version history and related code.">公开预印本将提供 arXiv、版本记录与相关代码。</p></div><span class="status" data-zh="待更新" data-en="To be updated">待更新</span></div>
+        <div class="list-item"><span class="list-no">03</span><div><h3 data-zh="报告与技术文档" data-en="Talks & technical reports">报告与技术文档</h3><p data-zh="学术报告、计算证书和可公开的技术说明。" data-en="Talks, computational certificates and public technical documentation.">学术报告、计算证书和可公开的技术说明。</p></div><span class="status" data-zh="待更新" data-en="To be updated">待更新</span></div>
+      </div>
+    </section>
+
+    <section class="section reveal" id="notes">
+      <div class="section-head"><div><p class="section-kicker">KNOWLEDGE ARCHIVE</p><h2 data-zh="笔记与知识库" data-en="Notes & knowledge archive">笔记与知识库</h2><p class="lead" data-zh="把课程学习、数学推导与物理直觉沉淀为可检索、可迭代的长期资料。" data-en="A growing archive of course notes, mathematical derivations and physical intuition.">把课程学习、数学推导与物理直觉沉淀为可检索、可迭代的长期资料。</p></div><a class="text-link" href="#contact"><span data-zh="建议与反馈" data-en="Suggestions">建议与反馈</span> ↗</a></div>
+      <div class="notes-grid">
+        <article class="note-card"><div class="note-meta">MATHEMATICS · COMPLEX ANALYSIS</div><h3 data-zh="复分析" data-en="Complex analysis">复分析</h3><p data-zh="解析函数、多值函数、留数、级数收敛与复积分的系统笔记。" data-en="Systematic notes on analytic functions, branches, residues, convergence and contour integration.">解析函数、多值函数、留数、级数收敛与复积分的系统笔记。</p><a class="text-link" href="https://github.com/Ynotfound/"><span data-zh="笔记整理中" data-en="Notes in progress">笔记整理中</span> ↗</a></article>
+        <article class="note-card"><div class="note-meta">PHYSICS · QUANTUM FIELD THEORY</div><h3 data-zh="量子场论" data-en="Quantum field theory">量子场论</h3><p data-zh="路径积分、微扰论、费曼规则、重整化与重整化群。" data-en="Path integrals, perturbation theory, Feynman rules, renormalization and the renormalization group.">路径积分、微扰论、费曼规则、重整化与重整化群。</p><a class="text-link" href="https://github.com/Ynotfound/"><span data-zh="笔记整理中" data-en="Notes in progress">笔记整理中</span> ↗</a></article>
+        <article class="note-card"><div class="note-meta">MATHEMATICAL PHYSICS · PERIODS</div><h3 data-zh="费曼积分与周期" data-en="Feynman integrals & periods">费曼积分与周期</h3><p data-zh="图多项式、参数积分、微分方程、几何结构与周期分类。" data-en="Graph polynomials, parametric integrals, differential equations, geometry and period classification.">图多项式、参数积分、微分方程、几何结构与周期分类。</p><a class="text-link" href="#research"><span data-zh="研究方向" data-en="Research direction">研究方向</span> ↗</a></article>
+      </div>
+    </section>
+
+    <section class="section reveal" id="blog">
+      <div class="section-head"><div><p class="section-kicker">FIELD NOTES</p><h2 data-zh="研究随笔" data-en="Field notes">研究随笔</h2><p class="lead" data-zh="记录阅读、想法、失败的尝试与逐渐清晰的问题。" data-en="Reading notes, ideas, failed attempts and questions that are gradually coming into focus.">记录阅读、想法、失败的尝试与逐渐清晰的问题。</p></div></div>
+      <div class="list-card">
+        <div class="blog-row"><div class="blog-date">2026 · 11</div><div><h3 data-zh="为什么要研究费曼积分的几何结构？" data-en="Why study the geometry of Feynman integrals?">为什么要研究费曼积分的几何结构？</h3><p data-zh="从计算问题走向结构问题：一份持续整理中的研究动机。" data-en="From computational questions to structural ones: an evolving research motivation.">从计算问题走向结构问题：一份持续整理中的研究动机。</p></div><span class="status" data-zh="草稿" data-en="Draft">草稿</span></div>
+        <div class="blog-row"><div class="blog-date">2026 · 11</div><div><h3 data-zh="AI 能怎样参与严肃的数学研究？" data-en="How can AI contribute to serious mathematical research?">AI 能怎样参与严肃的数学研究？</h3><p data-zh="关于可验证性、工具链与研究者判断的一些问题。" data-en="Questions about verifiability, toolchains and human mathematical judgment.">关于可验证性、工具链与研究者判断的一些问题。</p></div><span class="status" data-zh="构思中" data-en="Planned">构思中</span></div>
+      </div>
+    </section>
+
+    <section class="section reveal" id="projects">
+      <div class="section-head"><div><p class="section-kicker">COMPUTATION & TOOLS</p><h2 data-zh="项目与代码" data-en="Projects & code">项目与代码</h2><p class="lead" data-zh="研究工具、算法实现与可复现的计算实验。" data-en="Research tools, algorithmic implementations and reproducible computational experiments.">研究工具、算法实现与可复现的计算实验。</p></div></div>
+      <div class="project-grid">
+        <article class="project"><div class="project-icon">∮</div><div><h3>YuPhysics</h3><p data-zh="物理学习与研究相关的公开代码仓库。" data-en="A public repository for physics learning and research-related code.">物理学习与研究相关的公开代码仓库。</p></div><a href="https://github.com/Ynotfound/YuPhysics" target="_blank" rel="noreferrer">GitHub ↗</a></article>
+        <article class="project"><div class="project-icon">⌘</div><div><h3>magnus-lab</h3><p data-zh="计算与实验性项目的公开代码仓库。" data-en="A public repository for computational and experimental projects.">计算与实验性项目的公开代码仓库。</p></div><a href="https://github.com/Ynotfound/magnus-lab" target="_blank" rel="noreferrer">GitHub ↗</a></article>
+        <article class="project"><div class="project-icon">ψ</div><div><h3>Computational notebooks</h3><p data-zh="符号计算、数值验证与数学物理实验。" data-en="Symbolic computation, numerical checks and mathematical-physics experiments.">符号计算、数值验证与数学物理实验。</p></div><a href="https://github.com/Ynotfound?tab=repositories" target="_blank" rel="noreferrer">Repositories ↗</a></article>
+        <article class="project"><div class="project-icon">✧</div><div><h3>Avalon Observatory</h3><p data-zh="这个网站本身：持续生长的个人研究空间。" data-en="This website itself: a growing personal research space.">这个网站本身：持续生长的个人研究空间。</p></div><a href="https://github.com/Ynotfound/ynotfound.github.io" target="_blank" rel="noreferrer">Source ↗</a></article>
+      </div>
+    </section>
+
+    <section class="contact reveal" id="contact">
+      <div><p class="section-kicker">CONTACT / COLLABORATION</p><h2 data-zh="保持好奇，保持联系。" data-en="Stay curious. Stay in touch.">保持好奇，保持联系。</h2><p data-zh="欢迎交流数学、物理、AI 与科学计算相关的问题。" data-en="Open to conversations about mathematics, physics, AI and scientific computing.">欢迎交流数学、物理、AI 与科学计算相关的问题。</p></div>
+      <div class="contact-links"><a href="https://github.com/Ynotfound" target="_blank" rel="noreferrer">GitHub ↗</a><a href="https://github.com/Ynotfound/ynotfound.github.io" target="_blank" rel="noreferrer">Website source ↗</a></div>
+    </section>
+    <footer><div class="footer-inner"><span>© <span id="year"></span> YU ZHEHAO · PERSONAL OBSERVATORY</span><span class="footer-mark">PER ASPERA AD ASTRA ✧</span><span data-zh="以严谨为尺，以好奇为引。" data-en="Rigour as a compass; curiosity as a guide.">以严谨为尺，以好奇为引。</span></div></footer>
+  </div>
+</main>
+
+<div class="modal" id="searchModal" role="dialog" aria-modal="true" aria-label="Site search">
+  <div class="modal-box">
+    <input class="search-input" id="searchInput" type="search" placeholder="搜索研究、笔记、项目… / Search this site">
+    <div class="search-results" id="searchResults">
+      <a href="#research"><span>Research / 研究方向</span><span>↗</span></a>
+      <a href="#publications"><span>Publications / 论文</span><span>↗</span></a>
+      <a href="#notes"><span>Notes / 笔记</span><span>↗</span></a>
+      <a href="#projects"><span>Projects / 项目</span><span>↗</span></a>
+    </div>
+    <p class="modal-hint">ESC to close · ↑ ↓ to browse · ENTER to open</p>
+  </div>
+</div>
+
+<script>
+  const root = document.documentElement;
+  const langBtn = document.getElementById('langBtn');
+  const themeBtn = document.getElementById('themeBtn');
+  const menuBtn = document.getElementById('menuBtn');
+  const nav = document.getElementById('nav');
+  const modal = document.getElementById('searchModal');
+  const searchInput = document.getElementById('searchInput');
+  const searchResults = document.getElementById('searchResults');
+  let lang = 'zh';
+  function setLang(next) {
+    lang = next;
+    root.lang = next === 'zh' ? 'zh-CN' : 'en';
+    document.querySelectorAll('[data-zh][data-en]').forEach(el => { el.textContent = el.dataset[next]; });
+    langBtn.textContent = next === 'zh' ? 'EN' : '中';
+    searchInput.placeholder = next === 'zh' ? '搜索研究、笔记、项目… / Search this site' : 'Search research, notes, projects…';
+  }
+  langBtn.addEventListener('click', () => setLang(lang === 'zh' ? 'en' : 'zh'));
+  function setTheme(next) {
+    root.dataset.theme = next;
+    themeBtn.textContent = next === 'dark' ? '☼' : '☾';
+    document.querySelector('meta[name="theme-color"]').content = next === 'dark' ? '#101c28' : '#f5f3ed';
+  }
+  themeBtn.addEventListener('click', () => setTheme(root.dataset.theme === 'dark' ? 'light' : 'dark'));
+  menuBtn.addEventListener('click', () => nav.classList.toggle('open'));
+  nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => nav.classList.remove('open')));
+  document.getElementById('year').textContent = new Date().getFullYear();
+  const searchable = Array.from(document.querySelectorAll('main section[id]')).map(s => ({id:s.id, title:s.querySelector('h2')?.textContent || s.id, text:s.textContent}));
+  function openSearch() { modal.classList.add('open'); searchInput.value=''; filterSearch(''); setTimeout(() => searchInput.focus(), 20); }
+  function closeSearch() { modal.classList.remove('open'); }
+  function filterSearch(q) {
+    const query = q.trim().toLowerCase();
+    const items = searchable.filter(x => !query || (x.title+' '+x.text+' '+x.id).toLowerCase().includes(query));
+    searchResults.innerHTML = items.map(x => '<a href="#'+x.id+'"><span>'+x.title+'</span><span>↗</span></a>').join('') || '<p style="padding:10px;color:var(--muted);font-size:12px">No matching sections.</p>';
+    searchResults.querySelectorAll('a').forEach(a => a.addEventListener('click', closeSearch));
+  }
+  document.getElementById('searchBtn').addEventListener('click', openSearch);
+  searchInput.addEventListener('input', e => filterSearch(e.target.value));
+  modal.addEventListener('click', e => { if (e.target === modal) closeSearch(); });
+  document.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openSearch(); }
+    if (e.key === 'Escape') { closeSearch(); nav.classList.remove('open'); }
+  });
+  const observer = new IntersectionObserver(entries => entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } }), {threshold:.08});
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  document.querySelectorAll('.nav a').forEach(a => {
+    a.addEventListener('click', () => {
+      document.querySelectorAll('.nav a').forEach(x => x.classList.remove('active'));
+      a.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
