@@ -244,6 +244,14 @@
     @media(max-width:720px) { .hero-art-immersive{min-height:380px;margin-top:8px;} .orbit-sword{width:53px;} }
     @media(prefers-reduced-motion:reduce) { .orbit-aura,.orbit-sword{animation:none!important;} }
 
+  
+    /* v4 interaction tuning: larger pointer parallax and wider magnetic deformation */
+    .orbit-canvas { cursor:crosshair; }
+    .hero-art-immersive { touch-action:pan-y; }
+    @media(hover:hover) and (pointer:fine) {
+      .hero-art-immersive:hover .orbit-aura { opacity:1; transform:scale(1.28); }
+    }
+
   </style>
 </head>
 <body>
@@ -491,25 +499,30 @@
     x += cx; y += cy;
     if (influence && pointer.active) {
       const dx = x - pointer.x, dy = y - pointer.y;
-      const d2 = dx * dx + dy * dy;
-      const force = Math.exp(-d2 / (115 * 115));
-      const bend = force * 10;
-      x += dx * force * .045;
-      y += dy * force * .045;
-      x += -dy / (Math.sqrt(d2) + 1) * bend;
-      y += dx / (Math.sqrt(d2) + 1) * bend;
+      const d = Math.sqrt(dx * dx + dy * dy);
+      const force = Math.exp(-(d * d) / (205 * 205));
+      // A broad, visible magnetic field: radial push plus a tangential sweep.
+      const radial = force * 0.135;
+      const bend = force * 38;
+      x += dx * radial - dy / (d + 1) * bend;
+      y += dy * radial + dx / (d + 1) * bend;
     }
     return { x, y };
   }
 
   function drawTrack(orbit, cx, cy, color, alpha, lineWidth, dash = []) {
     ctx.save();
-    ctx.translate(cx, cy);
-    ctx.rotate(orbit.rotation);
     ctx.beginPath();
-    ctx.ellipse(0, 0, orbit.rx, orbit.ry, 0, 0, Math.PI * 2);
+    const samples = 260;
+    for (let i = 0; i <= samples; i++) {
+      const angle = (i / samples) * Math.PI * 2;
+      const point = pointOnOrbit(orbit, angle, cx, cy, true);
+      if (i === 0) ctx.moveTo(point.x, point.y);
+      else ctx.lineTo(point.x, point.y);
+    }
+    ctx.closePath();
     ctx.setLineDash(dash);
-    ctx.lineDashOffset = -elapsed * 13 * orbit.direction;
+    ctx.lineDashOffset = -elapsed * 22 * orbit.direction;
     ctx.strokeStyle = color;
     ctx.globalAlpha = alpha;
     ctx.lineWidth = lineWidth;
@@ -521,14 +534,14 @@
     const direction = Math.sign(orbit.speed);
     const steps = 30;
     const head = pointOnOrbit(orbit, angle, cx, cy);
-    const tail = pointOnOrbit(orbit, angle - direction * .52, cx, cy);
+    const tail = pointOnOrbit(orbit, angle - direction * .92, cx, cy);
     const gradient = ctx.createLinearGradient(tail.x, tail.y, head.x, head.y);
     gradient.addColorStop(0, 'rgba(0,0,0,0)');
     gradient.addColorStop(.58, color.tail);
     gradient.addColorStop(1, color.head);
     ctx.beginPath();
     for (let j = 0; j <= steps; j++) {
-      const a = angle - direction * (.52 * j / steps);
+      const a = angle - direction * (.92 * j / steps);
       const p = pointOnOrbit(orbit, a, cx, cy);
       if (j === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y);
     }
@@ -569,8 +582,9 @@
     const p = palettes();
     ctx.clearRect(0, 0, width, height);
     const min = Math.min(width, height);
-    const cx = width * .5 + pointer.tx * 8;
-    const cy = height * .5 + pointer.ty * 7;
+    // The orbital field has its own parallax range; the sword remains anchored at the visual centre.
+    const cx = width * .5 + pointer.tx * 32;
+    const cy = height * .5 + pointer.ty * 25;
 
     const halo = ctx.createRadialGradient(cx, cy, min * .03, cx, cy, min * .5);
     halo.addColorStop(0, document.documentElement.dataset.theme === 'dark' ? 'rgba(115,158,188,.11)' : 'rgba(115,143,159,.09)');
@@ -579,9 +593,9 @@
     ctx.fillRect(0, 0, width, height);
 
     const orbits = [
-      { rx:min*.445, ry:min*.195, rotation:-.49 + pointer.tx*.075, speed:.67, direction:1, count:2, phase:.15 },
-      { rx:min*.365, ry:min*.292, rotation:.91 - pointer.tx*.06, speed:-.49, direction:-1, count:2, phase:1.35 },
-      { rx:min*.475, ry:min*.335, rotation:.13 + pointer.ty*.055, speed:.34, direction:1, count:2, phase:2.5 }
+      { rx:min*.485, ry:min*.225, rotation:-.49 + pointer.tx*.22 + pointer.ty*.035, speed:.72, direction:1, count:2, phase:.15 },
+      { rx:min*.405, ry:min*.315, rotation:.91 - pointer.tx*.18 + pointer.ty*.045, speed:-.54, direction:-1, count:2, phase:1.35 },
+      { rx:min*.505, ry:min*.365, rotation:.13 + pointer.ty*.19 - pointer.tx*.035, speed:.38, direction:1, count:2, phase:2.5 }
     ];
 
     // The orbit paths stay in place; light and matter move along them.
@@ -622,11 +636,12 @@
 
     // A soft cursor field bends nearby trajectories instead of merely moving the whole graphic.
     if (pointer.active) {
-      const cursorGlow = ctx.createRadialGradient(pointer.x, pointer.y, 0, pointer.x, pointer.y, 95);
+      const cursorGlow = ctx.createRadialGradient(pointer.x, pointer.y, 0, pointer.x, pointer.y, 175);
       cursorGlow.addColorStop(0, p.goldSoft);
+      cursorGlow.addColorStop(.35, p.blueSoft);
       cursorGlow.addColorStop(1, 'rgba(0,0,0,0)');
       ctx.fillStyle = cursorGlow;
-      ctx.beginPath(); ctx.arc(pointer.x, pointer.y, 95, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(pointer.x, pointer.y, 175, 0, Math.PI * 2); ctx.fill();
     }
   }
 
@@ -637,8 +652,8 @@
     elapsed += delta;
     const targetX = pointer.active ? pointer.x / Math.max(width,1) - .5 : 0;
     const targetY = pointer.active ? pointer.y / Math.max(height,1) - .5 : 0;
-    pointer.tx += (targetX - pointer.tx) * .045;
-    pointer.ty += (targetY - pointer.ty) * .045;
+    pointer.tx += (targetX - pointer.tx) * .085;
+    pointer.ty += (targetY - pointer.ty) * .085;
     paint(elapsed);
     raf = requestAnimationFrame(tick);
   }
