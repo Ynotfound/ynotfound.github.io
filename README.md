@@ -1,60 +1,52 @@
 # Yu Zhehao — Personal Observatory
 
-A bilingual personal academic website for **Yu Zhehao**, bringing together theoretical physics, mathematics, AI, research manuscripts, notes, reading references and software projects.
+A bilingual, multi-page academic website for **Yu Zhehao**, built with Astro and deployed to GitHub Pages.
 
-**Live site:** https://ynotfound.github.io/  
-**Repository:** https://github.com/Ynotfound/ynotfound.github.io
+**Live site:** https://ynotfound.github.io/
+
+## Architecture
+
+- **Astro static generation** — each section and article has its own URL; no long single-page scroll.
+- **Markdown content collections** — notes and journal entries live under src/content/.
+- **LaTeX mathematics** — remark-math and rehype-katex.
+- **Code highlighting** — Astro's build-time Shiki integration.
+- **Full-text search** — a generated JSON index searches notes, journal entries and a research entry.
+- **Automatic metadata** — canonical URLs, sitemap, RSS and 404 page.
+- **Responsive shared layout** — navigation, language and theme controls are shared across pages.
+- **Interactive visuals** — orbital canvas on the homepage and a restrained Excalibur-inspired desktop cursor.
+
+## Routes
+
+- / — compact homepage / portal
+- /research/ and /research/feynman-periods/ — research programme
+- /publications/ — public manuscripts and publication status
+- /notes/ and /notes/<slug>/ — Markdown knowledge base
+- /reading/ — references and software documentation
+- /journal/ and /journal/<slug>/ — essays and field notes
+- /projects/ — code and research projects
+- /about/ — profile
+- /search/ — full-text search
+- /rss.xml, /sitemap.xml — feeds and indexing
+
+## Local development
+
+Requires Node.js 22 or later.
+
+~~~bash
+npm install
+npm run dev
+npm run build
+npm run preview
+~~~
+
+## Publishing content
+
+See CONTRIBUTING.md. Add a Markdown file to src/content/notes/ or src/content/journal/, set its frontmatter, and push to main. GitHub Actions installs dependencies, builds dist/, and deploys the artifact to GitHub Pages.
 
 ## Design
 
-- Midnight blue, ivory and champagne gold.
-- Chinese display typography prioritizes a Fangzheng Xiaobiaosong-style serif stack with system fallbacks. No proprietary font files are redistributed.
-- Restrained Excalibur-inspired sword mark and custom desktop pointer, with a short gold/blue particle trail.
-- Interactive orbital field, bilingual content, persistent light/dark preference and responsive navigation.
-
-## Sections
-
-- About
-- Research directions
-- Publications and research manuscripts
-- Notes and knowledge archive
-- Reading and references
-- Research journal
-- Projects and code
-- Contact
-
-## Implementation
-
-The current live version is a dependency-free static site:
-
-- `index.html` — page structure, styling and client-side interactions
-- `404.html` — custom not-found page
-- `robots.txt` and `sitemap.xml` — basic indexing metadata
-- `.github/workflows/deploy.yml` — GitHub Pages deployment
-
-There is no build step or package installation required. The site is currently a single-page experience with anchored sections; the Markdown-driven multi-article publishing system is a future enhancement, not something this version claims to provide.
-
-## Local preview
-
-Clone the repository and run:
-
-```bash
-python -m http.server 8000
-```
-
-Then open http://localhost:8000.
-
-## Deployment
-
-Pushes to `main` trigger GitHub Actions. The workflow copies the static files into the Pages artifact and deploys them to GitHub Pages.
-
-If Pages is not configured yet, open repository Settings → Pages and set the source to **GitHub Actions**.
+Midnight blue, ivory and champagne gold; a Fangzheng Xiaobiaosong-style Chinese serif font stack with system fallbacks; subtle Avalon / Excalibur details. The site uses original vector geometry and code, not redistributed Fate artwork or other proprietary assets.
 
 ## Editorial policy
 
-- Distinguish published papers, preprints and working manuscripts.
-- Add only verified public project links and document states.
-- Distinguish proved results, numerical checks, conjectures and work in progress.
-- Do not expose private manuscripts, credentials, API keys or personal contact details.
-- The listed Feynman-period manuscript is labelled as a working manuscript, not as a published paper or arXiv preprint.
-- The Fate-Palimpsest entry describes a non-commercial prototype using original placeholder assets; it does not redistribute official Fate artwork, music, models or voice assets.
+The Feynman-period long paper is identified as a public working manuscript, not as a published paper or arXiv preprint. Distinguish proved results, conditional conclusions, numerical checks, conjectures and open questions. Do not publish private manuscripts, credentials or confidential data.

@@ -1,0 +1,38 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import OrbitalField from '../components/OrbitalField.astro';
+const portals = [
+  { n:'01', title:'研究方向', en:'RESEARCH', href:'/research/', desc:'研究问题与当前主线', descEn:'Questions and current focus' },
+  { n:'02', title:'论文档案', en:'PUBLICATIONS', href:'/publications/', desc:'手稿、预印本与成果', descEn:'Manuscripts and papers' },
+  { n:'03', title:'笔记知识库', en:'NOTES', href:'/notes/', desc:'数学与物理的长期笔记', descEn:'Mathematics and physics' },
+  { n:'04', title:'阅读资料', en:'READING', href:'/reading/', desc:'文献、工具与参考', descEn:'Literature and references' },
+  { n:'05', title:'研究随笔', en:'JOURNAL', href:'/journal/', desc:'想法、阅读与研究记录', descEn:'Ideas and field notes' },
+  { n:'06', title:'项目代码', en:'PROJECTS', href:'/projects/', desc:'软件、实验与原型', descEn:'Software and experiments' }
+];
+---
+<BaseLayout title="Yu Zhehao — Personal Observatory" active="home" description="Yu Zhehao — Theoretical physics, mathematics and AI.">
+  <div class="wrap home-shell">
+    <section class="home-hero">
+      <div class="home-copy">
+        <h1 class="home-name">Yu Zhehao<span>.</span></h1>
+        <p class="home-subtitle">PHYSICS · MATHEMATICS · AI</p>
+        <p class="home-tagline" data-zh="探索基本物理背后的数学结构。" data-en="Exploring the mathematical structures underlying fundamental physics.">探索基本物理背后的数学结构。</p>
+        <p class="home-description" data-zh="一个记录研究、计算与思考的个人学术空间。" data-en="A personal academic space for research, computation and reflection.">一个记录研究、计算与思考的个人学术空间。</p>
+        <div class="home-actions">
+          <a class="button button-primary" href="/research/"><span data-zh="进入研究" data-en="Explore research">进入研究</span><span>↗</span></a>
+          <a class="button button-quiet" href="/about/"><span data-zh="关于我" data-en="About me">关于我</span><span>→</span></a>
+        </div>
+      </div>
+      <OrbitalField />
+    </section>
+    <nav class="portal-grid" aria-label="Site sections">
+      {portals.map((portal) => (
+        <a class="portal-card" href={portal.href}>
+          <span class="portal-index">{portal.n}</span>
+          <strong class="portal-title" data-zh={portal.title} data-en={portal.en}>{portal.title}</strong>
+          <span class="portal-caption" data-zh={portal.desc} data-en={portal.descEn}>{portal.desc}</span>
+        </a>
+      ))}
+    </nav>
+  </div>
+</BaseLayout>

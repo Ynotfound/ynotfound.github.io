@@ -1,0 +1,90 @@
+---
+import '../styles/global.css';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import ExcaliburCursor from '../components/ExcaliburCursor.astro';
+interface Props { title: string; description?: string; active?: string; }
+const { title, description = 'Yu Zhehao — Physics, Mathematics and AI.', active = '' } = Astro.props;
+const canonical = 'https://ynotfound.github.io' + Astro.url.pathname;
+---
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f5f3ed" />
+    <meta name="description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title} · Yu Zhehao</title>
+    <script is:inline>
+      try {
+        const theme = localStorage.getItem('yz-theme');
+        if (theme === 'dark' || theme === 'light') document.documentElement.dataset.theme = theme;
+        else if (window.matchMedia('(prefers-color-scheme: dark)').matches) document.documentElement.dataset.theme = 'dark';
+        const lang = localStorage.getItem('yz-lang');
+        if (lang === 'en') document.documentElement.lang = 'en';
+      } catch (_) {}
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <SiteHeader active={active} />
+    <main id="main-content"><slot /></main>
+    <SiteFooter />
+    <ExcaliburCursor />
+    <script>
+      const root = document.documentElement;
+      const langButton = document.querySelector('[data-lang-toggle]');
+      const themeButton = document.querySelector('[data-theme-toggle]');
+      const menuButton = document.querySelector('[data-menu-toggle]');
+      const nav = document.querySelector('[data-primary-nav]');
+      function applyLanguage(language) {
+        root.lang = language === 'zh' ? 'zh-CN' : 'en';
+        document.querySelectorAll('[data-zh][data-en]').forEach((element) => {
+          element.textContent = element.getAttribute(language === 'zh' ? 'data-zh' : 'data-en') || '';
+        });
+        if (langButton) {
+          langButton.textContent = language === 'zh' ? 'EN' : '中';
+          langButton.setAttribute('aria-label', language === 'zh' ? 'Switch to English' : '切换到中文');
+        }
+        try { localStorage.setItem('yz-lang', language); } catch (_) {}
+      }
+      function applyTheme(theme) {
+        root.dataset.theme = theme;
+        if (themeButton) {
+          themeButton.textContent = theme === 'dark' ? '☼' : '☾';
+          themeButton.setAttribute('aria-label', theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+        }
+        const meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.content = theme === 'dark' ? '#081521' : '#f5f3ed';
+        try { localStorage.setItem('yz-theme', theme); } catch (_) {}
+      }
+      function setMenu(open) {
+        if (!nav || !menuButton) return;
+        nav.classList.toggle('is-open', open);
+        menuButton.setAttribute('aria-expanded', String(open));
+        menuButton.textContent = open ? '×' : '☰';
+      }
+      let currentLanguage = root.lang === 'en' ? 'en' : 'zh';
+      try {
+        const savedLanguage = localStorage.getItem('yz-lang');
+        if (savedLanguage === 'zh' || savedLanguage === 'en') currentLanguage = savedLanguage;
+      } catch (_) {}
+      applyLanguage(currentLanguage);
+      applyTheme(root.dataset.theme === 'dark' ? 'dark' : 'light');
+      langButton?.addEventListener('click', () => { currentLanguage = currentLanguage === 'zh' ? 'en' : 'zh'; applyLanguage(currentLanguage); });
+      themeButton?.addEventListener('click', () => applyTheme(root.dataset.theme === 'dark' ? 'light' : 'dark'));
+      menuButton?.addEventListener('click', () => setMenu(menuButton.getAttribute('aria-expanded') !== 'true'));
+      nav?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => setMenu(false)));
+      document.addEventListener('click', (event) => {
+        if (nav && menuButton && !nav.contains(event.target) && !menuButton.contains(event.target)) setMenu(false);
+      });
+      document.addEventListener('keydown', (event) => { if (event.key === 'Escape') setMenu(false); });
+    </script>
+  </body>
+</html>

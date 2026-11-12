@@ -1,0 +1,22 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+const notes = (await getCollection('notes', ({ data }) => !data.draft)).sort((a, b) => a.data.order - b.data.order || b.data.date.getTime() - a.data.date.getTime());
+---
+<BaseLayout title="Notes & knowledge archive" active="notes" description="Mathematics, quantum field theory and Feynman-period notes by Yu Zhehao.">
+  <div class="page-shell">
+    <header class="page-heading">
+      <p class="page-kicker">KNOWLEDGE ARCHIVE / 知识库</p>
+      <h1 class="page-title" data-zh="笔记与知识库" data-en="Notes & knowledge archive">笔记与知识库</h1>
+      <p class="page-lead" data-zh="每篇笔记都有独立链接，支持 Markdown、LaTeX 数学公式、代码高亮与目录。内容会持续修订，并保留更新时间。" data-en="Each note has its own URL and supports Markdown, LaTeX mathematics, code highlighting and a table of contents. Notes are revised over time with update dates.">每篇笔记都有独立链接，支持 Markdown、LaTeX 数学公式、代码高亮与目录。</p>
+    </header>
+    {notes.length ? (
+      <div class="note-list">
+        {notes.map((note) => <a class="note-row" href={'/notes/' + note.slug + '/'}>
+          <div><div class="note-row-meta">{note.data.category} · {note.data.date.toLocaleDateString('en-CA')}</div><h2 data-zh={note.data.title} data-en={note.data.title_en}>{note.data.title}</h2><p data-zh={note.data.description} data-en={note.data.description_en}>{note.data.description}</p></div>
+          <span class="card-arrow">Read ↗</span>
+        </a>)}
+      </div>
+    ) : <div class="empty-state"><span class="empty-mark">∮</span><div><h2>No notes published yet</h2><p>Add a Markdown file in the notes collection to publish it here.</p></div></div>}
+  </div>
+</BaseLayout>

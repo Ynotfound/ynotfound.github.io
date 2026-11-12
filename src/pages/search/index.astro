@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Search" description="Search notes, research pages and journal entries across Yu Zhehao's personal observatory.">
+  <div class="page-shell">
+    <header class="page-heading">
+      <p class="page-kicker">SEARCH / 全站检索</p>
+      <h1 class="page-title" data-zh="搜索档案" data-en="Search the archive">搜索档案</h1>
+      <p class="page-lead" data-zh="检索笔记、研究页面与公开随笔。" data-en="Search notes, research pages and public journal entries.">检索笔记、研究页面与公开随笔。</p>
+    </header>
+    <div class="search-box"><input type="search" id="site-search" placeholder="输入关键词 / Search..." aria-label="Search the site" autocomplete="off" /></div>
+    <p class="search-count" id="search-count" aria-live="polite">Loading index…</p>
+    <div class="search-results" id="search-results"></div>
+  </div>
+  <script>
+    const input = document.querySelector('#site-search'), results = document.querySelector('#search-results'), count = document.querySelector('#search-count');
+    let index = [];
+    const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (char) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[char]);
+    function render(query) {
+      const q = query.trim().toLowerCase();
+      const matches = q ? index.filter((item) => (item.title + ' ' + item.description + ' ' + item.tags + ' ' + item.body).toLowerCase().includes(q)) : [];
+      count.textContent = q ? matches.length + ' result(s)' : 'Enter a keyword to search the archive.';
+      results.innerHTML = matches.slice(0, 30).map((item) => '<a class="search-result" href="' + escapeHtml(item.url) + '"><small>' + escapeHtml(item.kind) + '</small><h2>' + escapeHtml(item.title) + '</h2><p>' + escapeHtml(item.description) + '</p></a>').join('');
+      if (q && !matches.length) results.innerHTML = '<div class="empty-state"><span class="empty-mark">⌕</span><div><h2>No matching entries</h2><p>Try another term or browse the notes and research pages.</p></div></div>';
+    }
+    fetch('/search-index.json').then((response) => response.json()).then((data) => { index = data; count.textContent = index.length + ' indexed entries'; }).catch(() => { count.textContent = 'Search index unavailable. Please try again later.'; });
+    input?.addEventListener('input', () => render(input.value));
+    document.addEventListener('keydown', (event) => { if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); input?.focus(); } });
+  </script>
+</BaseLayout>

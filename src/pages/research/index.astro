@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+const directions = [
+  { n:'01', title:'费曼积分与周期', en:'Feynman integrals & periods', desc:'从费曼图的参数积分出发，研究周期的几何、代数与数论结构，关注图族分类、微分方程、单值性与重整化之间的联系。', tags:['Periods','Graph geometry','Picard–Fuchs'], href:'/research/feynman-periods/' },
+  { n:'02', title:'量子场论与重整化', en:'Quantum field theory', desc:'高圈计算、重整化群、Ward 恒等式与物理可观测量。重视符号计算、独立验证和可复核的计算流程。', tags:['QFT','Renormalization','RG'], href:'/projects/' },
+  { n:'03', title:'几何、数论与数学物理', en:'Geometry & mathematical physics', desc:'复分析、代数几何、周期与解析数论。寻找能够解释物理计算中结构性现象的统一数学语言。', tags:['Geometry','Number theory'], href:'/notes/' },
+  { n:'04', title:'AI 与科学计算', en:'AI & scientific computing', desc:'探索 AI、符号计算与高性能程序在数学物理研究中的作用，强调可验证性、实验设计和证据边界。', tags:['AI','Rust','Scientific computing'], href:'/projects/' }
+];
+---
+<BaseLayout title="Research" active="research" description="Research directions in Feynman periods, quantum field theory, geometry and AI.">
+  <div class="page-shell">
+    <header class="page-heading">
+      <p class="page-kicker">RESEARCH / 研究</p>
+      <h1 class="page-title" data-zh="研究方向" data-en="Research directions">研究方向</h1>
+      <p class="page-lead" data-zh="几条彼此交汇的探索路径。当前主线是费曼积分与周期的几何结构，并将其与量子场论计算及可验证的软件工具连接起来。" data-en="Interconnected lines of inquiry. The current focus is the geometry of Feynman integrals and periods, connected to quantum-field-theory computations and verifiable software tools.">几条彼此交汇的探索路径。当前主线是费曼积分与周期的几何结构，并将其与量子场论计算及可验证的软件工具连接起来。</p>
+    </header>
+    <div class="card-grid">
+      {directions.map((item) => (
+        <a class="info-card" href={item.href}>
+          <span class="card-number">{item.n} / RESEARCH</span>
+          <h2 data-zh={item.title} data-en={item.en}>{item.title}</h2>
+          <p>{item.desc}</p>
+          <div class="card-tags">{item.tags.map(tag => <span class="tag">{tag}</span>)}</div>
+          <span class="card-arrow">Explore ↗</span>
+        </a>
+      ))}
+    </div>
+    <section class="section-block feature-panel">
+      <p class="page-kicker">CURRENT FOCUS</p>
+      <h2 data-zh="费曼周期：从图到几何，再回到物理" data-en="Feynman periods: from graphs to geometry and back to physics">费曼周期：从图到几何，再回到物理</h2>
+      <p data-zh="研究档案将图的拓扑、Symanzik 多项式、参数微分、切割与 UV 收缩放进同一操作框架，并追问周期类型与物理重整化之间是否存在可预测的联系。每项结论都需要标明假设、证据与未解决缺口。" data-en="The programme places graph topology, Symanzik polynomials, parameter differentiation, cuts and UV contractions in one operational framework, asking whether period types and physical renormalization admit predictive links. Each result is labelled by assumptions, evidence and unresolved gaps.">研究档案将图的拓扑、Symanzik 多项式、参数微分、切割与 UV 收缩放进同一操作框架，并追问周期类型与物理重整化之间是否存在可预测的联系。每项结论都需要标明假设、证据与未解决缺口。</p>
+      <a class="button button-primary" href="/research/feynman-periods/">进入专题档案 ↗</a>
+    </section>
+  </div>
+</BaseLayout>

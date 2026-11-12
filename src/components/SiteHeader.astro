@@ -1,0 +1,41 @@
+---
+interface Props { active?: string; }
+const { active = '' } = Astro.props;
+const links = [
+  { key: 'research', href: '/research/', zh: '研究', en: 'Research' },
+  { key: 'publications', href: '/publications/', zh: '论文', en: 'Papers' },
+  { key: 'notes', href: '/notes/', zh: '笔记', en: 'Notes' },
+  { key: 'reading', href: '/reading/', zh: '阅读', en: 'Reading' },
+  { key: 'projects', href: '/projects/', zh: '项目', en: 'Projects' },
+  { key: 'about', href: '/about/', zh: '关于', en: 'About' }
+];
+---
+<header class="site-header">
+  <div class="header-inner wrap">
+    <a class="brand" href="/" aria-label="Yu Zhehao home">
+      <span class="brand-sword" aria-hidden="true">
+        <svg viewBox="0 0 40 52" fill="none">
+          <path d="M20 2L25 18L20 35L15 18L20 2Z" fill="currentColor"/>
+          <path d="M7 17Q20 24 33 17L29 24Q20 29 11 24Z" fill="currentColor"/>
+          <path d="M18 24H22V41H18Z" fill="#18364d" stroke="currentColor" stroke-width="1.2"/>
+          <path d="M14 42H26L20 50Z" fill="currentColor"/>
+          <path d="M20 5V31" stroke="#fff8e9" stroke-opacity=".7" stroke-width=".8"/>
+        </svg>
+      </span>
+      <span class="brand-copy"><strong>YU ZHEHAO</strong><small>PERSONAL OBSERVATORY</small></span>
+    </a>
+    <nav class="primary-nav" id="primary-nav" data-primary-nav aria-label="Primary navigation">
+      {links.map((link) => (
+        <a href={link.href} class:list={['nav-link', active === link.key && 'is-active']}>
+          <span data-zh={link.zh} data-en={link.en}>{link.zh}</span>
+        </a>
+      ))}
+    </nav>
+    <div class="header-tools">
+      <a class="header-icon" href="/search/" aria-label="Search" title="Search">⌕</a>
+      <button class="header-icon" type="button" data-lang-toggle aria-label="Switch to English">EN</button>
+      <button class="header-icon" type="button" data-theme-toggle aria-label="Switch to dark theme">☾</button>
+      <button class="menu-toggle" type="button" data-menu-toggle aria-controls="primary-nav" aria-expanded="false" aria-label="Open navigation">☰</button>
+    </div>
+  </div>
+</header>

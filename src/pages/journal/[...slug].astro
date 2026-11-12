@@ -1,0 +1,28 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+export async function getStaticPaths() {
+  const posts = await getCollection('journal', ({ data }) => !data.draft);
+  return posts.map((entry) => ({ params: { slug: entry.slug }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+const toc = headings.filter((heading) => heading.depth > 1 && heading.depth < 4);
+---
+<BaseLayout title={entry.data.title} active="journal" description={entry.data.description}>
+  <div class="page-shell">
+    <div class="breadcrumbs"><a href="/">首页</a><span>/</span><a href="/journal/">随笔</a><span>/</span>{entry.data.title}</div>
+    <div class="article-layout">
+      <article class="article-main">
+        <header class="page-heading">
+          <p class="page-kicker">FIELD NOTES · {entry.data.tags.join(' / ')}</p>
+          <h1 class="page-title" data-zh={entry.data.title} data-en={entry.data.title_en}>{entry.data.title}</h1>
+          <p class="page-lead" data-zh={entry.data.description} data-en={entry.data.description_en}>{entry.data.description}</p>
+          <div class="article-meta"><span>{entry.data.date.toLocaleDateString('en-CA')}</span></div>
+        </header>
+        <div class="prose"><Content /></div>
+      </article>
+      {toc.length > 0 && <aside class="article-toc"><strong>ON THIS PAGE</strong>{toc.map((heading) => <a href={'#' + heading.slug}>{heading.text}</a>)}</aside>}
+    </div>
+  </div>
+</BaseLayout>
