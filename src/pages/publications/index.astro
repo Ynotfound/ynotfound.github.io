@@ -1,38 +1,7 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-const resources = [
-  { n:'01 / MAIN PAPER', title:'Visible Structures and Renormalization of Feynman Periods', desc:'English manuscript · 130 pages · PDF', href:'https://github.com/Ynotfound/YuPhysics/blob/main/feynman-periods/english/feynman_periods_long_paper_en.pdf' },
-  { n:'02 / SUPPLEMENT', title:'Supplementary material', desc:'English supplement · 45 pages · PDF', href:'https://github.com/Ynotfound/YuPhysics/blob/main/feynman-periods/english/feynman_periods_supplement_en.pdf' },
-  { n:'03 / 中文对照版', title:'费曼周期：可见结构与重整化', desc:'中文主稿 · PDF', href:'https://github.com/Ynotfound/YuPhysics/blob/main/feynman-periods/chinese/feynman_periods_long_paper.pdf' },
-  { n:'04 / UNIFIED VOLUME', title:'Feynman periods research volume', desc:'综合研究总稿 · PDF', href:'https://github.com/Ynotfound/YuPhysics/blob/main/feynman-periods/research/manuscripts/feynman_periods_research_unified.pdf' },
-  { n:'05 / CLASSIFICATION', title:'Graph-family classification', desc:'图族分类表 · PDF', href:'https://github.com/Ynotfound/YuPhysics/blob/main/feynman-periods/research/manuscripts/GRAPH_FAMILY_CLASSIFICATION.pdf' },
-  { n:'06 / STRUCTURE', title:'Unified structural framework', desc:'统一结构框架 · PDF', href:'https://github.com/Ynotfound/YuPhysics/blob/main/feynman-periods/research/manuscripts/UNIFIED_STRUCTURE_THEOREM.pdf' }
-];
+import { getCollection } from 'astro:content';
+import CollectionIndex from '../../components/CollectionIndex.astro';
+const entries = (await getCollection('publications', ({ data }) => !data.draft && data.lang === 'zh'))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 ---
-<BaseLayout title="Publications & manuscripts" active="publications" description="Public research manuscripts, preprints and publication records by Yu Zhehao.">
-  <div class="page-shell">
-    <header class="page-heading">
-      <p class="page-kicker">PUBLICATIONS / 论文档案</p>
-      <h1 class="page-title" data-zh="论文与研究手稿" data-en="Publications & manuscripts">论文与研究手稿</h1>
-      <p class="page-lead" data-zh="严格区分正式发表、公开预印本与工作手稿。当前列出的费曼周期长文是公开研究手稿，尚非已发表论文或 arXiv 预印本。" data-en="Published papers, public preprints and working manuscripts are distinguished explicitly. The Feynman-period long paper listed here is a public working manuscript, not a published paper or arXiv preprint.">严格区分正式发表、公开预印本与工作手稿。当前列出的费曼周期长文是公开研究手稿，尚非已发表论文或 arXiv 预印本。</p>
-    </header>
-    <article class="publication-card">
-      <p class="page-kicker">WORKING MANUSCRIPT · 13 OCT 2026 EDITION</p>
-      <h2>Visible Structures and Renormalization of Feynman Periods</h2>
-      <p data-zh="研究费曼周期中可见的几何结构，以及它们在切割、参数微分与重整化下的行为。主要例子包括四传播子 banana 图、森林端点下降、二次减除 sunset 图，以及有限质量两圈 MOM 重整化群。" data-en="A study of geometric structures visible in Feynman periods and their behaviour under cuts, parameter differentiation and renormalization. Examples include the four-propagator banana, forest endpoint descent, the quadratically subtracted sunset and a finite-mass two-loop MOM renormalization group.">研究费曼周期中可见的几何结构，以及它们在切割、参数微分与重整化下的行为。</p>
-      <div class="publication-actions">
-        <a class="button button-primary" href={resources[0].href} target="_blank" rel="noreferrer">English PDF ↗</a>
-        <a class="button button-quiet" href={resources[1].href} target="_blank" rel="noreferrer">Supplement ↗</a>
-        <a class="button button-quiet" href={resources[2].href} target="_blank" rel="noreferrer">中文 PDF ↗</a>
-      </div>
-      <p class="status-note" data-zh="状态：公开研究手稿。YuPhysics 仓库说明此版本尚未投稿，且后续研究更新尚未全部并入该英文版。手稿中每项数学主张仍应按其自身假设与证明状态评估。" data-en="Status: public working manuscript. The YuPhysics repository states that this edition has not been submitted and does not yet incorporate all later research updates. Individual mathematical claims should be assessed under their own assumptions and proof status.">状态：公开研究手稿。YuPhysics 仓库说明此版本尚未投稿，且后续研究更新尚未全部并入该英文版。</p>
-    </article>
-    <section class="section-block">
-      <h2 data-zh="研究文稿与支持材料" data-en="Research manuscripts & supporting material">研究文稿与支持材料</h2>
-      <div class="resource-list">
-        {resources.slice(3).map((item) => <a class="resource-link" href={item.href} target="_blank" rel="noreferrer"><small>{item.n}</small><strong>{item.title}</strong><span>{item.desc}</span></a>)}
-      </div>
-      <p class="page-lead"><a href="https://github.com/Ynotfound/YuPhysics/tree/main/feynman-periods/research/manuscripts" target="_blank" rel="noreferrer">Browse all focused manuscripts, LaTeX sources and supporting notes ↗</a></p>
-    </section>
-  </div>
-</BaseLayout>
+<CollectionIndex title="论文与研究手稿" description="严格区分正式发表、公开预印本与工作手稿。每项成果都有独立记录、版本状态和原始文件入口。" kicker="PUBLICATIONS / 论文档案" active="publications" basePath="/publications/" entries={entries} locale="zh" variant="list" />

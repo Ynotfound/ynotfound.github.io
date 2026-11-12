@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+interface Props { locale?: 'zh' | 'en'; }
+const { locale = 'zh' } = Astro.props;
+const isEnglish = locale === 'en';
+---
+<BaseLayout title={isEnglish ? 'Search the archive' : '搜索档案'} description={isEnglish ? 'Search all notes, research pages, papers, projects and references.' : '检索笔记、研究页面、论文、项目与参考资料。'} locale={locale}>
+  <div class="page-shell" data-search-page data-locale={locale}>
+    <header class="page-heading">
+      <p class="page-kicker">SEARCH / {isEnglish ? 'ARCHIVE' : '全站检索'}</p>
+      <h1 class="page-title">{isEnglish ? 'Search the archive' : '搜索档案'}</h1>
+      <p class="page-lead">{isEnglish ? 'Search across notes, research, papers, projects, references and field notes.' : '跨栏目检索笔记、研究方向、论文、项目、参考资料与研究随笔。'}</p>
+    </header>
+    <div class="search-box">
+      <input type="search" data-search-input placeholder={isEnglish ? 'Search by title, topic or keyword…' : '输入标题、主题或关键词…'} aria-label={isEnglish ? 'Search the site' : '搜索网站'} autocomplete="off" />
+    </div>
+    <p class="search-count" data-search-count aria-live="polite">{isEnglish ? 'Loading search index…' : '正在加载搜索索引…'}</p>
+    <div class="search-results" data-search-results></div>
+  </div>
+  <script>
+    const root = document.querySelector('[data-search-page]');
+    const input = root?.querySelector('[data-search-input]');
+    const results = root?.querySelector('[data-search-results]');
+    const count = root?.querySelector('[data-search-count]');
+    const locale = root?.getAttribute('data-locale') || 'zh';
+    let index = [];
+    const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (char) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[char]);
+    function render(query) {
+      const q = query.trim().toLocaleLowerCase(locale === 'en' ? 'en' : 'zh-CN');
+      const matches = q ? index.filter((item) => item.lang === locale && (item.title + ' ' + item.description + ' ' + item.tags + ' ' + item.body).toLocaleLowerCase(locale === 'en' ? 'en' : 'zh-CN').includes(q)) : [];
+      if (count) count.textContent = q ? (locale === 'en' ? matches.length + ' result(s)' : matches.length + ' 条结果') : (locale === 'en' ? 'Enter a keyword to search.' : '输入关键词开始搜索。');
+      if (!results) return;
+      results.innerHTML = matches.slice(0, 40).map((item) => '<a class="search-result" href="' + escapeHtml(item.url) + '"><small>' + escapeHtml(item.kind) + '</small><h2>' + escapeHtml(item.title) + '</h2><p>' + escapeHtml(item.description) + '</p></a>').join('');
+      if (q && !matches.length) results.innerHTML = '<div class="empty-state"><span class="empty-mark">⌕</span><div><h2>' + (locale === 'en' ? 'No matching entries' : '没有找到匹配内容') + '</h2><p>' + (locale === 'en' ? 'Try another term or browse the sections.' : '尝试其他关键词，或直接浏览各个栏目。') + '</p></div></div>';
+    }
+    fetch('/search-index.json').then((response) => {
+      if (!response.ok) throw new Error('Search index request failed');
+      return response.json();
+    }).then((data) => {
+      index = data;
+      if (count) count.textContent = locale === 'en' ? index.filter((item) => item.lang === 'en').length + ' indexed entries' : '已索引 ' + index.filter((item) => item.lang === 'zh').length + ' 条内容';
+      if (input?.value) render(input.value);
+    }).catch(() => {
+      if (count) count.textContent = locale === 'en' ? 'Search index unavailable.' : '搜索索引暂时不可用。';
+    });
+    input?.addEventListener('input', () => render(input.value));
+    document.addEventListener('keydown', (event) => {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault();
+        input?.focus();
+      }
+    });
+  </script>
+</BaseLayout>

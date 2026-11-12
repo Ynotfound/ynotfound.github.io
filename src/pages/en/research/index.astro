@@ -1,0 +1,7 @@
+---
+import { getCollection } from 'astro:content';
+import CollectionIndex from '../../../components/CollectionIndex.astro';
+const entries = (await getCollection('research', ({ data }) => !data.draft && data.lang === 'en'))
+  .sort((a, b) => Number(b.data.featured) - Number(a.data.featured) || b.data.date.getTime() - a.data.date.getTime());
+---
+<CollectionIndex title="Research directions" description="Interconnected lines of inquiry. Each programme has its own archive of questions, methods, progress and evidence status." kicker="RESEARCH / PROGRAMMES" active="research" basePath="/en/research/" entries={entries} locale="en" />

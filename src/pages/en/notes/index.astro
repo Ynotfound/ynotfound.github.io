@@ -1,0 +1,7 @@
+---
+import { getCollection } from 'astro:content';
+import CollectionIndex from '../../../components/CollectionIndex.astro';
+const entries = (await getCollection('notes', ({ data }) => !data.draft && data.lang === 'en'))
+  .sort((a, b) => a.data.order - b.data.order || b.data.date.getTime() - a.data.date.getTime());
+---
+<CollectionIndex title="Notes & knowledge archive" description="Long-term notes on mathematics, physics and AI. Each entry has a stable URL and supports LaTeX mathematics, syntax highlighting and a table of contents." kicker="KNOWLEDGE ARCHIVE / NOTES" active="notes" basePath="/en/notes/" entries={entries} locale="en" variant="list" />

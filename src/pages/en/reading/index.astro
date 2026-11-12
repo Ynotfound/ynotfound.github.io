@@ -1,0 +1,7 @@
+---
+import { getCollection } from 'astro:content';
+import CollectionIndex from '../../../components/CollectionIndex.astro';
+const entries = (await getCollection('references', ({ data }) => !data.draft && data.lang === 'en'))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+<CollectionIndex title="Reading & references" description="An entry point to literature, software documentation and supporting material used in ongoing work. The emphasis is on traceable sources rather than an indiscriminate reading list." kicker="READING / REFERENCES" active="reading" basePath="/en/reading/" entries={entries} locale="en" />

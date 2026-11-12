@@ -1,0 +1,45 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+interface Props {
+  entry: any; Content: any; headings?: any[]; active: string;
+  basePath: string; locale?: 'zh' | 'en'; sectionLabel: string;
+}
+const { entry, Content, headings = [], active, basePath, locale = 'zh', sectionLabel } = Astro.props;
+const data = entry.data;
+const toc = headings.filter((heading) => heading.depth > 1 && heading.depth < 4);
+const dateLabel = (value: Date | undefined) => value
+  ? new Date(value).toLocaleDateString(locale === 'en' ? 'en-US' : 'zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })
+  : '';
+const doiUrl = data.doi ? 'https://doi.org/' + data.doi : '';
+const arxivUrl = data.arxiv ? 'https://arxiv.org/abs/' + data.arxiv : '';
+---
+<BaseLayout title={data.title} description={data.description} active={active} locale={locale}>
+  <div class="page-shell">
+    <div class="breadcrumbs"><a href={locale === 'en' ? '/en/' : '/'}>{locale === 'en' ? 'Home' : '首页'}</a><span>/</span><a href={basePath}>{sectionLabel}</a><span>/</span>{data.title}</div>
+    <div class="article-layout">
+      <article class="article-main">
+        <header class="page-heading">
+          <p class="page-kicker">{data.category || data.kind || data.status || sectionLabel} {data.tags?.length ? '· ' + data.tags.join(' / ') : ''}</p>
+          <h1 class="page-title">{data.title}</h1><p class="page-lead">{data.description}</p>
+          <div class="article-meta">
+            {dateLabel(data.date) && <span>{locale === 'en' ? 'Published' : '日期'} {dateLabel(data.date)}</span>}
+            {data.updated && <span>{locale === 'en' ? 'Updated' : '更新'} {dateLabel(data.updated)}</span>}
+            {data.status && <span>{locale === 'en' ? 'Status' : '状态'}: {data.status}</span>}
+            {data.authors?.length > 0 && <span>{data.authors.join(', ')}</span>}
+          </div>
+        </header>
+        <div class="publication-actions">
+          {data.pdf && <a class="button button-primary" href={data.pdf} target="_blank" rel="noreferrer">PDF ↗</a>}
+          {data.supplementary && <a class="button button-quiet" href={data.supplementary} target="_blank" rel="noreferrer">{locale === 'en' ? 'Supplement' : '补充材料'} ↗</a>}
+          {data.repository && <a class="button button-quiet" href={data.repository} target="_blank" rel="noreferrer">GitHub ↗</a>}
+          {data.homepage && <a class="button button-quiet" href={data.homepage} target="_blank" rel="noreferrer">{locale === 'en' ? 'Project page' : '项目主页'} ↗</a>}
+          {data.url && <a class="button button-primary" href={data.url} target="_blank" rel="noreferrer">{locale === 'en' ? 'Open source' : '打开来源'} ↗</a>}
+          {data.arxiv && <a class="button button-quiet" href={arxivUrl} target="_blank" rel="noreferrer">arXiv ↗</a>}
+          {data.doi && <a class="button button-quiet" href={doiUrl} target="_blank" rel="noreferrer">DOI ↗</a>}
+        </div>
+        <div class="prose"><Content /></div>
+      </article>
+      {toc.length > 0 && <aside class="article-toc"><strong>{locale === 'en' ? 'ON THIS PAGE' : '本页目录'}</strong>{toc.map((heading) => <a class:list={['toc-link', heading.depth === 3 && 'toc-sub']} href={'#' + heading.slug}>{heading.text}</a>)}</aside>}
+    </div>
+  </div>
+</BaseLayout>

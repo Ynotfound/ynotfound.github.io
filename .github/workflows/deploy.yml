@@ -1,15 +1,19 @@
 name: Build and deploy Astro observatory
+
 on:
   push:
     branches: [main]
   workflow_dispatch:
+
 permissions:
   contents: read
   pages: write
   id-token: write
+
 concurrency:
   group: astro-site-deploy
   cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,19 +23,21 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Install dependencies
-        run: npm install --no-audit --no-fund
-      - name: Build static site
-        run: npm run build
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Type, content, build and link validation
+        run: npm run validate
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
+
   deploy:
     needs: build
     environment:
       name: github-pages
-      url: \${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Configure GitHub Pages

@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import OrbitalField from '../../components/OrbitalField.astro';
+const portals = [
+  { n:'01', title:'Research', href:'/en/research/', desc:'Questions and research programmes' },
+  { n:'02', title:'Publications', href:'/en/publications/', desc:'Papers, preprints and manuscripts' },
+  { n:'03', title:'Knowledge', href:'/en/notes/', desc:'Mathematics and physics notes' },
+  { n:'04', title:'Reading', href:'/en/reading/', desc:'Literature and references' },
+  { n:'05', title:'Journal', href:'/en/journal/', desc:'Ideas and field notes' },
+  { n:'06', title:'Projects', href:'/en/projects/', desc:'Software and experiments' }
+];
+---
+<BaseLayout title="Yu Zhehao — Personal Observatory" active="home" locale="en" description="Yu Zhehao — Theoretical physics, mathematics and AI.">
+  <div class="wrap home-shell">
+    <section class="home-hero">
+      <div class="home-copy">
+        <h1 class="home-name">Yu Zhehao<span>.</span></h1>
+        <p class="home-subtitle">PHYSICS · MATHEMATICS · AI</p>
+        <p class="home-tagline">Exploring the mathematical structures underlying fundamental physics.</p>
+        <p class="home-description">A personal academic space for research, computation and reflection.</p>
+        <div class="home-actions">
+          <a class="button button-primary" href="/en/research/">Explore research <span>↗</span></a>
+          <a class="button button-quiet" href="/en/about/">About me <span>→</span></a>
+        </div>
+      </div>
+      <OrbitalField />
+    </section>
+    <nav class="portal-grid" aria-label="Site sections">
+      {portals.map((portal) => <a class="portal-card" href={portal.href}>
+        <span class="portal-index">{portal.n}</span>
+        <strong class="portal-title">{portal.title}</strong>
+        <span class="portal-caption">{portal.desc}</span>
+      </a>)}
+    </nav>
+  </div>
+</BaseLayout>

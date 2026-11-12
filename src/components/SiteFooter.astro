@@ -1,9 +1,14 @@
+---
+interface Props { locale?: 'zh' | 'en'; }
+const { locale = 'zh' } = Astro.props;
+const prefix = locale === 'en' ? '/en' : '';
+---
 <footer class="site-footer">
   <div class="wrap footer-inner">
-    <a class="footer-brand" href="/">YU ZHEHAO <span>✧</span></a>
+    <a class="footer-brand" href={prefix + '/'}>YU ZHEHAO <span>✧</span></a>
     <div class="footer-links">
-      <a href="/journal/" data-zh="研究随笔" data-en="Journal">研究随笔</a>
-      <a href="/reading/" data-zh="阅读档案" data-en="Reading">阅读档案</a>
+      <a href={prefix + '/journal/'}>{locale === 'en' ? 'Journal' : '研究随笔'}</a>
+      <a href={prefix + '/reading/'}>{locale === 'en' ? 'Reading' : '阅读档案'}</a>
       <a href="https://github.com/Ynotfound" target="_blank" rel="noreferrer">GitHub ↗</a>
     </div>
     <small>© {new Date().getFullYear()} · PER ASPERA AD ASTRA</small>

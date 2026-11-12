@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+interface Props {
+  title: string; description: string; kicker: string; active: string;
+  basePath: string; entries: any[]; locale?: 'zh' | 'en';
+  variant?: 'grid' | 'list'; emptyTitle?: string; emptyDescription?: string;
+}
+const {
+  title, description, kicker, active, basePath, entries, locale = 'zh', variant = 'grid',
+  emptyTitle = locale === 'en' ? 'Nothing published here yet' : '这里还没有公开内容',
+  emptyDescription = locale === 'en' ? 'New entries will appear here automatically.' : '新内容发布后会自动出现在这里。'
+} = Astro.props;
+const dateLabel = (value: Date | undefined) => value
+  ? new Date(value).toLocaleDateString(locale === 'en' ? 'en-US' : 'zh-CN', { year: 'numeric', month: 'short', day: 'numeric' })
+  : '';
+const actionLabel = locale === 'en' ? 'Open entry ↗' : '查看详情 ↗';
+---
+<BaseLayout title={title} description={description} active={active} locale={locale}>
+  <div class="page-shell">
+    <header class="page-heading">
+      <p class="page-kicker">{kicker}</p>
+      <h1 class="page-title">{title}</h1>
+      <p class="page-lead">{description}</p>
+    </header>
+    {entries.length ? (
+      variant === 'list' ? (
+        <div class="note-list">
+          {entries.map((entry) => <a class="note-row" href={basePath + entry.data.translationKey + '/'}>
+            <div>
+              <div class="note-row-meta">{entry.data.category || entry.data.kind || entry.data.status} {dateLabel(entry.data.date) && '· ' + dateLabel(entry.data.date)}</div>
+              <h2>{entry.data.title}</h2><p>{entry.data.description}</p>
+              {entry.data.tags?.length > 0 && <div class="card-tags">{entry.data.tags.map((tag: string) => <span class="tag">{tag}</span>)}</div>}
+            </div>
+            <span class="card-arrow">{actionLabel}</span>
+          </a>)}
+        </div>
+      ) : (
+        <div class="card-grid">
+          {entries.map((entry, index) => <a class="info-card" href={basePath + entry.data.translationKey + '/'}>
+            <span class="card-number">{String(index + 1).padStart(2, '0')} / {entry.data.category || entry.data.kind || entry.data.status || 'ENTRY'}</span>
+            <h2>{entry.data.title}</h2><p>{entry.data.description}</p>
+            {entry.data.tags?.length > 0 && <div class="card-tags">{entry.data.tags.map((tag: string) => <span class="tag">{tag}</span>)}</div>}
+            <span class="card-arrow">{actionLabel}</span>
+          </a>)}
+        </div>
+      )
+    ) : (
+      <div class="empty-state"><span class="empty-mark">✧</span><div><h2>{emptyTitle}</h2><p>{emptyDescription}</p></div></div>
+    )}
+  </div>
+</BaseLayout>

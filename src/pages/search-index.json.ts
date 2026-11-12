@@ -1,12 +1,26 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
+
 export const GET: APIRoute = async () => {
-  const notes = await getCollection('notes', ({ data }) => !data.draft);
-  const journal = await getCollection('journal', ({ data }) => !data.draft);
+  const [notes, journal, research, publications, projects, references] = await Promise.all([
+    getCollection('notes', ({ data }) => !data.draft),
+    getCollection('journal', ({ data }) => !data.draft),
+    getCollection('research', ({ data }) => !data.draft),
+    getCollection('publications', ({ data }) => !data.draft),
+    getCollection('projects', ({ data }) => !data.draft),
+    getCollection('references', ({ data }) => !data.draft)
+  ]);
+
   const index = [
-    ...notes.map((entry) => ({ kind: 'NOTE', title: entry.data.title, description: entry.data.description, tags: entry.data.tags.join(' '), body: entry.body, url: '/notes/' + entry.id + '/' })),
-    ...journal.map((entry) => ({ kind: 'JOURNAL', title: entry.data.title, description: entry.data.description, tags: entry.data.tags.join(' '), body: entry.body, url: '/journal/' + entry.id + '/' })),
-    { kind: 'RESEARCH', title: 'Feynman integrals and periods', description: 'Geometry, graph topology, differential equations and renormalization.', tags: 'Feynman periods QFT geometry Symanzik', body: 'banana graph Picard Fuchs monodromy UV forests', url: '/research/feynman-periods/' }
+    ...notes.map((entry) => ({ kind: 'NOTE', lang: entry.data.lang, title: entry.data.title, description: entry.data.description, tags: entry.data.tags.join(' '), body: entry.body, url: (entry.data.lang === 'en' ? '/en' : '') + '/notes/' + entry.data.translationKey + '/' })),
+    ...journal.map((entry) => ({ kind: 'JOURNAL', lang: entry.data.lang, title: entry.data.title, description: entry.data.description, tags: entry.data.tags.join(' '), body: entry.body, url: (entry.data.lang === 'en' ? '/en' : '') + '/journal/' + entry.data.translationKey + '/' })),
+    ...research.map((entry) => ({ kind: 'RESEARCH', lang: entry.data.lang, title: entry.data.title, description: entry.data.description, tags: entry.data.tags.join(' '), body: entry.body, url: (entry.data.lang === 'en' ? '/en' : '') + '/research/' + entry.data.translationKey + '/' })),
+    ...publications.map((entry) => ({ kind: 'PUBLICATION', lang: entry.data.lang, title: entry.data.title, description: entry.data.description, tags: entry.data.tags.join(' '), body: entry.body, url: (entry.data.lang === 'en' ? '/en' : '') + '/publications/' + entry.data.translationKey + '/' })),
+    ...projects.map((entry) => ({ kind: 'PROJECT', lang: entry.data.lang, title: entry.data.title, description: entry.data.description, tags: entry.data.tags.join(' '), body: entry.body, url: (entry.data.lang === 'en' ? '/en' : '') + '/projects/' + entry.data.translationKey + '/' })),
+    ...references.map((entry) => ({ kind: 'REFERENCE', lang: entry.data.lang, title: entry.data.title, description: entry.data.description, tags: entry.data.tags.join(' '), body: entry.body, url: (entry.data.lang === 'en' ? '/en' : '') + '/reading/' + entry.data.translationKey + '/' }))
   ];
-  return new Response(JSON.stringify(index), { headers: { 'Content-Type': 'application/json; charset=utf-8' } });
+
+  return new Response(JSON.stringify(index), {
+    headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=300' }
+  });
 };

@@ -3,12 +3,17 @@ import '../styles/global.css';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import ExcaliburCursor from '../components/ExcaliburCursor.astro';
-interface Props { title: string; description?: string; active?: string; }
-const { title, description = 'Yu Zhehao — Physics, Mathematics and AI.', active = '' } = Astro.props;
+interface Props { title: string; description?: string; active?: string; locale?: 'zh' | 'en'; }
+const { title, description = 'Yu Zhehao — Physics, Mathematics and AI.', active = '', locale = 'zh' } = Astro.props;
 const canonical = 'https://ynotfound.github.io' + Astro.url.pathname;
+const zhPath = Astro.url.pathname.replace(/^\/en(?=\/|$)/, '') || '/';
+const enPath = '/en' + (zhPath === '/' ? '/' : zhPath);
+const alternateZh = 'https://ynotfound.github.io' + zhPath;
+const alternateEn = 'https://ynotfound.github.io' + enPath;
+const languageTarget = locale === 'en' ? zhPath : enPath;
 ---
 <!doctype html>
-<html lang="zh-CN" data-theme="light">
+<html lang={locale === 'en' ? 'en' : 'zh-CN'} data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -18,7 +23,11 @@ const canonical = 'https://ynotfound.github.io' + Astro.url.pathname;
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={locale === 'en' ? 'en_US' : 'zh_CN'} />
     <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="zh-CN" href={alternateZh} />
+    <link rel="alternate" hreflang="en" href={alternateEn} />
+    <link rel="alternate" hreflang="x-default" href={alternateZh} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title} · Yu Zhehao</title>
     <script is:inline>
@@ -26,34 +35,21 @@ const canonical = 'https://ynotfound.github.io' + Astro.url.pathname;
         const theme = localStorage.getItem('yz-theme');
         if (theme === 'dark' || theme === 'light') document.documentElement.dataset.theme = theme;
         else if (window.matchMedia('(prefers-color-scheme: dark)').matches) document.documentElement.dataset.theme = 'dark';
-        const lang = localStorage.getItem('yz-lang');
-        if (lang === 'en') document.documentElement.lang = 'en';
       } catch (_) {}
     </script>
   </head>
   <body>
-    <a class="skip-link" href="#main-content">Skip to content</a>
-    <SiteHeader active={active} />
+    <a class="skip-link" href="#main-content">{locale === 'en' ? 'Skip to content' : '跳转到正文'}</a>
+    <SiteHeader active={active} locale={locale} languageTarget={languageTarget} />
     <main id="main-content"><slot /></main>
-    <SiteFooter />
+    <SiteFooter locale={locale} />
     <ExcaliburCursor />
     <script>
       const root = document.documentElement;
-      const langButton = document.querySelector('[data-lang-toggle]');
       const themeButton = document.querySelector('[data-theme-toggle]');
+      const langButton = document.querySelector('[data-lang-toggle]');
       const menuButton = document.querySelector('[data-menu-toggle]');
       const nav = document.querySelector('[data-primary-nav]');
-      function applyLanguage(language) {
-        root.lang = language === 'zh' ? 'zh-CN' : 'en';
-        document.querySelectorAll('[data-zh][data-en]').forEach((element) => {
-          element.textContent = element.getAttribute(language === 'zh' ? 'data-zh' : 'data-en') || '';
-        });
-        if (langButton) {
-          langButton.textContent = language === 'zh' ? 'EN' : '中';
-          langButton.setAttribute('aria-label', language === 'zh' ? 'Switch to English' : '切换到中文');
-        }
-        try { localStorage.setItem('yz-lang', language); } catch (_) {}
-      }
       function applyTheme(theme) {
         root.dataset.theme = theme;
         if (themeButton) {
@@ -70,15 +66,12 @@ const canonical = 'https://ynotfound.github.io' + Astro.url.pathname;
         menuButton.setAttribute('aria-expanded', String(open));
         menuButton.textContent = open ? '×' : '☰';
       }
-      let currentLanguage = root.lang === 'en' ? 'en' : 'zh';
-      try {
-        const savedLanguage = localStorage.getItem('yz-lang');
-        if (savedLanguage === 'zh' || savedLanguage === 'en') currentLanguage = savedLanguage;
-      } catch (_) {}
-      applyLanguage(currentLanguage);
       applyTheme(root.dataset.theme === 'dark' ? 'dark' : 'light');
-      langButton?.addEventListener('click', () => { currentLanguage = currentLanguage === 'zh' ? 'en' : 'zh'; applyLanguage(currentLanguage); });
       themeButton?.addEventListener('click', () => applyTheme(root.dataset.theme === 'dark' ? 'light' : 'dark'));
+      langButton?.addEventListener('click', () => {
+        const target = langButton.getAttribute('data-target');
+        if (target) window.location.assign(target);
+      });
       menuButton?.addEventListener('click', () => setMenu(menuButton.getAttribute('aria-expanded') !== 'true'));
       nav?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => setMenu(false)));
       document.addEventListener('click', (event) => {

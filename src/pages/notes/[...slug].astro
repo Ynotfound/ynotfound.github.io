@@ -1,28 +1,11 @@
 ---
 import { getCollection, render } from 'astro:content';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import CollectionDetail from '../../components/CollectionDetail.astro';
 export async function getStaticPaths() {
-  const notes = await getCollection('notes', ({ data }) => !data.draft);
-  return notes.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+  const entries = await getCollection('notes', ({ data }) => !data.draft && data.lang === 'zh');
+  return Promise.all(entries.map(async (entry) => ({ params: { slug: entry.data.translationKey }, props: { entry } })));
 }
 const { entry } = Astro.props;
 const { Content, headings } = await render(entry);
-const toc = headings.filter((heading) => heading.depth > 1 && heading.depth < 4);
 ---
-<BaseLayout title={entry.data.title} active="notes" description={entry.data.description}>
-  <div class="page-shell">
-    <div class="breadcrumbs"><a href="/">首页</a><span>/</span><a href="/notes/">笔记</a><span>/</span>{entry.data.title}</div>
-    <div class="article-layout">
-      <article class="article-main">
-        <header class="page-heading">
-          <p class="page-kicker">{entry.data.category} · {entry.data.tags.join(' / ')}</p>
-          <h1 class="page-title" data-zh={entry.data.title} data-en={entry.data.title_en}>{entry.data.title}</h1>
-          <p class="page-lead" data-zh={entry.data.description} data-en={entry.data.description_en}>{entry.data.description}</p>
-          <div class="article-meta"><span>Published {entry.data.date.toLocaleDateString('en-CA')}</span>{entry.data.updated && <span>Updated {entry.data.updated.toLocaleDateString('en-CA')}</span>}</div>
-        </header>
-        <div class="prose"><Content /></div>
-      </article>
-      {toc.length > 0 && <aside class="article-toc"><strong>ON THIS PAGE</strong>{toc.map((heading) => <a class:list={['toc-link', heading.depth === 3 && 'toc-sub']} href={'#' + heading.slug}>{heading.text}</a>)}</aside>}
-    </div>
-  </div>
-</BaseLayout>
+<CollectionDetail entry={entry} Content={Content} headings={headings} active="notes" basePath="/notes/" sectionLabel="笔记" locale="zh" />

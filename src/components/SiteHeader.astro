@@ -1,6 +1,7 @@
 ---
-interface Props { active?: string; }
-const { active = '' } = Astro.props;
+interface Props { active?: string; locale?: 'zh' | 'en'; languageTarget: string; }
+const { active = '', locale = 'zh', languageTarget } = Astro.props;
+const prefix = locale === 'en' ? '/en' : '';
 const links = [
   { key: 'research', href: '/research/', zh: '研究', en: 'Research' },
   { key: 'publications', href: '/publications/', zh: '论文', en: 'Papers' },
@@ -12,7 +13,7 @@ const links = [
 ---
 <header class="site-header">
   <div class="header-inner wrap">
-    <a class="brand" href="/" aria-label="Yu Zhehao home">
+    <a class="brand" href={prefix + '/'} aria-label="Yu Zhehao home">
       <span class="brand-sword" aria-hidden="true">
         <svg viewBox="0 0 40 52" fill="none">
           <path d="M20 2L25 18L20 35L15 18L20 2Z" fill="currentColor"/>
@@ -25,16 +26,12 @@ const links = [
       <span class="brand-copy"><strong>YU ZHEHAO</strong><small>PERSONAL OBSERVATORY</small></span>
     </a>
     <nav class="primary-nav" id="primary-nav" data-primary-nav aria-label="Primary navigation">
-      {links.map((link) => (
-        <a href={link.href} class:list={['nav-link', active === link.key && 'is-active']}>
-          <span data-zh={link.zh} data-en={link.en}>{link.zh}</span>
-        </a>
-      ))}
+      {links.map((link) => <a href={prefix + link.href} class:list={['nav-link', active === link.key && 'is-active']}>{locale === 'en' ? link.en : link.zh}</a>)}
     </nav>
     <div class="header-tools">
-      <a class="header-icon" href="/search/" aria-label="Search" title="Search">⌕</a>
-      <button class="header-icon" type="button" data-lang-toggle aria-label="Switch to English">EN</button>
-      <button class="header-icon" type="button" data-theme-toggle aria-label="Switch to dark theme">☾</button>
+      <a class="header-icon" href={prefix + '/search/'} aria-label="Search" title="Search">⌕</a>
+      <button class="header-icon" type="button" data-lang-toggle data-target={languageTarget} aria-label={locale === 'en' ? '切换到中文' : 'Switch to English'}>{locale === 'en' ? '中' : 'EN'}</button>
+      <button class="header-icon" type="button" data-theme-toggle aria-label="Switch theme">☾</button>
       <button class="menu-toggle" type="button" data-menu-toggle aria-controls="primary-nav" aria-expanded="false" aria-label="Open navigation">☰</button>
     </div>
   </div>

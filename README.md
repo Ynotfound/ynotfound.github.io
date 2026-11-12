@@ -1,31 +1,31 @@
 # Yu Zhehao — Personal Observatory
 
-A bilingual, multi-page academic website for **Yu Zhehao**, built with Astro and deployed to GitHub Pages.
+A bilingual academic website for **Yu Zhehao**, built with Astro and deployed to GitHub Pages.
 
-**Live site:** https://ynotfound.github.io/
+Live site: https://ynotfound.github.io/
 
 ## Architecture
 
-- **Astro static generation** — each section and article has its own URL; no long single-page scroll.
-- **Markdown content collections** — notes and journal entries live under src/content/.
-- **LaTeX mathematics** — remark-math and rehype-katex.
-- **Code highlighting** — Astro's build-time Shiki integration.
-- **Full-text search** — a generated JSON index searches notes, journal entries and a research entry.
-- **Automatic metadata** — canonical URLs, sitemap, RSS and 404 page.
-- **Responsive shared layout** — navigation, language and theme controls are shared across pages.
-- **Interactive visuals** — orbital canvas on the homepage and a restrained Excalibur-inspired desktop cursor.
+- Astro static generation; every section and article has a stable URL.
+- Six typed Markdown collections: notes, journal, research, publications, projects and references.
+- Paired Chinese/English content entries with a shared translation key.
+- KaTeX mathematics and build-time syntax highlighting.
+- Generated search index, sitemap and RSS feed.
+- Shared responsive layout, theme preference and language-aware navigation.
+- Native Excalibur-inspired cursor with a separate Canvas particle trail.
+- GitHub Actions runs type/content/build/link validation before deployment.
 
 ## Routes
 
-- / — compact homepage / portal
-- /research/ and /research/feynman-periods/ — research programme
-- /publications/ — public manuscripts and publication status
-- /notes/ and /notes/<slug>/ — Markdown knowledge base
-- /reading/ — references and software documentation
-- /journal/ and /journal/<slug>/ — essays and field notes
-- /projects/ — code and research projects
-- /about/ — profile
-- /search/ — full-text search
+- / and /en/ — bilingual home portals
+- /research/ and /en/research/ — research programmes
+- /publications/ and /en/publications/ — papers and working manuscripts
+- /notes/ and /en/notes/ — mathematical and physics notes
+- /reading/ and /en/reading/ — references and resources
+- /journal/ and /en/journal/ — field notes
+- /projects/ and /en/projects/ — research software and prototypes
+- /about/ and /en/about/ — profile
+- /search/ and /en/search/ — full-text search
 - /rss.xml, /sitemap.xml — feeds and indexing
 
 ## Local development
@@ -33,20 +33,22 @@ A bilingual, multi-page academic website for **Yu Zhehao**, built with Astro and
 Requires Node.js 22 or later.
 
 ~~~bash
-npm install
+npm ci
 npm run dev
-npm run build
+npm run validate
 npm run preview
 ~~~
 
-## Publishing content
+## Content model
 
-See CONTRIBUTING.md. Add a Markdown file to src/content/notes/ or src/content/journal/, set its frontmatter, and push to main. GitHub Actions installs dependencies, builds dist/, and deploys the artifact to GitHub Pages.
+Content lives in src/content/. Every public entry has a translationKey shared by its Chinese (lang: zh) and English (lang: en) Markdown files. Add a pair of files with the same translation key to publish a bilingual entry. Set draft: true to keep it private from the generated site.
 
-## Design
-
-Midnight blue, ivory and champagne gold; a Fangzheng Xiaobiaosong-style Chinese serif font stack with system fallbacks; subtle Avalon / Excalibur details. The site uses original vector geometry and code, not redistributed Fate artwork or other proprietary assets.
+See CONTRIBUTING.md for frontmatter examples and publishing rules.
 
 ## Editorial policy
 
-The Feynman-period long paper is identified as a public working manuscript, not as a published paper or arXiv preprint. Distinguish proved results, conditional conclusions, numerical checks, conjectures and open questions. Do not publish private manuscripts, credentials or confidential data.
+Distinguish published papers, preprints and working manuscripts. For research notes, distinguish proved results, conditional conclusions, numerical checks, conjectures and open questions. Never publish credentials, private correspondence or confidential collaborator material.
+
+## Design
+
+Midnight blue, ivory and champagne gold; a Fangzheng Xiaobiaosong-style Chinese serif stack with system fallbacks; restrained Avalon / Excalibur details. All sword artwork is original vector artwork, not redistributed Fate assets.

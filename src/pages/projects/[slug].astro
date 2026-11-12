@@ -1,0 +1,11 @@
+---
+import { getCollection, render } from 'astro:content';
+import CollectionDetail from '../../components/CollectionDetail.astro';
+export async function getStaticPaths() {
+  const entries = await getCollection('projects', ({ data }) => !data.draft && data.lang === 'zh');
+  return Promise.all(entries.map(async (entry) => ({ params: { slug: entry.data.translationKey }, props: { entry } })));
+}
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+---
+<CollectionDetail entry={entry} Content={Content} headings={headings} active="projects" basePath="/projects/" sectionLabel="项目" locale="zh" />

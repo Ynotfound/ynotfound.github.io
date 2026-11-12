@@ -1,26 +1,7 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-const refs = [
-  { group:'QFT / SOFTWARE', title:'HyperlogProcedures project review', desc:'hp08、hlogrs、计算流程、项目结构与进度说明。', href:'https://github.com/Ynotfound/HyperlogProcedures_Rewrite/blob/main/REVIEW.zh-CN.md' },
-  { group:'QFT / COMPUTATION', title:'hlogrs usage guide', desc:'Rust 符号周期计算工具链的运行方法、CLI 与库接口。', href:'https://github.com/Ynotfound/HyperlogProcedures_Rewrite/blob/main/USAGE.md' },
-  { group:'AI / RELATED WORK', title:'GENESIS literature review', desc:'世界模型、潜变量与科学概念形成的相关工作定位。', href:'https://github.com/Ynotfound/GENESIS/blob/main/LITERATURE_REVIEW.md' },
-  { group:'MATHEMATICAL PHYSICS', title:'Feynman-period supporting notes', desc:'几何、单值性、切割、森林与计算证书索引。', href:'https://github.com/Ynotfound/YuPhysics/tree/main/feynman-periods/research/support' }
-];
+import { getCollection } from 'astro:content';
+import CollectionIndex from '../../components/CollectionIndex.astro';
+const entries = (await getCollection('references', ({ data }) => !data.draft && data.lang === 'zh'))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 ---
-<BaseLayout title="Reading & references" active="reading" description="Reading notes, software documentation and references for ongoing research.">
-  <div class="page-shell">
-    <header class="page-heading">
-      <p class="page-kicker">READING / REFERENCES</p>
-      <h1 class="page-title" data-zh="阅读与参考资料" data-en="Reading & references">阅读与参考资料</h1>
-      <p class="page-lead" data-zh="研究中实际使用的文献、软件说明和支持性材料入口。这里优先保存可追溯的原始来源，而不是堆砌书单。" data-en="An entry point to literature, software documentation and supporting material used in ongoing work. The emphasis is on traceable primary sources rather than an indiscriminate reading list.">研究中实际使用的文献、软件说明和支持性材料入口。</p>
-    </header>
-    <div class="resource-list">
-      {refs.map((ref, i) => <a class="resource-link" href={ref.href} target="_blank" rel="noreferrer"><small>{String(i + 1).padStart(2, '0')} / {ref.group}</small><strong>{ref.title}</strong><span>{ref.desc}</span></a>)}
-    </div>
-    <section class="section-block">
-      <h2 data-zh="本地阅读笔记" data-en="Personal reading notes">本地阅读笔记</h2>
-      <p class="page-lead" data-zh="论文阅读笔记可以放入 Journal；经过系统整理的定义、定理与推导放入 Notes。这样可以把即时阅读记录和长期知识库区分开。" data-en="Use Journal for paper-by-paper reading reflections, and Notes for definitions, theorems and derivations that have been organized into lasting references.">论文阅读笔记可以放入 Journal；经过系统整理的定义、定理与推导放入 Notes。</p>
-      <a class="button button-quiet" href="/journal/">进入研究随笔 ↗</a>
-    </section>
-  </div>
-</BaseLayout>
+<CollectionIndex title="阅读与参考资料" description="研究中实际使用的文献、软件说明和支持性材料入口。优先保存可追溯的原始来源，而不是堆砌书单。" kicker="READING / REFERENCES" active="reading" basePath="/reading/" entries={entries} locale="zh" />

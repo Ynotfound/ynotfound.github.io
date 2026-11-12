@@ -1,24 +1,7 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-const projects = [
-  { symbol:'∮', name:'YuPhysics', category:'RESEARCH MANUSCRIPTS', desc:'费曼周期研究文稿、LaTeX 源码、支持性证明记录、计算代码与证书。', href:'https://github.com/Ynotfound/YuPhysics', tags:['Feynman periods','LaTeX'] },
-  { symbol:'λ', name:'HyperlogProcedures_Rewrite', category:'SCIENTIFIC SOFTWARE', desc:'围绕 HyperlogProcedures / hlogrs 的 Rust 与 C++ 重写工作，关注精确周期计算、图函数与可复核计算流程。', href:'https://github.com/Ynotfound/HyperlogProcedures_Rewrite', tags:['Rust','C++','QFT'] },
-  { symbol:'ψ', name:'GENESIS', category:'AI / WORLD MODELS', desc:'科学交互与模拟中的涌现式认知研究原型，包含匿名一维不规则采样世界模型的基线实验。', href:'https://github.com/Ynotfound/GENESIS', tags:['AI','World models'] },
-  { symbol:'✧', name:'Fate-Palimpsest', category:'PERSONAL PROTOTYPE', desc:'个人非商业动作 RPG 原型，包含 Unity 工程与 WebGL 玩法纵切，使用原创占位素材。', href:'https://github.com/Ynotfound/Fate-Palimpsest', tags:['Unity','WebGL'] }
-];
+import { getCollection } from 'astro:content';
+import CollectionIndex from '../../components/CollectionIndex.astro';
+const entries = (await getCollection('projects', ({ data }) => !data.draft && data.lang === 'zh'))
+  .sort((a, b) => Number(b.data.featured) - Number(a.data.featured) || b.data.date.getTime() - a.data.date.getTime());
 ---
-<BaseLayout title="Projects & code" active="projects" description="Research software, AI experiments and creative prototypes by Yu Zhehao.">
-  <div class="page-shell">
-    <header class="page-heading">
-      <p class="page-kicker">PROJECTS / CODE</p>
-      <h1 class="page-title" data-zh="项目与代码" data-en="Projects & code">项目与代码</h1>
-      <p class="page-lead" data-zh="研究软件、AI 实验与个人技术原型。项目的最新状态、构建方式和贡献记录以各自仓库为准。" data-en="Research software, AI experiments and personal prototypes. Consult each repository for current status, build instructions and contribution history.">研究软件、AI 实验与个人技术原型。</p>
-    </header>
-    <div class="card-grid">
-      {projects.map((project) => <a class="info-card" href={project.href} target="_blank" rel="noreferrer">
-        <span class="card-number">{project.category}</span><h2>{project.symbol} {project.name}</h2><p>{project.desc}</p>
-        <div class="card-tags">{project.tags.map(tag => <span class="tag">{tag}</span>)}</div><span class="card-arrow">Open repository ↗</span>
-      </a>)}
-    </div>
-  </div>
-</BaseLayout>
+<CollectionIndex title="项目与代码" description="研究软件、AI 实验与个人技术原型。项目状态、构建方式和贡献记录以各自仓库为准。" kicker="PROJECTS / CODE" active="projects" basePath="/projects/" entries={entries} locale="zh" />

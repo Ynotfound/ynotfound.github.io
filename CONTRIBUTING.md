@@ -1,17 +1,19 @@
 # Writing and publishing
 
-The site is built with Astro and GitHub Pages. Add Markdown files; the build generates article pages, navigation lists, a search index, sitemap and RSS feed.
+The site uses Astro Content Collections. Each public entry must have a Chinese and English Markdown file that share one translationKey.
 
 ## Add a note
 
-Create a file under src/content/notes/, for example my-topic.md:
+Create two files under src/content/notes/, for example my-topic.zh.md and my-topic.en.md.
+
+Chinese frontmatter:
 
 ~~~yaml
 ---
+translationKey: my-topic
+lang: zh
 title: 中文标题
-title_en: English title
 description: 中文摘要
-description_en: English summary
 category: MATHEMATICS
 tags: [Complex analysis, Geometry]
 date: 2026-11-12
@@ -20,37 +22,46 @@ draft: false
 ---
 ~~~
 
-Write the body in Markdown. Inline mathematics uses dollar delimiters; display mathematics uses double-dollar delimiters. Code fences are syntax highlighted at build time.
-
-## Add a journal entry
-
-Create a Markdown file under src/content/journal/ with:
+English frontmatter uses the same key and lang: en:
 
 ~~~yaml
 ---
-title: 中文标题
-title_en: English title
-description: 中文摘要
-description_en: English summary
+translationKey: my-topic
+lang: en
+title: English title
+description: English summary
+category: MATHEMATICS
+tags: [Complex analysis, Geometry]
 date: 2026-11-12
-tags: [Reading, Research]
+order: 50
 draft: false
 ---
 ~~~
 
-Journal entries are intended for reading reflections, research logs and essays. Use Notes for material that has been organized into durable explanations or references.
+Write the complete article body in the language of that file. Inline mathematics uses $...$; display mathematics uses $$...$$. Code fences are syntax highlighted at build time.
 
-## Drafts and publication state
+## Other collections
 
-Set draft to true to keep an entry out of the public site. Set it to false only when it is ready to publish. Never put credentials, private correspondence, unpublished collaborator material or confidential data in this public repository.
+- research/: research programmes; status is active, exploratory, paused or completed.
+- publications/: published, preprint, working-paper, draft or superseded.
+- projects/: software, research tools and prototypes.
+- references/: papers, books, software and other source material.
+- journal/: dated research reflections and field notes.
 
-Distinguish theorem-level proofs, conditional results, numerical evidence, conjectures and open questions. A public manuscript is not automatically a published paper or an arXiv preprint.
+Each collection has a typed schema in src/content.config.ts. Follow the schema and keep paired translations aligned.
 
-## Local preview
+## Drafts and research status
+
+Set draft: true to exclude an entry from public pages, feeds, search and sitemap. Distinguish theorem-level proofs, conditional results, numerical evidence, conjectures and open questions. A public working manuscript is not automatically a published paper or an arXiv preprint.
+
+Never put credentials, private correspondence, unpublished collaborator material or confidential data in this public repository.
+
+## Local validation
 
 ~~~bash
-npm install
-npm run dev
+npm ci
+npm run check
+npm run validate
 ~~~
 
-Build the static site with npm run build; the output is in dist/.
+GitHub Actions runs the same validation before deployment.

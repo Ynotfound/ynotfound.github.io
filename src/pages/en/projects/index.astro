@@ -1,0 +1,7 @@
+---
+import { getCollection } from 'astro:content';
+import CollectionIndex from '../../../components/CollectionIndex.astro';
+const entries = (await getCollection('projects', ({ data }) => !data.draft && data.lang === 'en'))
+  .sort((a, b) => Number(b.data.featured) - Number(a.data.featured) || b.data.date.getTime() - a.data.date.getTime());
+---
+<CollectionIndex title="Projects & code" description="Research software, AI experiments and personal technical prototypes. Consult each repository for current status, build instructions and contribution history." kicker="PROJECTS / CODE" active="projects" basePath="/en/projects/" entries={entries} locale="en" />

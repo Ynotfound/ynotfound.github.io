@@ -1,27 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
-import BaseLayout from '../../layouts/BaseLayout.astro';
-const posts = (await getCollection('journal', ({ data }) => !data.draft)).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+import CollectionIndex from '../../components/CollectionIndex.astro';
+const entries = (await getCollection('journal', ({ data }) => !data.draft && data.lang === 'zh'))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 ---
-<BaseLayout title="Research journal" active="journal" description="Research reflections, reading notes and field notes by Yu Zhehao.">
-  <div class="page-shell">
-    <header class="page-heading">
-      <p class="page-kicker">FIELD NOTES / JOURNAL</p>
-      <h1 class="page-title" data-zh="研究随笔" data-en="Research journal">研究随笔</h1>
-      <p class="page-lead" data-zh="记录论文阅读、研究思考、计算实验和学习过程。随笔允许保留问题与失败，但会明确标明它们的状态。" data-en="Paper reflections, research ideas, computational experiments and learning notes. Journal entries may preserve open questions and failed attempts, with their status made explicit.">记录论文阅读、研究思考、计算实验和学习过程。</p>
-    </header>
-    {posts.length ? (
-      <div class="note-list">
-        {posts.map((post) => <a class="note-row" href={'/journal/' + post.id + '/'}>
-          <div><div class="note-row-meta">{post.data.date.toLocaleDateString('en-CA')} · {post.data.tags.join(' / ')}</div><h2 data-zh={post.data.title} data-en={post.data.title_en}>{post.data.title}</h2><p data-zh={post.data.description} data-en={post.data.description_en}>{post.data.description}</p></div>
-          <span class="card-arrow">Read ↗</span>
-        </a>)}
-      </div>
-    ) : (
-      <div class="empty-state">
-        <span class="empty-mark">✧</span>
-        <div><h2 data-zh="公开随笔档案正在建立" data-en="The public journal is taking shape">公开随笔档案正在建立</h2><p data-zh="这里暂时没有公开文章。写作时只需在 src/content/journal/ 新建 Markdown 文件，填写标题、日期与摘要，推送后就会自动生成独立文章页。" data-en="There are no public essays yet. Add a Markdown file under src/content/journal/ with a title, date and summary; pushing it will automatically create a standalone article page.">这里暂时没有公开文章。写作时只需在 src/content/journal/ 新建 Markdown 文件，填写标题、日期与摘要，推送后就会自动生成独立文章页。</p></div>
-      </div>
-    )}
-  </div>
-</BaseLayout>
+<CollectionIndex title="研究随笔" description="记录论文阅读、研究思考、计算实验和学习过程。随笔可以保留问题与失败，但会明确标明它们的状态。" kicker="FIELD NOTES / JOURNAL" active="journal" basePath="/journal/" entries={entries} locale="zh" variant="list" emptyTitle="公开随笔档案正在建立" emptyDescription="在 src/content/journal/ 中添加一对中英文 Markdown 文件，推送后便会自动生成独立文章页。" />
