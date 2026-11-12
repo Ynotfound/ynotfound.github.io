@@ -1,0 +1,24 @@
+name: Bootstrap npm lockfile
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'package.json'
+      - '.github/workflows/bootstrap-lock.yml'
+permissions:
+  contents: read
+jobs:
+  generate-lock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Generate deterministic npm lockfile
+        run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+      - uses: actions/upload-artifact@v4
+        with:
+          name: npm-lockfile
+          path: package-lock.json
+          retention-days: 3
