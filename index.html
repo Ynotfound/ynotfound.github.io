@@ -367,6 +367,22 @@
     }
     @media(max-width:420px) { .resource-grid { grid-template-columns:1fr; } }
 
+  
+    .intro { align-items:start; }
+    .intro-copy { min-width:0; }
+    .intro-copy h2 { font:500 clamp(24px,2.7vw,33px)/1.4 var(--display-font); margin:0 0 10px; }
+    .intro-copy>p:not(.section-kicker) { max-width:780px; margin:0; color:var(--muted); font-size:12px; line-height:2; }
+    .about-tags { display:flex; flex-wrap:wrap; gap:7px; margin-top:16px; }
+    .intro>.text-link { align-self:center; }
+    .research-card .card-link { display:inline-flex; align-items:center; gap:8px; margin-top:16px; color:var(--gold); font-size:10px; letter-spacing:.02em; }
+    .research-card .card-link:hover { color:var(--ink); }
+    html[data-theme="dark"] .research-card .card-link:hover { color:#fff8e9; }
+    @media(max-width:720px) {
+      .intro { grid-template-columns:35px 1fr; align-items:start; }
+      .intro>.text-link { grid-column:2; align-self:start; }
+      .intro-copy h2 { font-size:25px; }
+    }
+
   </style>
 </head>
 <body>
@@ -431,8 +447,13 @@
 
     <section class="intro reveal" id="about">
       <div class="intro-mark">✳</div>
-      <p data-zh="这里同时容纳严谨的推导、计算实验、论文阅读，以及尚在形成中的问题。公开记录不意味着每个想法都已得到证明；我会尽量清楚地区分结论、证据与猜想。" data-en="This space holds derivations, computational experiments, paper notes and questions still taking shape. Public notes are not claims of proof: I aim to distinguish established results, evidence and conjectures clearly.">这里同时容纳严谨的推导、计算实验、论文阅读，以及尚在形成中的问题。公开记录不意味着每个想法都已得到证明；我会尽量清楚地区分结论、证据与猜想。</p>
-      <a class="text-link" href="#contact"><span data-zh="关于我与联系" data-en="About & contact">关于我与联系</span> ↗</a>
+      <div class="intro-copy">
+        <p class="section-kicker">ABOUT / YU ZHEHAO</p>
+        <h2 data-zh="让好奇心长成结构。" data-en="Let curiosity take structure.">让好奇心长成结构。</h2>
+        <p data-zh="我关注理论物理、数学与人工智能的交汇，尤其着迷于费曼积分背后的几何与数论结构。这里记录研究、计算、阅读与学习，也会明确区分已验证结果、工作假设和仍待解决的问题。" data-en="I am interested in the intersections of theoretical physics, mathematics and artificial intelligence, especially the geometry and arithmetic behind Feynman integrals. This site records research, computation, reading and learning, while distinguishing verified results from working hypotheses and open questions.">我关注理论物理、数学与人工智能的交汇，尤其着迷于费曼积分背后的几何与数论结构。这里记录研究、计算、阅读与学习，也会明确区分已验证结果、工作假设和仍待解决的问题。</p>
+        <div class="about-tags"><span class="tag">Theoretical Physics</span><span class="tag">Mathematics</span><span class="tag">AI & Scientific Computing</span></div>
+      </div>
+      <a class="text-link" href="#research"><span data-zh="探索研究方向" data-en="Explore research">探索研究方向</span> ↗</a>
     </section>
 
     <section class="section reveal" id="research">
@@ -441,10 +462,10 @@
         <a class="text-link" href="#focus"><span data-zh="当前研究焦点" data-en="Current focus">当前研究焦点</span> ↗</a>
       </div>
       <div class="research-grid">
-        <article class="research-card"><div class="card-top"><span>01</span><span class="card-arrow">↗</span></div><h3 data-zh="费曼积分与周期" data-en="Feynman integrals & periods">费曼积分与周期</h3><div class="card-en">FEYNMAN INTEGRALS & PERIODS</div><p class="card-desc" data-zh="研究费曼图所定义的积分及其几何、代数与数论结构，关注周期分类、微分方程、单值性与图操作之间的联系。" data-en="Geometric, algebraic and arithmetic structures of Feynman integrals, including period classification, differential equations, monodromy and graph operations.">研究费曼图所定义的积分及其几何、代数与数论结构，关注周期分类、微分方程、单值性与图操作之间的联系。</p><div class="tags"><span class="tag">Periods</span><span class="tag">Graph Geometry</span><span class="tag">Picard–Fuchs</span></div></article>
-        <article class="research-card"><div class="card-top"><span>02</span><span class="card-arrow">↗</span></div><h3 data-zh="量子场论与重整化" data-en="Quantum field theory">量子场论与重整化</h3><div class="card-en">QUANTUM FIELD THEORY</div><p class="card-desc" data-zh="关注高圈费曼积分、重整化群、Ward 恒等式，以及计算结构如何服务于可检验的物理量。" data-en="High-loop Feynman integrals, renormalization group, Ward identities, and how computational structures support physical observables.">关注高圈费曼积分、重整化群、Ward 恒等式，以及计算结构如何服务于可检验的物理量。</p><div class="tags"><span class="tag">QFT</span><span class="tag">Renormalization</span><span class="tag">RG</span></div></article>
-        <article class="research-card"><div class="card-top"><span>03</span><span class="card-arrow">↗</span></div><h3 data-zh="几何、数论与数学物理" data-en="Geometry & mathematical physics">几何、数论与数学物理</h3><div class="card-en">GEOMETRY & MATHEMATICAL PHYSICS</div><p class="card-desc" data-zh="从复分析、代数几何和解析数论出发，寻找能解释物理计算中结构性现象的数学语言。" data-en="Complex analysis, algebraic geometry and analytic number theory as languages for structural phenomena in theoretical physics.">从复分析、代数几何和解析数论出发，寻找能解释物理计算中结构性现象的数学语言。</p><div class="tags"><span class="tag">Geometry</span><span class="tag">Number Theory</span></div></article>
-        <article class="research-card"><div class="card-top"><span>04</span><span class="card-arrow">↗</span></div><h3 data-zh="AI 与科学计算" data-en="AI & scientific computing">AI 与科学计算</h3><div class="card-en">AI FOR SCIENTIFIC DISCOVERY</div><p class="card-desc" data-zh="探索 AI、符号计算与高性能程序在数学物理研究中的作用，重视可复核的推导、测试和计算证书。" data-en="AI, symbolic computation and high-performance software for mathematical physics, with an emphasis on reproducible reasoning and verification.">探索 AI、符号计算与高性能程序在数学物理研究中的作用，重视可复核的推导、测试和计算证书。</p><div class="tags"><span class="tag">AI</span><span class="tag">Rust</span><span class="tag">Symbolic Computation</span></div></article>
+        <article class="research-card"><div class="card-top"><span>01</span><span class="card-arrow">↗</span></div><h3 data-zh="费曼积分与周期" data-en="Feynman integrals & periods">费曼积分与周期</h3><div class="card-en">FEYNMAN INTEGRALS & PERIODS</div><p class="card-desc" data-zh="研究费曼图所定义的积分及其几何、代数与数论结构，关注周期分类、微分方程、单值性与图操作之间的联系。" data-en="Geometric, algebraic and arithmetic structures of Feynman integrals, including period classification, differential equations, monodromy and graph operations.">研究费曼图所定义的积分及其几何、代数与数论结构，关注周期分类、微分方程、单值性与图操作之间的联系。</p><div class="tags"><span class="tag">Periods</span><span class="tag">Graph Geometry</span><span class="tag">Picard–Fuchs</span></div><a class="card-link" href="#publications"><span data-zh="查看研究文稿" data-en="View manuscripts">查看研究文稿</span> ↗</a></article>
+        <article class="research-card"><div class="card-top"><span>02</span><span class="card-arrow">↗</span></div><h3 data-zh="量子场论与重整化" data-en="Quantum field theory">量子场论与重整化</h3><div class="card-en">QUANTUM FIELD THEORY</div><p class="card-desc" data-zh="关注高圈费曼积分、重整化群、Ward 恒等式，以及计算结构如何服务于可检验的物理量。" data-en="High-loop Feynman integrals, renormalization group, Ward identities, and how computational structures support physical observables.">关注高圈费曼积分、重整化群、Ward 恒等式，以及计算结构如何服务于可检验的物理量。</p><div class="tags"><span class="tag">QFT</span><span class="tag">Renormalization</span><span class="tag">RG</span></div><a class="card-link" href="https://github.com/Ynotfound/HyperlogProcedures_Rewrite" target="_blank" rel="noreferrer"><span data-zh="查看计算项目" data-en="View software project">查看计算项目</span> ↗</a></article>
+        <article class="research-card"><div class="card-top"><span>03</span><span class="card-arrow">↗</span></div><h3 data-zh="几何、数论与数学物理" data-en="Geometry & mathematical physics">几何、数论与数学物理</h3><div class="card-en">GEOMETRY & MATHEMATICAL PHYSICS</div><p class="card-desc" data-zh="从复分析、代数几何和解析数论出发，寻找能解释物理计算中结构性现象的数学语言。" data-en="Complex analysis, algebraic geometry and analytic number theory as languages for structural phenomena in theoretical physics.">从复分析、代数几何和解析数论出发，寻找能解释物理计算中结构性现象的数学语言。</p><div class="tags"><span class="tag">Geometry</span><span class="tag">Number Theory</span></div><a class="card-link" href="#notes"><span data-zh="进入知识库" data-en="Explore notes">进入知识库</span> ↗</a></article>
+        <article class="research-card"><div class="card-top"><span>04</span><span class="card-arrow">↗</span></div><h3 data-zh="AI 与科学计算" data-en="AI & scientific computing">AI 与科学计算</h3><div class="card-en">AI FOR SCIENTIFIC DISCOVERY</div><p class="card-desc" data-zh="探索 AI、符号计算与高性能程序在数学物理研究中的作用，重视可复核的推导、测试和计算证书。" data-en="AI, symbolic computation and high-performance software for mathematical physics, with an emphasis on reproducible reasoning and verification.">探索 AI、符号计算与高性能程序在数学物理研究中的作用，重视可复核的推导、测试和计算证书。</p><div class="tags"><span class="tag">AI</span><span class="tag">Rust</span><span class="tag">Symbolic Computation</span></div><a class="card-link" href="https://github.com/Ynotfound/GENESIS" target="_blank" rel="noreferrer"><span data-zh="查看 AI 实验" data-en="View AI experiments">查看 AI 实验</span> ↗</a></article>
       </div>
     </section>
 
@@ -462,7 +483,7 @@
           <div class="focus-point"><span>02</span><div><strong data-zh="周期的几何" data-en="Geometry of periods">周期的几何</strong><small data-zh="微分方程、单值性与分类" data-en="Differential equations, monodromy and classification">微分方程、单值性与分类</small></div></div>
           <div class="focus-point"><span>03</span><div><strong data-zh="物理闭环" data-en="Physical closure">物理闭环</strong><small data-zh="重整化、RG 与可检验量" data-en="Renormalization, RG and observables">重整化、RG 与可检验量</small></div></div>
         </div>
-        <a class="text-link" href="#projects"><span data-zh="查看研究项目" data-en="View research projects">查看研究项目</span> ↗</a>
+        <a class="text-link" href="#publications"><span data-zh="查看研究档案" data-en="View research archive">查看研究档案</span> ↗</a>
       </div>
     </section>
 
