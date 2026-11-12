@@ -1,7 +1,7 @@
 ---
 translationKey: qft-renormalization
 lang: en
-title: Renormalization in quantum field theory: a conceptual map
+title: 'Renormalization in quantum field theory: a conceptual map'
 description: A conceptual map of regularization, counterterms and the renormalization group in perturbative quantum field theory.
 category: THEORETICAL PHYSICS
 tags: [QFT, Renormalization, Feynman diagrams, Renormalization group]
