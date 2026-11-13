@@ -24,36 +24,63 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       </div>
     </section>
 
-    <div class="author-preview-toolbar">
-      <div class="author-preview-toolbar-label"><span class="page-kicker">COMPOSER</span><span id="author-status" role="status" aria-live="polite">实时预览已就绪</span></div>
+    <details class="author-bib-panel" open>
+      <summary><span><strong>BibTeX Library</strong><small>文献数据库 · 使用 [@citation-key] 引用</small></span><span class="author-bib-count" id="author-bib-count">0 entries</span></summary>
+      <label class="author-field"><span>BIBTEX SOURCE</span><textarea id="author-bib" class="author-bib-source" spellcheck="false">@misc&#123;sample-reference,
+  author = &#123;Replace With Author&#125;,
+  title = &#123;Replace With the Actual Reference Title&#125;,
+  year = &#123;2026&#125;,
+  note = &#123;Example entry: replace this with a verified BibTeX record&#125;
+&#125;</textarea></label>
+      <p class="author-bib-help">粘贴真实 BibTeX 条目。正文使用 [@key] 或 [@key1; @key2]；预览会生成编号引用和文末参考文献。示例条目只是占位符。</p>
+    </details>
+
+
+
+    <div class="author-preview-toolbar academic-toolbar">
+      <div class="author-preview-toolbar-label"><span class="page-kicker">COMPOSER / LIVE VALIDATION</span><span id="author-status" role="status" aria-live="polite">正在初始化写作引擎…</span></div>
       <div class="author-preview-actions">
         <button class="button button-quiet" id="author-reset" type="button">恢复示例</button>
         <button class="button button-quiet" id="author-copy" type="button">复制正文</button>
-        <button class="button button-primary" id="author-download" type="button">下载 Markdown ↧</button>
+        <button class="button button-quiet" id="author-download" type="button">下载 Markdown</button>
+        <button class="button button-quiet" id="author-tex" type="button">导出 LaTeX</button>
+        <button class="button button-quiet" id="author-bib-download" type="button">导出 BibTeX</button>
+        <button class="button button-primary" id="author-print" type="button">打印 / 保存 PDF</button>
       </div>
     </div>
 
     <div class="author-preview-workspace">
       <section class="author-editor-panel">
         <div class="author-panel-heading"><div><span class="author-panel-kicker">01 / SOURCE</span><h2>Markdown & LaTeX</h2></div><span class="author-panel-hint">SOURCE MODE</span></div>
-        <textarea id="author-source" class="author-source" spellcheck="false" aria-label="Markdown and LaTeX source">## 从图到参数积分
+        <textarea id="author-source" class="author-source" spellcheck="false" aria-label="Markdown and LaTeX source">## 1. 从图到参数积分
 
 设 \(G\) 是一个连通图，边集为 \(E\)。为每条边引入 Schwinger 参数 \(\alpha_e\)。
-
-第一 Symanzik 多项式由生成树求和：
 
 $$
 \mathcal U_G(\alpha)
 =
-\sum_&#123;T\in\mathcal T_1(G)&#125;
-\prod_&#123;e\notin T&#125;\alpha_e.
+\sum_{T\in\mathcal T_1(G)}
+\prod_{e\notin T}\alpha_e.
+\label&#123;eq:symanzik&#125;
 $$
 
-例如，参数多项式的结构会直接反映图的生成树组合。
+::: definition id=def:period title="图周期"
+图周期是由图所定义的参数积分在适当收敛条件下得到的数值。具体定义必须同时说明积分形式、参数区域和归一化约定。
+:::
 
-我们也可以写行内公式，例如 $\mathcal F_G(\alpha)$、$\zeta(3)$ 和 $\beta(g)$。
+::: theorem id=thm:structure title="结构信息的必要性"
+判断图的参数积分可能涉及的函数空间，需要同时考察参数多项式、积分区域与奇点结构；仅凭图的外观或多项式次数通常不足以完成分类。
+:::
 
-## 矩阵与分段公式
+::: proof
+这是一个研究方法层面的结构性陈述，不是关于所有图的周期分类定理。实际分类仍需对具体图族给出几何分析和独立验证。
+:::
+
+因此，定义 @ref&#123;def:period&#125; 与定理 @ref&#123;thm:structure&#125; 说明了为什么需要同时记录代数与几何信息。第一 Symanzik 多项式见公式 @ref&#123;eq:symanzik&#125;。
+
+文献示例：[@sample-reference]。
+
+## 2. 一个矩阵例子
 
 $$
 M =
@@ -63,17 +90,17 @@ c & d
 \end&#123;pmatrix&#125;,
 \qquad
 \det M = ad-bc.
+\label&#123;eq:determinant&#125;
 $$
 
-## 代码
+## 3. 代码与计算记录
 
 &#96;&#96;&#96;python
 def symanzik_example(edges):
     return "graph data"
 &#96;&#96;&#96;
 
-> 提醒：数值验证可以帮助发现规律，但不能替代一般证明。
-</textarea>
+> 数值验证可以帮助发现规律，但不能替代一般证明。</textarea>
         <div class="author-editor-footer"><span>支持 Markdown、列表、引用、代码块与 LaTeX</span><span id="author-count">0 字符</span></div>
       </section>
 
@@ -88,6 +115,17 @@ def symanzik_example(edges):
         </article>
       </section>
     </div>
+
+
+    <section class="author-preview-help academic-syntax">
+      <div><p class="page-kicker">ACADEMIC MARKUP</p><h2>学术写作语法</h2><p>这些标记只在作者预览和导出的 LaTeX 中解释。正式网站正文仍使用普通 Markdown / LaTeX。</p></div>
+      <div class="academic-syntax-list">
+        <div><strong>定理 / 定义 / 引理 / 推论 / 证明</strong><code>::: theorem id=thm:main title="定理标题"</code><code>...内容...</code><code>:::</code></div>
+        <div><strong>公式标签</strong><code>\label&#123;eq:main&#125;</code><span>放在独立公式内部；正文用 <code>@ref&#123;eq:main&#125;</code> 引用。</span></div>
+        <div><strong>交叉引用</strong><code>@ref&#123;thm:main&#125;</code><span>支持定理、定义和公式标签。</span></div>
+        <div><strong>文献引用</strong><code>[@key]</code><span>key 来自上方 BibTeX Library。</span></div>
+      </div>
+    </section>
 
     <section class="author-preview-help">
       <div><p class="page-kicker">PUBLISHING WORKFLOW</p><h2>预览满意后，如何正式发布？</h2></div>
@@ -108,101 +146,210 @@ def symanzik_example(edges):
   <script is:inline>
     (() => {
       const $ = (id) => document.getElementById(id);
-      const fields = ['author-title','author-description','author-kind','author-language','author-key','author-date','author-category','author-tags','author-source'];
+      const fields = ['author-title','author-description','author-kind','author-language','author-key','author-date','author-category','author-tags','author-source','author-bib'];
       const sample = $('author-source').value;
-      const requiredLibraries = ['markdownit','katex','texmath','DOMPurify'];
-      const missing = requiredLibraries.filter((name) => !window[name]);
+      const sampleBib = $('author-bib').value;
+      const missing = ['markdownit','katex','texmath','DOMPurify'].filter((name) => !window[name]);
       if (missing.length) {
         $('author-status').textContent = '预览引擎加载失败：' + missing.join(', ') + '。请检查网络后刷新。';
-        $('reader-content').textContent = '数学与 Markdown 预览库未能加载。你的源文本仍保留在左侧。';
+        $('reader-content').textContent = 'Markdown / LaTeX 预览库未能加载。源文本仍保留在左侧。';
         return;
       }
+      const markdown = window.markdownit({ html: false, linkify: true, typographer: false })
+        .use(window.texmath, { engine: window.katex, delimiters: 'dollars', katexOptions: { throwOnError: false, trust: false, strict: 'ignore' } });
+      const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+      const idSafe = (v) => String(v ?? '').replace(/[^A-Za-z0-9:_-]/g, '-');
+      const codePattern = /^\x60{3}[^\n]*\n[\s\S]*?^\x60{3}\s*$/gm;
+      const envPattern = /^:::\s*(theorem|lemma|proposition|corollary|definition|example|remark|proof)(?:\s+id=([A-Za-z0-9:._-]+))?(?:\s+title="([^"]*)")?\s*\n([\s\S]*?)^:::\s*$/gm;
+      const eqPattern = /^\$\$\s*\n([\s\S]*?)\n\$\$\s*$/gm;
+      const citePattern = /\[\s*((?:@[A-Za-z0-9:._-]+)(?:\s*;\s*@[A-Za-z0-9:._-]+)*)\s*\]/g;
 
-      const markdown = window.markdownit({ html: false, linkify: true, typographer: false, breaks: false })
-        .use(window.texmath, {
-          engine: window.katex,
-          delimiters: 'dollars',
-          katexOptions: { throwOnError: false, trust: false, strict: 'ignore' }
-        });
-
-      function update() {
-        const title = $('author-title').value.trim() || 'Untitled';
-        const description = $('author-description').value.trim();
-        const kind = $('author-kind').value;
-        const lang = $('author-language').value;
-        const tags = $('author-tags').value.split(',').map((item) => item.trim()).filter(Boolean);
-        $('reader-title').textContent = title;
-        $('reader-description').textContent = description;
-        $('reader-kind').textContent = kind === 'note' ? 'NOTE' : 'JOURNAL';
-        $('reader-date').textContent = $('author-date').value || '';
-        $('reader-language').textContent = lang.toUpperCase();
-        $('reader-tags').replaceChildren(...tags.map((tag) => {
-          const element = document.createElement('span');
-          element.className = 'tag';
-          element.textContent = tag;
-          return element;
-        }));
-        const rendered = markdown.render($('author-source').value);
-        $('reader-content').innerHTML = window.DOMPurify.sanitize(rendered, { USE_PROFILES: { html: true } });
-        $('author-count').textContent = $('author-source').value.length.toLocaleString() + ' 字符';
-        document.querySelectorAll('.author-note-only').forEach((node) => { node.hidden = kind !== 'note'; });
+      function parseBib(source) {
+        const out = {};
+        const re = /^@([A-Za-z]+)\s*\{\s*([^,\s]+)\s*,([\s\S]*?)^\s*\}/gm;
+        for (const m of source.matchAll(re)) {
+          const fields = {};
+          const fieldRe = /([A-Za-z][A-Za-z0-9_-]*)\s*=\s*(?:\{([\s\S]*?)\}|"([^"]*)")\s*,?/g;
+          for (const f of m[3].matchAll(fieldRe)) fields[f[1].toLowerCase()] = (f[2] ?? f[3] ?? '').trim();
+          out[m[2]] = { type: m[1].toLowerCase(), ...fields };
+        }
+        return out;
       }
 
-      function yamlString(value) { return JSON.stringify(String(value ?? '')); }
+      function preview(source, bibSource, locale) {
+        const bib = parseBib(bibSource);
+        const code = [];
+        let text = source.replace(codePattern, (block) => {
+          const token = '@@CODE' + code.length + '@@'; code.push(block); return token;
+        });
+        const equations = [];
+        const labels = new Map();
+        const duplicate = [];
+        text = text.replace(eqPattern, (_all, latex) => {
+          const n = equations.length + 1;
+          const lm = /\\label\{([^}]+)\}/.exec(latex);
+          const label = lm?.[1]?.trim();
+          const clean = latex.replace(/\\label\{[^}]+\}/g, '').trim();
+          const token = '@@EQ' + equations.length + '@@';
+          equations.push({ token, n, clean });
+          if (label) { if (labels.has(label)) duplicate.push(label); labels.set(label, { id: idSafe(label), name: locale === 'en' ? 'Equation (' + n + ')' : '公式 (' + n + ')' }); }
+          return token;
+        });
 
+        const typeNames = { theorem: locale === 'en' ? 'Theorem' : '定理', lemma: locale === 'en' ? 'Lemma' : '引理', proposition: locale === 'en' ? 'Proposition' : '命题', corollary: locale === 'en' ? 'Corollary' : '推论', definition: locale === 'en' ? 'Definition' : '定义', example: locale === 'en' ? 'Example' : '例', remark: locale === 'en' ? 'Remark' : '注', proof: locale === 'en' ? 'Proof' : '证明' };
+        const envs = [], counters = {};
+        text = text.replace(envPattern, (_all, type, label, title, body) => {
+          const token = '@@ENV' + envs.length + '@@';
+          const family = ['theorem','lemma','proposition','corollary'].includes(type) ? 'theorem' : type;
+          const n = type === 'proof' ? null : (counters[family] = (counters[family] || 0) + 1);
+          envs.push({ token, type, label, title, body, n });
+          if (label) { if (labels.has(label)) duplicate.push(label); labels.set(label, { id: idSafe(label), name: typeNames[type] + (n ? ' ' + n : '') }); }
+          return token;
+        });
+
+        const cited = [], citeNums = new Map();
+        for (const m of source.replace(codePattern, '').matchAll(citePattern)) {
+          for (const key of m[1].split(';').map((x) => x.trim().replace(/^@/, ''))) {
+            if (!citeNums.has(key)) { cited.push(key); citeNums.set(key, cited.length + 1); }
+          }
+        }
+        const missingCites = cited.filter((key) => !bib[key]);
+        const missingRefs = [];
+        const htmlTokens = new Map(); let serial = 0;
+
+        function prepare(fragment) {
+          let result = fragment.replace(/@ref\{([^}]+)\}/g, (_all, key) => {
+            const target = labels.get(key.trim());
+            const token = '@@HTML' + serial++ + '@@';
+            if (!target) { missingRefs.push(key.trim()); htmlTokens.set(token, '<span class="academic-missing-ref">?? ' + esc(key.trim()) + '</span>'); }
+            else htmlTokens.set(token, '<a class="academic-crossref" href="#' + esc(target.id) + '">' + esc(target.name) + '</a>');
+            return token;
+          });
+          return result.replace(citePattern, (_all, group) => group.split(';').map((item) => {
+            const key = item.trim().replace(/^@/, ''), n = citeNums.get(key), token = '@@HTML' + serial++ + '@@';
+            htmlTokens.set(token, n && bib[key] ? '<a class="academic-citation" href="#ref-' + esc(idSafe(key)) + '">[' + n + ']</a>' : '<span class="academic-missing-cite">[? ' + esc(key) + ']</span>');
+            return token;
+          }).join('; '));
+        }
+        function restore(html, map) {
+          for (const [token, value] of map) html = html.replaceAll('<p>' + token + '</p>', value).replaceAll(token, value);
+          return html;
+        }
+
+        const eqHtml = new Map(equations.map((e) => [e.token, '<div class="academic-equation"><div class="academic-equation-math">' + markdown.render('$$\n' + e.clean + '\n$$') + '</div><span class="academic-equation-number">(' + e.n + ')</span></div>']));
+        const codeHtml = new Map(code.map((block, i) => ['@@CODE' + i + '@@', markdown.render(block)]));
+        const envHtml = new Map();
+        function renderFragment(fragment) {
+          let html = markdown.render(prepare(fragment));
+          html = restore(html, eqHtml); html = restore(html, codeHtml); html = restore(html, htmlTokens);
+          return html;
+        }
+        for (const env of envs) {
+          const heading = typeNames[env.type] + (env.n ? ' ' + env.n : '');
+          const title = env.title ? ' <span class="academic-environment-title">(' + esc(env.title) + ')</span>' : '';
+          const id = env.label ? ' id="' + esc(idSafe(env.label)) + '"' : '';
+          envHtml.set(env.token, '<section class="academic-environment academic-' + env.type + '"' + id + '><div class="academic-environment-heading"><strong>' + heading + title + '</strong></div><div class="academic-environment-body">' + renderFragment(env.body) + '</div></section>');
+        }
+        const article = restore(renderFragment(text), envHtml);
+        const bibliography = cited.length ? '<section class="academic-bibliography"><h2>' + (locale === 'en' ? 'References' : '参考文献') + '</h2><ol>' + cited.map((key) => {
+          const e = bib[key];
+          if (!e) return '<li><span class="academic-missing-cite">Missing BibTeX entry: ' + esc(key) + '</span></li>';
+          const doi = e.doi ? ' <a href="https://doi.org/' + esc(e.doi) + '" target="_blank" rel="noreferrer">DOI</a>' : '';
+          const url = e.url ? ' <a href="' + esc(e.url) + '" target="_blank" rel="noreferrer">Link</a>' : '';
+          return '<li id="ref-' + esc(idSafe(key)) + '"><span class="academic-ref-authors">' + esc(e.author || '') + '</span>. <cite>' + esc(e.title || key) + '</cite>. ' + esc(e.journal || e.booktitle || e.publisher || '') + (e.year ? ', ' + esc(e.year) : '') + '.' + doi + url + '</li>';
+        }).join('') + '</ol></section>' : '';
+        return { html: window.DOMPurify.sanitize(article + bibliography, { USE_PROFILES: { html: true } }), equations: equations.length, environments: envs.length, citations: cited.length, missingCites, missingRefs, duplicate, bibCount: Object.keys(bib).length };
+      }
+
+      function texEscape(value) {
+        return String(value).replace(/\\/g, '\\textbackslash{}').replace(/([{}#$%&_])/g, '\\$1').replace(/~/g, '\\textasciitilde{}').replace(/\^/g, '\\textasciicircum{}');
+      }
+      function markdownToTex(source) {
+        const blocks = [];
+        const protect = (value) => { const token = '@@TEX' + blocks.length + '@@'; blocks.push(value); return token; };
+        let text = source.replace(codePattern, (block) => protect('\\begin{verbatim}\n' + block.replace(/^\x60{3}[^\n]*\n/, '').replace(/\n\x60{3}\s*$/, '') + '\n\\end{verbatim}'));
+        text = text.replace(envPattern, (_all, type, label, title, body) => protect('\\begin{' + type + '}' + (title ? '[' + texEscape(title) + ']' : '') + '\n' + (label ? '\\label{' + label + '}\n' : '') + markdownToTex(body) + '\n\\end{' + type + '}'));
+        text = text.replace(eqPattern, (_all, latex) => protect('\\begin{equation}\n' + latex.trim() + '\n\\end{equation}'));
+        text = text.replace(/^\s*(#{1,4})\s+(.+)$/gm, (_all, hashes, title) => '\\' + ['section','subsection','subsubsection','paragraph'][hashes.length - 1] + '{' + texEscape(title) + '}');
+        text = text.replace(/\[@([A-Za-z0-9:._-]+)\]/g, '\\cite{$1}');
+        text = text.replace(/@ref\{([^}]+)\}/g, '\\autoref{$1}');
+        text = text.replace(/\*\*(.+?)\*\*/g, '\\textbf{$1}').replace(/\*(.+?)\*/g, '\\emph{$1}');
+        text = text.replace(/^\s*[-*+]\s+(.+)$/gm, '\\\\item $1');
+        text = text.replace(/^\s*>\s?/gm, '');
+        blocks.forEach((value, i) => { text = text.replace('@@TEX' + i + '@@', value); });
+        return text;
+      }
       function makeMarkdownFile() {
         const key = $('author-key').value.trim().toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-+|-+$/g, '') || 'untitled';
-        const lang = $('author-language').value;
-        const tags = $('author-tags').value.split(',').map((item) => item.trim()).filter(Boolean);
-        const kind = $('author-kind').value;
-        const lines = [
-          '---',
-          'translationKey: ' + key,
-          'lang: ' + lang,
-          'title: ' + yamlString($('author-title').value),
-          'description: ' + yamlString($('author-description').value),
-          'date: ' + ($('author-date').value || new Date().toISOString().slice(0,10)),
-          'tags: [' + tags.map(yamlString).join(', ') + ']',
-          'draft: true'
-        ];
-        if (kind === 'note') {
-          lines.push('category: ' + yamlString($('author-category').value || 'GENERAL'));
-          lines.push('order: 100');
-        }
+        const lang = $('author-language').value, tags = $('author-tags').value.split(',').map((x) => x.trim()).filter(Boolean), kind = $('author-kind').value;
+        const lines = ['---','translationKey: ' + key,'lang: ' + lang,'title: ' + JSON.stringify($('author-title').value),'description: ' + JSON.stringify($('author-description').value),'date: ' + ($('author-date').value || new Date().toISOString().slice(0,10)),'tags: [' + tags.map((x) => JSON.stringify(x)).join(', ') + ']','draft: true'];
+        if (kind === 'note') lines.push('category: ' + JSON.stringify($('author-category').value || 'GENERAL'),'order: 100');
         lines.push('---', '', $('author-source').value, '');
         return { filename: key + '.' + lang + '.md', content: lines.join('\n') };
       }
-
-      async function copyText(value, success) {
-        try {
-          await navigator.clipboard.writeText(value);
-          $('author-status').textContent = success;
-        } catch (_) {
-          $('author-status').textContent = '浏览器不允许自动复制，请手动选择文本。';
-        }
+      function makeTexFile() {
+        const key = $('author-key').value.trim().toLowerCase().replace(/[^a-z0-9-]+/g, '-') || 'article';
+        const body = markdownToTex($('author-source').value);
+        const hasCitations = /\[@[A-Za-z0-9:._-]+/.test($('author-source').value);
+        const lines = [
+          '\\documentclass[UTF8,12pt]{ctexart}',
+          '\\usepackage[a4paper,margin=27mm]{geometry}',
+          '\\usepackage{amsmath,amssymb,amsthm,mathtools}',
+          '\\usepackage{graphicx,booktabs,enumitem,xcolor}',
+          '\\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}',
+          '\\newtheorem{theorem}{Theorem}',
+          '\\newtheorem{lemma}[theorem]{Lemma}',
+          '\\newtheorem{proposition}[theorem]{Proposition}',
+          '\\newtheorem{corollary}[theorem]{Corollary}',
+          '\\newtheorem{definition}{Definition}',
+          '\\newtheorem{example}{Example}',
+          '\\newtheorem{remark}{Remark}',
+          '\\title{' + texEscape($('author-title').value) + '}',
+          '\\author{Yu Zhehao}',
+          '\\date{' + ($('author-date').value || '\\today') + '}',
+          '\\begin{document}','\\maketitle',body,
+          hasCitations ? '\\bibliographystyle{unsrt}\n\\bibliography{' + key + '}' : '',
+          '\\end{document}'
+        ];
+        return { filename: key + '.tex', content: lines.join('\n') };
       }
-
+      function download(filename, content, mime) {
+        const url = URL.createObjectURL(new Blob([content], { type: mime }));
+        const link = document.createElement('a'); link.href = url; link.download = filename;
+        document.body.appendChild(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 1200);
+      }
+      function update() {
+        const kind = $('author-kind').value, lang = $('author-language').value;
+        $('reader-title').textContent = $('author-title').value.trim() || 'Untitled';
+        $('reader-description').textContent = $('author-description').value;
+        $('reader-kind').textContent = kind === 'note' ? 'NOTE' : 'JOURNAL';
+        $('reader-date').textContent = $('author-date').value || '';
+        $('reader-language').textContent = lang.toUpperCase();
+        $('reader-tags').replaceChildren(...$('author-tags').value.split(',').map((x) => x.trim()).filter(Boolean).map((tag) => {
+          const node = document.createElement('span'); node.className = 'tag'; node.textContent = tag; return node;
+        }));
+        const result = preview($('author-source').value, $('author-bib').value, lang);
+        $('reader-content').innerHTML = result.html;
+        $('author-count').textContent = $('author-source').value.length.toLocaleString() + ' 字符';
+        $('author-bib-count').textContent = result.bibCount + ' entries';
+        document.querySelectorAll('.author-note-only').forEach((node) => { node.hidden = kind !== 'note'; });
+        const warnings = [];
+        if (result.missingCites.length) warnings.push('缺少 BibTeX: ' + result.missingCites.join(', '));
+        if (result.missingRefs.length) warnings.push('未定义标签: ' + result.missingRefs.join(', '));
+        if (result.duplicate.length) warnings.push('重复标签: ' + result.duplicate.join(', '));
+        $('author-status').textContent = warnings.length ? warnings.join('；') : '预览已更新 · ' + result.equations + ' 个公式 · ' + result.environments + ' 个学术环境 · ' + result.citations + ' 组引用';
+      }
+      async function copyText(value, message) {
+        try { await navigator.clipboard.writeText(value); $('author-status').textContent = message; }
+        catch (_) { $('author-status').textContent = '浏览器不允许自动复制，请手动选择文本。'; }
+      }
       fields.forEach((id) => $(id).addEventListener('input', update));
-      $('author-reset').addEventListener('click', () => {
-        $('author-source').value = sample;
-        update();
-        $('author-status').textContent = '示例内容已恢复';
-      });
+      $('author-reset').addEventListener('click', () => { $('author-source').value = sample; $('author-bib').value = sampleBib; update(); });
       $('author-copy').addEventListener('click', () => copyText($('author-source').value, '正文已复制'));
-      $('author-download').addEventListener('click', () => {
-        const file = makeMarkdownFile();
-        const blob = new Blob([file.content], { type: 'text/markdown;charset=utf-8' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = file.filename;
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-        setTimeout(() => URL.revokeObjectURL(url), 1000);
-        $('author-status').textContent = '已生成 ' + file.filename + '（草稿）';
-      });
+      $('author-download').addEventListener('click', () => { const f = makeMarkdownFile(); download(f.filename, f.content, 'text/markdown;charset=utf-8'); $('author-status').textContent = 'Markdown 草稿已生成'; });
+      $('author-tex').addEventListener('click', () => { const f = makeTexFile(); download(f.filename, f.content, 'application/x-tex;charset=utf-8'); $('author-status').textContent = 'LaTeX 源文件已生成；如有引用，请同时导出 BibTeX'; });
+      $('author-bib-download').addEventListener('click', () => { const key = $('author-key').value.trim().toLowerCase().replace(/[^a-z0-9-]+/g, '-') || 'references'; download(key + '.bib', $('author-bib').value.trim() + '\n', 'application/x-bibtex;charset=utf-8'); });
+      $('author-print').addEventListener('click', () => window.print());
       update();
     })();
-  </script>
-</BaseLayout>
+  </script></BaseLayout>

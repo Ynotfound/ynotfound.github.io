@@ -57,3 +57,8 @@ Midnight blue, ivory and champagne gold; a Fangzheng Xiaobiaosong-style Chinese 
 ## Author Studio
 
 Use [Pages CMS](https://app.pagescms.org/) to create and edit content. See [AUTHORING.md](AUTHORING.md) for setup and publishing instructions.
+
+
+## Academic writing workspace
+
+- /author-preview/ — browser-local Markdown/LaTeX preview, theorem environments, BibTeX citations and export. See AUTHORING.md.

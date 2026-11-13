@@ -27,6 +27,9 @@ for (const file of required) {
 const previewHtml = await readFile(path.join(root, 'author-preview/index.html'), 'utf8');
 if (!previewHtml.includes('name=\"robots\" content=\"noindex, nofollow, noarchive\"')) failures.push('author-preview: expected noindex metadata');
 if (!previewHtml.includes('markdown-it-texmath') || !previewHtml.includes('dompurify')) failures.push('author-preview: missing live Markdown/LaTeX preview libraries');
+for (const feature of ['BibTeX Library', 'academic-equation', 'academic-environment', 'author-tex', 'author-print', 'academic-bibliography']) {
+  if (!previewHtml.includes(feature)) failures.push('author-preview: missing academic writing feature ' + feature);
+}
 
 const mathPages = [
   'notes/feynman-periods/index.html', 'en/notes/feynman-periods/index.html',

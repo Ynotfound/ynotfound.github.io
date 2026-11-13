@@ -1,64 +1,115 @@
 # Author Studio
 
-This repository uses Pages CMS as a private, GitHub-backed writing interface. The public site remains an Astro static site on GitHub Pages.
+The site has two distinct interfaces backed by one Git repository:
 
-## Open the authoring interface
+- **Pages CMS** is the GitHub-backed authoring interface for creating and editing content.
+- **Author Preview** is a browser-local writing laboratory for testing Markdown, LaTeX, theorem environments, cross-references, BibTeX citations and exports.
+- **Public Observatory** is the reader-facing website. Only entries committed to the content collections and marked as published appear there.
 
-1. Visit https://app.pagescms.org/.
-2. Sign in with your GitHub account.
-3. Install the Pages CMS GitHub App for the Ynotfound/ynotfound.github.io repository only.
-4. Open this repository. Pages CMS reads .pages.yml and shows the configured writing, research, publication, project and reference collections.
+## Open the authoring tools
 
-Pages CMS writes Markdown and media files back to this repository. A successful GitHub Actions build then republishes the public site.
+1. Visit https://app.pagescms.org/ and sign in with GitHub.
+2. Open the repository Ynotfound/ynotfound.github.io.
+3. Use Writing, Notes, Research, Publications, Projects or References to edit repository content.
+4. Open https://ynotfound.github.io/author-preview/ for the separate split-pane academic preview.
 
-## Live article preview
+Pages CMS writes Markdown and media files to GitHub. A successful GitHub Actions build republishes the public site.
 
-Open the companion [Author Preview workspace](https://ynotfound.github.io/author-preview/). It provides a split source/reader view for Markdown and LaTeX, updates as you type, and can copy the article body or download a complete draft Markdown file.
+## Article preview workspace
 
-The preview is a browser-side helper, not an authenticated CMS page. It does not save your draft to a server or publish it. Do not paste confidential material into a shared/public computer. The page is marked noindex, but noindex is not access control.
+The Author Preview workspace runs in the browser. It does not save drafts to a server, write to GitHub or publish content. It is marked noindex, but noindex is not access control; do not paste confidential material into a shared or public computer.
 
-Use Pages CMS for the actual GitHub-backed editing and publishing workflow. The preview tool uses the same dollar-delimited math convention as the site: `$...# Author Studio
+Features:
 
-This repository uses Pages CMS as a private, GitHub-backed writing interface. The public site remains an Astro static site on GitHub Pages.
+- Live Markdown and KaTeX preview.
+- Automatic numbering for display equations and supported theorem-like environments.
+- Cross-references using @ref{label}.
+- BibTeX entries and citations using [@key] or [@key1; @key2].
+- Download a Markdown draft with frontmatter.
+- Export a XeLaTeX .tex source and a separate .bib file.
+- Print the reader view and choose “Save as PDF” in the browser print dialog.
 
-## Open the authoring interface
+### Theorem-like environments
 
-1. Visit https://app.pagescms.org/.
-2. Sign in with your GitHub account.
-3. Install the Pages CMS GitHub App for the Ynotfound/ynotfound.github.io repository only.
-4. Open this repository. Pages CMS reads .pages.yml and shows the configured writing, research, publication, project and reference collections.
+Write an environment as a fenced container:
 
-Pages CMS writes Markdown and media files back to this repository. A successful GitHub Actions build then republishes the public site.
+~~~text
+::: theorem id=thm:main title="Main theorem"
+Statement of the theorem.
 
- inline and `$...$` for display equations.
+The body may contain Markdown and display mathematics.
+:::
+~~~
+
+Supported names: theorem, lemma, proposition, corollary, definition, example, remark, and proof.
+
+The theorem-family environments share a running counter in the preview. Definitions, examples and remarks have their own counters. Proofs are unnumbered.
+
+### Equation labels and cross-references
+
+Put a label inside a display equation:
+
+~~~latex
+$$
+a^2+b^2=c^2.
+\label{eq:pythagoras}
+$$
+~~~
+
+Refer to it in prose with @ref{eq:pythagoras}. For a theorem or definition, use its declared ID, such as @ref{thm:main}.
+
+### BibTeX citations
+
+Paste real BibTeX records into the BibTeX Library panel. Cite them in the article body:
+
+~~~text
+The method is discussed in [@sample-key].
+A comparison appears in [@key-one; @key-two].
+~~~
+
+The preview numbers citations in order of first appearance and builds a reference list. Missing keys are shown as warnings. Replace the example placeholder with verified bibliographic data before exporting or publishing.
+
+### Export
+
+- **Markdown**: creates a draft file with draft: true.
+- **LaTeX**: creates a .tex source using the ctexart class, suitable for XeLaTeX. It supports common headings, paragraphs, lists, block quotes, code fences, display equations, theorem containers, cross-references and citations. Review complex tables, figures, custom macros and advanced environments manually before submission.
+- **BibTeX**: exports the contents of the BibTeX Library to a separate .bib file.
+- **PDF**: use the browser print dialog and choose “Save as PDF”. This prints the reader preview; it is not a TeX compilation.
+
+For a TeX document with citations, put the exported .tex and .bib files in the same directory and run:
+
+~~~bash
+xelatex article.tex
+bibtex article
+xelatex article.tex
+xelatex article.tex
+~~~
 
 ## Publishing an article
 
-1. Open Writing → Articles & Journal.
+1. In Pages CMS, open **Writing → Articles & Journal** or **Notes**.
 2. Create a Chinese entry with a stable translationKey, for example my-first-essay, and choose zh.
-3. Keep Keep as draft enabled while writing. Drafts are excluded from public pages, search, RSS and sitemap.
+3. Keep **Keep as draft** enabled while writing.
 4. Create the matching English entry using the exact same translationKey and choose en.
-5. When both language versions are ready, turn off Keep as draft for both entries. The public content validator requires every published entry to have both language versions.
-6. Wait for the GitHub Actions build and deployment to succeed.
+5. Paste the finished Markdown source into the CMS Source editor. The Author Preview workspace is a preview/export helper; it does not directly write into Pages CMS.
+6. When both language versions are ready, turn off **Keep as draft** for both entries.
+7. Wait for GitHub Actions to validate and deploy the site.
 
-The CMS saves files to GitHub; it does not bypass the site's content validation. If one language is published before its pair exists, the validation job will fail and the public deployment will not update until the pair is complete.
+The public content validator requires every public entry to have both language versions. If one language is published before its pair exists, validation fails and deployment is blocked until the pair is complete.
 
 ## Mathematics, code and images
 
-- The article editor stores Markdown, not HTML.
-- Use the editor's **Source** mode for all mathematical writing. The visual/WYSIWYG mode may normalize backslashes and damage LaTeX commands.
-- Inline mathematics is enclosed by one dollar sign on each side.
-- Display mathematics uses two dollar signs on each side. Put the opening and closing delimiters on separate lines, with the formula between them.
-- Do not type a bare square bracket around equations. Use the dollar-sign math delimiters.
-- After saving, check the preview. The build pipeline checks that KaTeX output exists on the core Chinese and English note pages.
+- Use the CMS **Source** mode for mathematical writing. The visual/WYSIWYG mode may normalize backslashes and damage LaTeX commands.
+- Inline mathematics uses single-dollar delimiters: $...$.
+- Display mathematics uses double-dollar delimiters on separate lines: $$...$$.
 - Use fenced code blocks for source code.
-- Insert images through the editor's image/media control. Uploads are stored under public/uploads/images/ and served from /uploads/images/.
-- PDFs and other documents can be uploaded through the media manager under public/uploads/documents/. For publication records, paste the resulting public path or an external URL into the PDF field.
+- Upload images through the CMS media control. They are stored under public/uploads/images/ and served from /uploads/images/.
+- PDFs and other documents can be uploaded under public/uploads/documents/. Add the resulting public path or external URL to the relevant publication field.
 
 ## Editorial safety
 
-- New entries default to draft.
+- Draft entries are excluded from public pages, search, RSS and sitemap.
 - Do not mark a manuscript as published unless it has actually been published.
 - Distinguish proofs, symbolic checks, numerical checks, conjectures and open problems.
-- Keep private correspondence, credentials and confidential collaborator material out of this public Git repository.
-- The CMS login is handled by Pages CMS and GitHub. Never put a GitHub token or private key in this repository.
+- Keep credentials, private correspondence and confidential collaborator material out of this public Git repository.
+- Never put GitHub tokens or private keys in the repository.
