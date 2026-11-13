@@ -26,9 +26,9 @@ The CMS saves files to GitHub; it does not bypass the site's content validation.
 
 - The article editor stores Markdown, not HTML.
 - Use the editor's **Source** mode for all mathematical writing. The visual/WYSIWYG mode may normalize backslashes and damage LaTeX commands.
-- Inline mathematics: \$...\$, for example \$\alpha_e\$ or \$\mathcal U_G(\alpha)\$.
-- Display mathematics: put the formula on its own lines between \$\$\$ delimiters. This is the recommended syntax for displayed equations.
-- Do not type a bare square bracket around equations. The opening and closing delimiters must each be two dollar signs.
+- Inline mathematics is enclosed by one dollar sign on each side.
+- Display mathematics uses two dollar signs on each side. Put the opening and closing delimiters on separate lines, with the formula between them.
+- Do not type a bare square bracket around equations. Use the dollar-sign math delimiters.
 - After saving, check the preview. The build pipeline checks that KaTeX output exists on the core Chinese and English note pages.
 - Use fenced code blocks for source code.
 - Insert images through the editor's image/media control. Uploads are stored under public/uploads/images/ and served from /uploads/images/.

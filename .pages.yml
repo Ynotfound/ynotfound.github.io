@@ -76,7 +76,7 @@ content:
             description: "When enabled, this article is excluded from the public site."
           - name: body
             label: Article
-            description: "For LaTeX, use Source mode and write $...$ inline or $...$ for display equations."
+            description: "For LaTeX, use Source mode. Inline math uses single-dollar delimiters; display equations use double-dollar delimiters."
             type: rich-text
             required: true
             options:
