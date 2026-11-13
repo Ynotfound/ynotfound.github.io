@@ -171,19 +171,48 @@
         return String(value).replace(/\\/g, '\\textbackslash{}').replace(/([{}#$%&_])/g, '\\$1').replace(/~/g, '\\textasciitilde{}').replace(/\^/g, '\\textasciicircum{}');
       }
       function markdownToTex(source) {
-        const blocks = [];
-        const protect = (value) => { const token = '@@TEX' + blocks.length + '@@'; blocks.push(value); return token; };
-        let text = source.replace(codePattern, (block) => protect('\\begin{verbatim}\n' + block.replace(/^\x60{3}[^\n]*\n/, '').replace(/\n\x60{3}\s*$/, '') + '\n\\end{verbatim}'));
-        text = text.replace(envPattern, (_all, type, label, title, body) => protect('\\begin{' + type + '}' + (title ? '[' + texEscape(title) + ']' : '') + '\n' + (label ? '\\label{' + label + '}\n' : '') + markdownToTex(body) + '\n\\end{' + type + '}'));
-        text = text.replace(eqPattern, (_all, latex) => protect('\\begin{equation}\n' + latex.trim() + '\n\\end{equation}'));
-        text = text.replace(/^\s*(#{1,4})\s+(.+)$/gm, (_all, hashes, title) => '\\' + ['section','subsection','subsubsection','paragraph'][hashes.length - 1] + '{' + texEscape(title) + '}');
-        text = text.replace(/\[@([A-Za-z0-9:._-]+)\]/g, '\\cite{$1}');
-        text = text.replace(/@ref\{([^}]+)\}/g, '\\autoref{$1}');
-        text = text.replace(/\*\*(.+?)\*\*/g, '\\textbf{$1}').replace(/\*(.+?)\*/g, '\\emph{$1}');
-        text = text.replace(/^\s*[-*+]\s+(.+)$/gm, '\\\\item $1');
-        text = text.replace(/^\s*>\s?/gm, '');
-        blocks.forEach((value, i) => { text = text.replace('@@TEX' + i + '@@', value); });
-        return text;
+        let text = source;
+        const protectedItems = [];
+        const protect = (value) => {
+          const token = '@@TEX_BLOCK_' + protectedItems.length + '@@';
+          protectedItems.push(value);
+          return token;
+        };
+        text = text.replace(codePattern, (_whole, code) => protect('\\begin{verbatim}\n' + code + '\n\\end{verbatim}'));
+        text = text.replace(envPattern, (_whole, type, label, title, body) => {
+          const optional = title ? '[' + texEscape(title) + ']' : '';
+          const labelLine = label ? '\\label{' + label + '}\n' : '';
+          return protect('\\begin{' + type + '}' + optional + '\n' + labelLine + markdownToTex(body) + '\n\\end{' + type + '}');
+        });
+        text = text.replace(eqPattern, (_whole, latex) => {
+          const formula = latex.trim();
+          const alreadyEnvironment = /^\\begin\{(align|gather|multline)\*?\}/.test(formula);
+          return protect(alreadyEnvironment ? formula : '\\begin{equation}\n' + formula + '\n\\end{equation}');
+        });
+
+        const blocks = text.split(/\n\s*\n/).map((block) => block.trim()).filter(Boolean);
+        const converted = blocks.map((block) => {
+          const tokenMatch = /^@@TEX_BLOCK_(\d+)@@$/.exec(block);
+          if (tokenMatch) return protectedItems[Number(tokenMatch[1])];
+          const heading = /^(#{1,4})\s+(.+)$/.exec(block);
+          if (heading) {
+            const command = ['section','subsection','subsubsection','paragraph'][heading[1].length - 1];
+            return '\\' + command + '{' + inlineToTex(heading[2]) + '}';
+          }
+          const lines = block.split('\n');
+          if (lines.every((line) => /^[-*+]\s+/.test(line))) {
+            return '\\begin{itemize}\n' + lines.map((line) => '\\item ' + inlineToTex(line.replace(/^[-*+]\s+/, ''))).join('\n') + '\n\\end{itemize}';
+          }
+          if (lines.every((line) => /^\d+\.\s+/.test(line))) {
+            return '\\begin{enumerate}\n' + lines.map((line) => '\\item ' + inlineToTex(line.replace(/^\d+\.\s+/, ''))).join('\n') + '\n\\end{enumerate}';
+          }
+          if (lines.every((line) => /^>\s?/.test(line))) {
+            return '\\begin{quote}\n' + lines.map((line) => inlineToTex(line.replace(/^>\s?/, ''))).join('\\\\\n') + '\n\\end{quote}';
+          }
+          if (/^---+$/.test(block)) return '\\medskip\\hrule\\medskip';
+          return lines.map((line) => inlineToTex(line)).join('\n');
+        });
+        return converted.join('\n\n');
       }
       function makeMarkdownFile() {
         const key = $('author-key').value.trim().toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-+|-+$/g, '') || 'untitled';
