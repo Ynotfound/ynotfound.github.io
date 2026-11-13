@@ -24,14 +24,9 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       </div>
     </section>
 
-    <details class="author-bib-panel" open>
+    <details class="author-bib-panel">
       <summary><span><strong>BibTeX Library</strong><small>文献数据库 · 使用 [@citation-key] 引用</small></span><span class="author-bib-count" id="author-bib-count">0 entries</span></summary>
-      <label class="author-field"><span>BIBTEX SOURCE</span><textarea id="author-bib" class="author-bib-source" spellcheck="false">@misc&#123;sample-reference,
-  author = &#123;Replace With Author&#125;,
-  title = &#123;Replace With the Actual Reference Title&#125;,
-  year = &#123;2026&#125;,
-  note = &#123;Example entry: replace this with a verified BibTeX record&#125;
-&#125;</textarea></label>
+      <label class="author-field"><span>BIBTEX SOURCE</span><textarea id="author-bib" class="author-bib-source" spellcheck="false" placeholder="Paste BibTeX entries here..."></textarea></label>
       <p class="author-bib-help">粘贴真实 BibTeX 条目。正文使用 [@key] 或 [@key1; @key2]；预览会生成编号引用和文末参考文献。示例条目只是占位符。</p>
     </details>
 
