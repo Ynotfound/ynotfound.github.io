@@ -44,6 +44,7 @@
         button.textContent = label; actions?.append(button);
       };
       addAction('author-tex', '导出 LaTeX');
+      addAction('author-source-download', '下载源稿 Markdown');
       addAction('author-bib-download', '导出 BibTeX');
       addAction('author-print', '打印 / 保存 PDF', true);
 
@@ -214,12 +215,86 @@
         });
         return converted.join('\n\n');
       }
-      function makeMarkdownFile() {
+      function toPublicMarkdown(source, bibSource, locale) {
+        const bib = parseBib(bibSource);
+        const codeBlocks = [];
+        let text = source.replace(codePattern, (block) => {
+          const token = '@@PUBLIC_CODE_' + codeBlocks.length + '@@';
+          codeBlocks.push(block);
+          return token;
+        });
+        const labels = new Map();
+        let equationNumber = 0;
+        text = text.replace(eqPattern, (_all, latex) => {
+          equationNumber += 1;
+          const match = /\\label\{([^}]+)\}/.exec(latex);
+          const label = match?.[1]?.trim();
+          if (label) labels.set(label, { id: idSafe(label), name: locale === 'en' ? 'Equation (' + equationNumber + ')' : '公式 (' + equationNumber + ')' });
+          const clean = latex.replace(/\\label\{[^}]+\}/g, '').trim();
+          const tagged = /\\tag\{/.test(clean) ? clean : clean + '\n\\tag{' + equationNumber + '}';
+          const anchor = label ? '<a id="' + esc(idSafe(label)) + '"></a>\n\n' : '';
+          return '\n\n' + anchor + '$\n' + tagged + '\n$\n\n';
+        });
+
+        const names = {
+          theorem: locale === 'en' ? 'Theorem' : '定理',
+          lemma: locale === 'en' ? 'Lemma' : '引理',
+          proposition: locale === 'en' ? 'Proposition' : '命题',
+          corollary: locale === 'en' ? 'Corollary' : '推论',
+          definition: locale === 'en' ? 'Definition' : '定义',
+          example: locale === 'en' ? 'Example' : '例',
+          remark: locale === 'en' ? 'Remark' : '注',
+          proof: locale === 'en' ? 'Proof' : '证明'
+        };
+        const counters = {};
+        text = text.replace(envPattern, (_all, type, label, title, body) => {
+          const family = ['theorem','lemma','proposition','corollary'].includes(type) ? 'theorem' : type;
+          const number = type === 'proof' ? null : (counters[family] = (counters[family] || 0) + 1);
+          if (label) labels.set(label, { id: idSafe(label), name: names[type] + (number ? ' ' + number : '') });
+          const heading = names[type] + (number ? ' ' + number : '') + (title ? ' (' + title + ')' : '');
+          const anchor = label ? '<a id="' + esc(idSafe(label)) + '"></a>\n\n' : '';
+          return '\n\n' + anchor + '**' + heading + '**\n\n' + body.trim() + '\n\n';
+        });
+
+        const cited = [], numbers = new Map();
+        for (const match of source.replace(codePattern, '').matchAll(citePattern)) {
+          for (const key of match[1].split(';').map((item) => item.trim().replace(/^@/, ''))) {
+            if (!numbers.has(key)) { cited.push(key); numbers.set(key, cited.length + 1); }
+          }
+        }
+        text = text.replace(/@ref\{([^}]+)\}/g, (_all, key) => {
+          const target = labels.get(key.trim());
+          return target ? '[' + target.name + '](#' + target.id + ')' : '**?? ' + key.trim() + '**';
+        });
+        text = text.replace(citePattern, (_all, group) => group.split(';').map((item) => {
+          const key = item.trim().replace(/^@/, ''), number = numbers.get(key);
+          return bib[key] ? '[' + number + '](#ref-' + idSafe(key) + ')' : '[? ' + key + ']';
+        }).join('; '));
+
+        if (cited.length) {
+          const heading = locale === 'en' ? '## References' : '## 参考文献';
+          const entries = cited.map((key, index) => {
+            const entry = bib[key];
+            if (!entry) return (index + 1) + '. Missing BibTeX entry: ' + key;
+            const anchor = '<a id="ref-' + esc(idSafe(key)) + '"></a> ';
+            const venue = [entry.journal || entry.booktitle || entry.publisher || '', entry.year || ''].filter(Boolean).join(', ');
+            const doi = entry.doi ? ' [DOI](https://doi.org/' + entry.doi + ')' : '';
+            const url = entry.url ? ' [Link](' + entry.url + ')' : '';
+            return (index + 1) + '. ' + anchor + (entry.author || '') + '. *' + (entry.title || key) + '*.' + (venue ? ' ' + venue + '.' : '') + doi + url;
+          });
+          text += '\n\n' + heading + '\n\n' + entries.join('\n\n');
+        }
+        codeBlocks.forEach((block, index) => { text = text.replace('@@PUBLIC_CODE_' + index + '@@', block); });
+        return text.trim() + '\n';
+      }
+
+      function makeMarkdownFile(readerReady = true) {
         const key = $('author-key').value.trim().toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-+|-+$/g, '') || 'untitled';
         const lang = $('author-language').value, tags = $('author-tags').value.split(',').map((x) => x.trim()).filter(Boolean), kind = $('author-kind').value;
         const lines = ['---','translationKey: ' + key,'lang: ' + lang,'title: ' + JSON.stringify($('author-title').value),'description: ' + JSON.stringify($('author-description').value),'date: ' + ($('author-date').value || new Date().toISOString().slice(0,10)),'tags: [' + tags.map((x) => JSON.stringify(x)).join(', ') + ']','draft: true'];
         if (kind === 'note') lines.push('category: ' + JSON.stringify($('author-category').value || 'GENERAL'),'order: 100');
-        lines.push('---', '', $('author-source').value, '');
+        const body = readerReady ? toPublicMarkdown($('author-source').value, $('author-bib').value, lang) : $('author-source').value;
+        lines.push('---', '', body, '');
         return { filename: key + '.' + lang + '.md', content: lines.join('\n') };
       }
       function makeTexFile() {
@@ -281,7 +356,8 @@
       fields.forEach((id) => $(id).addEventListener('input', update));
       $('author-reset').addEventListener('click', () => { $('author-source').value = sample; $('author-bib').value = sampleBib; update(); });
       $('author-copy').addEventListener('click', () => copyText($('author-source').value, '正文已复制'));
-      $('author-download').addEventListener('click', () => { const f = makeMarkdownFile(); download(f.filename, f.content, 'text/markdown;charset=utf-8'); $('author-status').textContent = 'Markdown 草稿已生成'; });
+      $('author-download').addEventListener('click', () => { const f = makeMarkdownFile(true); download(f.filename, f.content, 'text/markdown;charset=utf-8'); $('author-status').textContent = '读者版 Markdown 草稿已生成'; });
+      $('author-source-download').addEventListener('click', () => { const f = makeMarkdownFile(false); f.filename = f.filename.replace(/\\.md$/, '.source.md'); download(f.filename, f.content, 'text/markdown;charset=utf-8'); $('author-status').textContent = '保留学术标记的源稿已生成'; });
       $('author-tex').addEventListener('click', () => { const f = makeTexFile(); download(f.filename, f.content, 'application/x-tex;charset=utf-8'); $('author-status').textContent = 'LaTeX 源文件已生成；如有引用，请同时导出 BibTeX'; });
       $('author-bib-download').addEventListener('click', () => { const key = $('author-key').value.trim().toLowerCase().replace(/[^a-z0-9-]+/g, '-') || 'references'; download(key + '.bib', $('author-bib').value.trim() + '\n', 'application/x-bibtex;charset=utf-8'); });
       $('author-print').addEventListener('click', () => window.print());
