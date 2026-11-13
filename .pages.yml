@@ -1,0 +1,669 @@
+media:
+  - name: images
+    label: Article images
+    input: public/uploads/images
+    output: /uploads/images
+    extensions: [png, jpg, jpeg, webp, gif]
+    categories: [image]
+    rename: safe
+  - name: documents
+    label: Papers and documents
+    input: public/uploads/documents
+    output: /uploads/documents
+    extensions: [pdf, zip]
+    categories: [document, compressed]
+    rename: safe
+
+content:
+  - name: writing
+    label: Writing
+    type: group
+    items:
+      - name: journal
+        label: Articles & Journal
+        type: collection
+        path: src/content/journal
+        format: yaml-frontmatter
+        subfolders: false
+        filename:
+          template: "{translationKey}.{lang}.md"
+          field: create
+        view:
+          primary: title
+          fields: [title, lang, date, draft]
+          sort: [date, title]
+          search: [title, description, tags]
+          default:
+            sort: date
+            order: desc
+        fields:
+          - name: translationKey
+            label: Article ID (shared by translations)
+            type: string
+            required: true
+            pattern: "^[a-z0-9-]+$"
+            description: "Use the same ID for the Chinese and English versions, e.g. quantum-notes."
+          - name: lang
+            label: Language
+            type: select
+            required: true
+            options:
+              values:
+                - name: zh
+                  label: 中文
+                - name: en
+                  label: English
+          - name: title
+            label: Title
+            type: string
+            required: true
+          - name: description
+            label: Summary / SEO description
+            type: text
+            required: true
+          - name: date
+            label: Publication date
+            type: date
+            required: true
+          - name: tags
+            label: Tags
+            type: string
+            list: true
+          - name: draft
+            label: Keep as draft
+            type: boolean
+            default: true
+            description: "When enabled, this article is excluded from the public site."
+          - name: body
+            label: Article
+            type: rich-text
+            required: true
+            options:
+              format: markdown
+              switcher: true
+              media: images
+              path: articles
+      - name: notes
+        label: Notes
+        type: collection
+        path: src/content/notes
+        format: yaml-frontmatter
+        subfolders: false
+        filename:
+          template: "{translationKey}.{lang}.md"
+          field: create
+        view:
+          primary: title
+          fields: [title, category, lang, date, draft]
+          sort: [date, title]
+          search: [title, description, category, tags]
+          default:
+            sort: date
+            order: desc
+        fields:
+          - name: translationKey
+            label: Note ID
+            type: string
+            required: true
+            pattern: "^[a-z0-9-]+$"
+          - name: lang
+            label: Language
+            type: select
+            required: true
+            options:
+              values:
+                - name: zh
+                  label: 中文
+                - name: en
+                  label: English
+          - name: title
+            label: Title
+            type: string
+            required: true
+          - name: description
+            label: Summary
+            type: text
+            required: true
+          - name: category
+            label: Category
+            type: string
+            required: true
+          - name: tags
+            label: Tags
+            type: string
+            list: true
+          - name: date
+            label: Date
+            type: date
+            required: true
+          - name: updated
+            label: Last updated
+            type: date
+          - name: order
+            label: Display order
+            type: number
+          - name: draft
+            label: Keep as draft
+            type: boolean
+            default: true
+          - name: body
+            label: Note content
+            type: rich-text
+            required: true
+            options:
+              format: markdown
+              switcher: true
+              media: images
+              path: notes
+
+  - name: research
+    label: Research
+    type: group
+    items:
+      - name: programmes
+        label: Research programmes
+        type: collection
+        path: src/content/research
+        format: yaml-frontmatter
+        subfolders: false
+        filename:
+          template: "{translationKey}.{lang}.md"
+          field: create
+        view:
+          primary: title
+          fields: [title, status, lang, updated, draft]
+          sort: [updated, date, title]
+          search: [title, description, category, tags]
+          default:
+            sort: updated
+            order: desc
+        fields:
+          - name: translationKey
+            label: Programme ID
+            type: string
+            required: true
+            pattern: "^[a-z0-9-]+$"
+          - name: lang
+            label: Language
+            type: select
+            required: true
+            options:
+              values:
+                - name: zh
+                  label: 中文
+                - name: en
+                  label: English
+          - name: title
+            label: Title
+            type: string
+            required: true
+          - name: description
+            label: Summary
+            type: text
+            required: true
+          - name: category
+            label: Field
+            type: string
+            required: true
+          - name: status
+            label: Programme status
+            type: select
+            required: true
+            options:
+              values:
+                - name: active
+                  label: Active
+                - name: exploratory
+                  label: Exploratory
+                - name: paused
+                  label: Paused
+                - name: completed
+                  label: Completed
+          - name: tags
+            label: Tags
+            type: string
+            list: true
+          - name: date
+            label: Start / record date
+            type: date
+            required: true
+          - name: updated
+            label: Last updated
+            type: date
+          - name: featured
+            label: Feature on research index
+            type: boolean
+            default: false
+          - name: draft
+            label: Keep as draft
+            type: boolean
+            default: true
+          - name: body
+            label: Programme description
+            type: rich-text
+            required: true
+            options:
+              format: markdown
+              switcher: true
+              media: images
+              path: research
+      - name: updates
+        label: Research log
+        type: collection
+        path: src/content/updates
+        format: yaml-frontmatter
+        subfolders: false
+        filename:
+          template: "{translationKey}.{lang}.md"
+          field: create
+        view:
+          primary: title
+          fields: [title, projectKey, recordType, evidence, lang, date, draft]
+          sort: [date, title]
+          search: [title, description, projectKey, tags]
+          default:
+            sort: date
+            order: desc
+        fields:
+          - name: translationKey
+            label: Record ID
+            type: string
+            required: true
+            pattern: "^[a-z0-9-]+$"
+          - name: lang
+            label: Language
+            type: select
+            required: true
+            options:
+              values:
+                - name: zh
+                  label: 中文
+                - name: en
+                  label: English
+          - name: projectKey
+            label: Research programme ID
+            type: string
+            required: true
+            description: "Must match a programme ID, e.g. feynman-periods, quantum-field-theory, riemann-hypothesis, four-color-theorem."
+          - name: title
+            label: Record title
+            type: string
+            required: true
+          - name: description
+            label: Short summary
+            type: text
+            required: true
+          - name: date
+            label: Record date
+            type: date
+            required: true
+          - name: recordType
+            label: Record type
+            type: select
+            required: true
+            options:
+              values:
+                - name: snapshot
+                  label: Research snapshot
+                - name: result
+                  label: Result
+                - name: verification
+                  label: Verification
+                - name: conjecture
+                  label: Conjecture
+                - name: open-problem
+                  label: Open problem
+                - name: failed-attempt
+                  label: Failed attempt
+          - name: evidence
+            label: Evidence class
+            type: select
+            required: true
+            options:
+              values:
+                - name: proof
+                  label: Proof
+                - name: symbolic-check
+                  label: Symbolic check
+                - name: numerical-check
+                  label: Numerical check
+                - name: literature
+                  label: Literature
+                - name: proposal
+                  label: Programme snapshot / proposal
+                - name: none
+                  label: Not classified
+          - name: tags
+            label: Tags
+            type: string
+            list: true
+          - name: sourceUrl
+            label: Supporting source URL
+            type: string
+          - name: draft
+            label: Keep as draft
+            type: boolean
+            default: true
+          - name: body
+            label: Detailed record
+            type: rich-text
+            required: true
+            options:
+              format: markdown
+              switcher: true
+              media: images
+              path: research-log
+
+  - name: library
+    label: Library & Projects
+    type: group
+    items:
+      - name: publications
+        label: Papers & Manuscripts
+        type: collection
+        path: src/content/publications
+        format: yaml-frontmatter
+        subfolders: false
+        filename:
+          template: "{translationKey}.{lang}.md"
+          field: create
+        view:
+          primary: title
+          fields: [title, status, year, lang, date, draft]
+          sort: [year, date, title]
+          search: [title, description, authors, venue, tags]
+          default:
+            sort: year
+            order: desc
+        fields:
+          - name: translationKey
+            label: Paper ID
+            type: string
+            required: true
+            pattern: "^[a-z0-9-]+$"
+          - name: lang
+            label: Language
+            type: select
+            required: true
+            options:
+              values:
+                - name: zh
+                  label: 中文
+                - name: en
+                  label: English
+          - name: title
+            label: Title
+            type: string
+            required: true
+          - name: description
+            label: Abstract / Summary
+            type: text
+            required: true
+          - name: kind
+            label: Document type
+            type: select
+            required: true
+            options:
+              values:
+                - name: journal-article
+                  label: Journal article
+                - name: conference-paper
+                  label: Conference paper
+                - name: preprint
+                  label: Preprint
+                - name: working-paper
+                  label: Working paper
+                - name: thesis
+                  label: Thesis
+                - name: other
+                  label: Other
+          - name: status
+            label: Publication status
+            type: select
+            required: true
+            options:
+              values:
+                - name: published
+                  label: Published
+                - name: preprint
+                  label: Preprint
+                - name: working-paper
+                  label: Working paper
+                - name: draft
+                  label: Draft
+                - name: superseded
+                  label: Superseded
+          - name: authors
+            label: Authors
+            type: string
+            list: true
+          - name: year
+            label: Year
+            type: number
+            required: true
+          - name: venue
+            label: Journal / Venue
+            type: string
+          - name: date
+            label: Date added
+            type: date
+            required: true
+          - name: tags
+            label: Tags
+            type: string
+            list: true
+          - name: doi
+            label: DOI
+            type: string
+          - name: arxiv
+            label: arXiv ID
+            type: string
+          - name: pdf
+            label: PDF URL or uploaded path
+            type: string
+          - name: supplementary
+            label: Supplementary material URL or path
+            type: string
+          - name: repository
+            label: Source repository
+            type: string
+          - name: draft
+            label: Keep as draft
+            type: boolean
+            default: true
+          - name: body
+            label: Abstract and notes
+            type: rich-text
+            options:
+              format: markdown
+              switcher: true
+              media: images
+              path: publications
+      - name: projects
+        label: Projects & Software
+        type: collection
+        path: src/content/projects
+        format: yaml-frontmatter
+        subfolders: false
+        filename:
+          template: "{translationKey}.{lang}.md"
+          field: create
+        view:
+          primary: title
+          fields: [title, category, status, lang, draft]
+          sort: [date, title]
+          search: [title, description, category, tags]
+          default:
+            sort: date
+            order: desc
+        fields:
+          - name: translationKey
+            label: Project ID
+            type: string
+            required: true
+            pattern: "^[a-z0-9-]+$"
+          - name: lang
+            label: Language
+            type: select
+            required: true
+            options:
+              values:
+                - name: zh
+                  label: 中文
+                - name: en
+                  label: English
+          - name: title
+            label: Title
+            type: string
+            required: true
+          - name: description
+            label: Summary
+            type: text
+            required: true
+          - name: category
+            label: Category
+            type: string
+            required: true
+          - name: status
+            label: Project status
+            type: select
+            required: true
+            options:
+              values:
+                - name: active
+                  label: Active
+                - name: maintained
+                  label: Maintained
+                - name: prototype
+                  label: Prototype
+                - name: archived
+                  label: Archived
+          - name: tags
+            label: Tags
+            type: string
+            list: true
+          - name: date
+            label: Date
+            type: date
+            required: true
+          - name: repository
+            label: GitHub repository
+            type: string
+          - name: homepage
+            label: Project homepage
+            type: string
+          - name: featured
+            label: Feature on project index
+            type: boolean
+            default: false
+          - name: draft
+            label: Keep as draft
+            type: boolean
+            default: true
+          - name: body
+            label: Project description
+            type: rich-text
+            required: true
+            options:
+              format: markdown
+              switcher: true
+              media: images
+              path: projects
+      - name: references
+        label: References & Reading
+        type: collection
+        path: src/content/references
+        format: yaml-frontmatter
+        subfolders: false
+        filename:
+          template: "{translationKey}.{lang}.md"
+          field: create
+        view:
+          primary: title
+          fields: [title, kind, year, lang, draft]
+          sort: [year, date, title]
+          search: [title, description, authors, tags]
+          default:
+            sort: year
+            order: desc
+        fields:
+          - name: translationKey
+            label: Reference ID
+            type: string
+            required: true
+            pattern: "^[a-z0-9-]+$"
+          - name: lang
+            label: Language
+            type: select
+            required: true
+            options:
+              values:
+                - name: zh
+                  label: 中文
+                - name: en
+                  label: English
+          - name: title
+            label: Title
+            type: string
+            required: true
+          - name: description
+            label: Summary
+            type: text
+            required: true
+          - name: kind
+            label: Reference type
+            type: select
+            required: true
+            options:
+              values:
+                - name: paper
+                  label: Paper
+                - name: book
+                  label: Book
+                - name: software
+                  label: Software
+                - name: repository
+                  label: Repository
+                - name: website
+                  label: Website
+                - name: dataset
+                  label: Dataset
+                - name: notes
+                  label: Notes
+          - name: authors
+            label: Authors
+            type: string
+            list: true
+          - name: year
+            label: Year
+            type: number
+          - name: date
+            label: Date added
+            type: date
+            required: true
+          - name: tags
+            label: Tags
+            type: string
+            list: true
+          - name: url
+            label: Source URL
+            type: string
+            required: true
+          - name: doi
+            label: DOI
+            type: string
+          - name: arxiv
+            label: arXiv ID
+            type: string
+          - name: draft
+            label: Keep as draft
+            type: boolean
+            default: true
+          - name: body
+            label: Reading notes
+            type: rich-text
+            options:
+              format: markdown
+              switcher: true
+              media: images
+              path: references

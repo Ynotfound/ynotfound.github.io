@@ -2,6 +2,10 @@
 
 The site uses Astro Content Collections. Each public entry must have a Chinese and English Markdown file that share one translationKey.
 
+## Visual authoring interface
+
+For browser-based writing and publishing, use [Pages CMS](https://app.pagescms.org/). The repository is preconfigured in `.pages.yml`; setup, bilingual publishing, LaTeX and media instructions are in [AUTHORING.md](AUTHORING.md).
+
 ## Add a note
 
 Create two files under src/content/notes/, for example my-topic.zh.md and my-topic.en.md.

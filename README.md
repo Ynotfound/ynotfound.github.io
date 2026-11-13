@@ -52,3 +52,8 @@ Distinguish published papers, preprints and working manuscripts. For research no
 ## Design
 
 Midnight blue, ivory and champagne gold; a Fangzheng Xiaobiaosong-style Chinese serif stack with system fallbacks; restrained Avalon / Excalibur details. All sword artwork is original vector artwork, not redistributed Fate assets.
+
+
+## Author Studio
+
+Use [Pages CMS](https://app.pagescms.org/) to create and edit content. See [AUTHORING.md](AUTHORING.md) for setup and publishing instructions.
