@@ -15,7 +15,7 @@ const required = [
   'reading/index.html', 'en/reading/index.html',
   'about/index.html', 'en/about/index.html',
   'search/index.html', 'en/search/index.html',
-  'search-index.json', 'sitemap.xml', 'rss.xml', 'cursor.png', 'author-preview/index.html'
+  'search-index.json', 'sitemap.xml', 'rss.xml', 'cursor.png', 'author-preview/index.html', 'author-preview.js'
 ];
 
 const failures = [];
@@ -25,10 +25,15 @@ for (const file of required) {
 }
 
 const previewHtml = await readFile(path.join(root, 'author-preview/index.html'), 'utf8');
+const previewScript = await readFile(path.join(root, 'author-preview.js'), 'utf8');
+const { spawnSync } = await import('node:child_process');
+const scriptCheck = spawnSync(process.execPath, ['--check', path.join(root, 'author-preview.js')], { encoding: 'utf8' });
+if (scriptCheck.status !== 0) failures.push('author-preview.js: JavaScript syntax check failed: ' + (scriptCheck.stderr || scriptCheck.stdout));
 if (!previewHtml.includes('name=\"robots\" content=\"noindex, nofollow, noarchive\"')) failures.push('author-preview: expected noindex metadata');
 if (!previewHtml.includes('markdown-it-texmath') || !previewHtml.includes('dompurify')) failures.push('author-preview: missing live Markdown/LaTeX preview libraries');
+if (!previewHtml.includes('author-preview.js')) failures.push('author-preview: external writing script is not linked');
 for (const feature of ['BibTeX Library', 'academic-equation', 'academic-environment', 'author-tex', 'author-print', 'academic-bibliography']) {
-  if (!previewHtml.includes(feature)) failures.push('author-preview: missing academic writing feature ' + feature);
+  if (!previewHtml.includes(feature) && !previewScript.includes(feature)) failures.push('author-preview: missing academic writing feature ' + feature);
 }
 
 const mathPages = [
