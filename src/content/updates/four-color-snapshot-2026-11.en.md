@@ -2,7 +2,7 @@
 translationKey: four-color-snapshot-2026-11
 lang: en
 projectKey: four-color-theorem
-title: Research snapshot: reducible configurations and finite verification
+title: 'Research snapshot: reducible configurations and finite verification'
 description: The current exploration concerns boundary-color extension, reducible configurations, discharging structures and the distinction between general arguments and finite computational verification.
 date: 2026-11-12
 recordType: snapshot
