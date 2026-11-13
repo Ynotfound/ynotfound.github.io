@@ -7,8 +7,8 @@ const escapeXml = (value: string) => value.replace(/[<>&'"]/g, (char) => ({
 
 export const GET: APIRoute = async () => {
   const staticPaths = [
-    '', 'research/', 'publications/', 'notes/', 'reading/', 'journal/', 'projects/', 'about/', 'search/',
-    'en/', 'en/research/', 'en/publications/', 'en/notes/', 'en/reading/', 'en/journal/', 'en/projects/', 'en/about/', 'en/search/'
+    '', 'research/', 'research/observatory/', 'publications/', 'notes/', 'reading/', 'journal/', 'projects/', 'about/', 'search/',
+    'en/', 'en/research/', 'en/research/observatory/', 'en/publications/', 'en/notes/', 'en/reading/', 'en/journal/', 'en/projects/', 'en/about/', 'en/search/'
   ];
   const [notes, journal, research, publications, projects, references] = await Promise.all([
     getCollection('notes', ({ data }) => !data.draft),

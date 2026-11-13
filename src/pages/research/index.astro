@@ -4,4 +4,4 @@ import CollectionIndex from '../../components/CollectionIndex.astro';
 const entries = (await getCollection('research', ({ data }) => !data.draft && data.lang === 'zh'))
   .sort((a, b) => Number(b.data.featured) - Number(a.data.featured) || b.data.date.getTime() - a.data.date.getTime());
 ---
-<CollectionIndex title="研究方向" description="几条彼此交汇的探索路径。每个研究专题都有独立档案，记录问题、方法、进展与证据状态。" kicker="RESEARCH / 研究" active="research" basePath="/research/" entries={entries} locale="zh" />
+<CollectionIndex title="研究方向" description="几条彼此交汇的探索路径。每个研究专题都有独立档案，记录问题、方法、进展与证据状态。" kicker="RESEARCH / 研究" active="research" basePath="/research/" entries={entries} locale="zh" actionHref="/research/observatory/" actionLabel="进入研究观测站 ↗" />

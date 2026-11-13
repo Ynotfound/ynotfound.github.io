@@ -4,16 +4,18 @@ interface Props {
   title: string; description: string; kicker: string; active: string;
   basePath: string; entries: any[]; locale?: 'zh' | 'en';
   variant?: 'grid' | 'list'; emptyTitle?: string; emptyDescription?: string;
+  actionHref?: string; actionLabel?: string;
 }
 const {
   title, description, kicker, active, basePath, entries, locale = 'zh', variant = 'grid',
   emptyTitle = locale === 'en' ? 'Nothing published here yet' : '这里还没有公开内容',
-  emptyDescription = locale === 'en' ? 'New entries will appear here automatically.' : '新内容发布后会自动出现在这里。'
+  emptyDescription = locale === 'en' ? 'New entries will appear here automatically.' : '新内容发布后会自动出现在这里。',
+  actionHref, actionLabel
 } = Astro.props;
 const dateLabel = (value: Date | undefined) => value
   ? new Date(value).toLocaleDateString(locale === 'en' ? 'en-US' : 'zh-CN', { year: 'numeric', month: 'short', day: 'numeric' })
   : '';
-const actionLabel = locale === 'en' ? 'Open entry ↗' : '查看详情 ↗';
+const actionLabelDefault = locale === 'en' ? 'Open entry ↗' : '查看详情 ↗';
 ---
 <BaseLayout title={title} description={description} active={active} locale={locale}>
   <div class="page-shell">
@@ -21,6 +23,7 @@ const actionLabel = locale === 'en' ? 'Open entry ↗' : '查看详情 ↗';
       <p class="page-kicker">{kicker}</p>
       <h1 class="page-title">{title}</h1>
       <p class="page-lead">{description}</p>
+      {actionHref && <div class="page-heading-action"><a class="button button-primary" href={actionHref}>{actionLabel ?? actionLabelDefault}</a></div>}
     </header>
     {entries.length ? (
       variant === 'list' ? (
@@ -31,7 +34,7 @@ const actionLabel = locale === 'en' ? 'Open entry ↗' : '查看详情 ↗';
               <h2>{entry.data.title}</h2><p>{entry.data.description}</p>
               {entry.data.tags?.length > 0 && <div class="card-tags">{entry.data.tags.map((tag: string) => <span class="tag">{tag}</span>)}</div>}
             </div>
-            <span class="card-arrow">{actionLabel}</span>
+            <span class="card-arrow">{actionLabelDefault}</span>
           </a>)}
         </div>
       ) : (
@@ -40,7 +43,7 @@ const actionLabel = locale === 'en' ? 'Open entry ↗' : '查看详情 ↗';
             <span class="card-number">{String(index + 1).padStart(2, '0')} / {entry.data.category || entry.data.kind || entry.data.status || 'ENTRY'}</span>
             <h2>{entry.data.title}</h2><p>{entry.data.description}</p>
             {entry.data.tags?.length > 0 && <div class="card-tags">{entry.data.tags.map((tag: string) => <span class="tag">{tag}</span>)}</div>}
-            <span class="card-arrow">{actionLabel}</span>
+            <span class="card-arrow">{actionLabelDefault}</span>
           </a>)}
         </div>
       )

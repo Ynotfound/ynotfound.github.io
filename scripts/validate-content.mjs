@@ -1,8 +1,9 @@
 import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 
-const roots = ['notes', 'journal', 'research', 'publications', 'projects', 'references'];
+const roots = ['notes', 'journal', 'research', 'updates', 'publications', 'projects', 'references'];
 const failures = [];
+const keysByCollection = new Map();
 
 async function markdownFiles(directory) {
   let entries;
@@ -20,6 +21,7 @@ async function markdownFiles(directory) {
 for (const collection of roots) {
   const files = await markdownFiles(path.join('src', 'content', collection));
   const translations = new Map();
+  const updateProjectKeys = new Set();
   for (const file of files) {
     const source = await readFile(file, 'utf8');
     const frontmatter = source.match(/^---\s*\n([\s\S]*?)\n---/);
@@ -35,16 +37,28 @@ for (const collection of roots) {
     if (set.has(lang)) failures.push(collection + '/' + key + ': duplicate ' + lang + ' translation');
     set.add(lang);
     translations.set(key, set);
+    if (collection === 'updates') {
+      const projectKey = value('projectKey');
+      if (!projectKey) failures.push(file + ': missing projectKey');
+      else updateProjectKeys.add(projectKey);
+    }
   }
+  keysByCollection.set(collection, new Set(translations.keys()));
   for (const [key, langs] of translations) {
     for (const lang of ['zh', 'en']) {
       if (!langs.has(lang)) failures.push(collection + '/' + key + ': missing ' + lang + ' translation');
     }
   }
+  if (collection === 'updates') keysByCollection.set('updateProjectKeys', updateProjectKeys);
+}
+
+const researchKeys = keysByCollection.get('research') || new Set();
+for (const key of keysByCollection.get('updateProjectKeys') || []) {
+  if (!researchKeys.has(key)) failures.push('updates: projectKey "' + key + '" does not match a public research programme');
 }
 
 if (failures.length) {
   console.error('Content validation failed:\n- ' + failures.join('\n- '));
   process.exit(1);
 }
-console.log('Content validation passed: every public entry has a zh/en pair.');
+console.log('Content validation passed: every public entry has a zh/en pair and each update links to a research programme.');

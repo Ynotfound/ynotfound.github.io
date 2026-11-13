@@ -1,17 +1,14 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-interface Props {
-  entry: any; Content: any; headings?: any[]; active: string;
-  basePath: string; locale?: 'zh' | 'en'; sectionLabel: string;
-}
-const { entry, Content, headings = [], active, basePath, locale = 'zh', sectionLabel } = Astro.props;
+import ResearchTimeline from './ResearchTimeline.astro';
+interface Props { entry: any; Content: any; headings?: any[]; active: string; basePath: string; locale?: 'zh' | 'en'; sectionLabel: string; updates?: any[]; }
+const { entry, Content, headings = [], active, basePath, locale = 'zh', sectionLabel, updates = [] } = Astro.props;
 const data = entry.data;
 const toc = headings.filter((heading) => heading.depth > 1 && heading.depth < 4);
-const dateLabel = (value: Date | undefined) => value
-  ? new Date(value).toLocaleDateString(locale === 'en' ? 'en-US' : 'zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })
-  : '';
+const dateLabel = (value: Date | undefined) => value ? new Date(value).toLocaleDateString(locale === 'en' ? 'en-US' : 'zh-CN', { year: 'numeric', month: 'long', day: 'numeric' }) : '';
 const doiUrl = data.doi ? 'https://doi.org/' + data.doi : '';
 const arxivUrl = data.arxiv ? 'https://arxiv.org/abs/' + data.arxiv : '';
+const projectNames = data.translationKey ? { [data.translationKey]: data.title } : {};
 ---
 <BaseLayout title={data.title} description={data.description} active={active} locale={locale}>
   <div class="page-shell">
@@ -38,8 +35,15 @@ const arxivUrl = data.arxiv ? 'https://arxiv.org/abs/' + data.arxiv : '';
           {data.doi && <a class="button button-quiet" href={doiUrl} target="_blank" rel="noreferrer">DOI ↗</a>}
         </div>
         <div class="prose"><Content /></div>
+        {updates.length > 0 && <ResearchTimeline entries={updates} locale={locale} projectNames={projectNames} />}
       </article>
-      {toc.length > 0 && <aside class="article-toc"><strong>{locale === 'en' ? 'ON THIS PAGE' : '本页目录'}</strong>{toc.map((heading) => <a class:list={['toc-link', heading.depth === 3 && 'toc-sub']} href={'#' + heading.slug}>{heading.text}</a>)}</aside>}
+      {toc.length > 0 && (
+        <aside class="article-toc">
+          <strong>{locale === 'en' ? 'ON THIS PAGE' : '本页目录'}</strong>
+          {toc.map((heading) => <a class:list={['toc-link', heading.depth === 3 && 'toc-sub']} href={'#' + heading.slug}>{heading.text}</a>)}
+          {updates.length > 0 && <a href="#research-timeline">{locale === 'en' ? 'Research timeline' : '研究时间线'}</a>}
+        </aside>
+      )}
     </div>
   </div>
 </BaseLayout>

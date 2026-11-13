@@ -4,7 +4,7 @@ import path from 'node:path';
 const root = path.resolve('dist');
 const required = [
   'index.html', 'en/index.html',
-  'research/index.html', 'en/research/index.html',
+  'research/index.html', 'research/observatory/index.html', 'en/research/index.html', 'en/research/observatory/index.html',
   'publications/index.html', 'en/publications/index.html',
   'notes/index.html', 'en/notes/index.html',
   'journal/index.html', 'en/journal/index.html',

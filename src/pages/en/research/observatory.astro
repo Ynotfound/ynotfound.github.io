@@ -1,0 +1,69 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ResearchTimeline from '../../../components/ResearchTimeline.astro';
+const programmes = (await getCollection('research', ({ data }) => !data.draft && data.lang === 'en'))
+  .sort((a, b) => Number(b.data.featured) - Number(a.data.featured) || a.data.title.localeCompare(b.data.title));
+const updates = (await getCollection('researchUpdates', ({ data }) => !data.draft && data.lang === 'en'))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const activeCount = programmes.filter((entry) => entry.data.status === 'active').length;
+const exploratoryCount = programmes.filter((entry) => entry.data.status === 'exploratory').length;
+const projectNames = Object.fromEntries(programmes.map((entry) => [entry.data.translationKey, entry.data.title]));
+const statusLabels: Record<string, string> = { active: 'Active', exploratory: 'Exploratory', paused: 'Paused', completed: 'Completed' };
+const statusDescriptions: Record<string, string> = {
+  active: 'An actively pursued research programme', exploratory: 'Structural exploration and feasibility work',
+  paused: 'Temporarily paused', completed: 'The current stated objective is complete'
+};
+---
+<BaseLayout title="Research Observatory" active="research" description="A structured observatory of research programmes, evidence states and dated research records by Yu Zhehao." locale="en">
+  <div class="page-shell">
+    <div class="breadcrumbs"><a href="/en/">Home</a><span>/</span><a href="/en/research/">Research</a><span>/</span>Observatory</div>
+    <header class="page-heading">
+      <p class="page-kicker">RESEARCH OBSERVATORY</p>
+      <h1 class="page-title">Programmes & progress</h1>
+      <p class="page-lead">A structured view of research directions, dated records and evidence status. Plans, numerical agreement and unfinished derivations are not presented as proved results.</p>
+    </header>
+    <section class="research-stats" aria-label="Research overview">
+      <div class="research-stat"><span>ACTIVE PROGRAMMES</span><strong>{activeCount.toString().padStart(2, '0')}</strong><small>Programmes under active development</small></div>
+      <div class="research-stat"><span>EXPLORATORY</span><strong>{exploratoryCount.toString().padStart(2, '0')}</strong><small>Directions still being explored</small></div>
+      <div class="research-stat"><span>PUBLIC RECORDS</span><strong>{updates.length.toString().padStart(2, '0')}</strong><small>Public records, including snapshots</small></div>
+    </section>
+    <section class="section-block">
+      <div class="section-heading">
+        <div><p class="page-kicker">PROGRAMMES</p><h2>Research programmes</h2></div>
+        <a class="text-link" href="/en/research/">All research directions ↗</a>
+      </div>
+      <div class="programme-grid">
+        {programmes.map((entry) => {
+          const related = updates.filter((update) => update.data.projectKey === entry.data.translationKey);
+          const latestUpdate = related[0];
+          return (
+            <a class="programme-card" href={'/en/research/' + entry.data.translationKey + '/'}>
+              <div class="programme-card-top">
+                <span class="programme-category">{entry.data.category}</span>
+                <span class:list={['programme-status', 'programme-' + entry.data.status]}>{statusLabels[entry.data.status] ?? entry.data.status}</span>
+              </div>
+              <h3>{entry.data.title}</h3><p>{entry.data.description}</p>
+              <div class="programme-card-bottom">
+                <span>{related.length} record(s)</span>
+                <span>{latestUpdate ? 'Latest ' + latestUpdate.data.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' }) : 'No records yet'}</span>
+              </div>
+              <span class="programme-status-description">{statusDescriptions[entry.data.status]}</span>
+            </a>
+          );
+        })}
+      </div>
+    </section>
+    <ResearchTimeline entries={updates.slice(0, 12)} projectNames={projectNames} locale="en" />
+    <section class="section-block evidence-panel">
+      <p class="page-kicker">EVIDENCE POLICY</p>
+      <h2>Different kinds of evidence remain distinct.</h2>
+      <div class="evidence-grid">
+        <div><strong>Proof</strong><p>A mathematical argument with explicit definitions, assumptions and derivations.</p></div>
+        <div><strong>Symbolic check</strong><p>Supported by independent symbolic computation or identity checks, with scope stated.</p></div>
+        <div><strong>Numerical check</strong><p>Valid only on the tested range; it does not imply a general theorem.</p></div>
+        <div><strong>Research snapshot</strong><p>A record of current aims and status, not a claim of a new theorem.</p></div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>

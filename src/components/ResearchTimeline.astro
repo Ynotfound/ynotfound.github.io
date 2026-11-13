@@ -1,0 +1,52 @@
+---
+interface Props { entries: any[]; locale?: 'zh' | 'en'; projectNames?: Record<string, string>; }
+const { entries = [], locale = 'zh', projectNames = {} } = Astro.props;
+const en = locale === 'en';
+const labels: Record<string, { zh: string; en: string }> = {
+  snapshot: { zh: '研究快照', en: 'Research snapshot' },
+  result: { zh: '研究结果', en: 'Research result' },
+  verification: { zh: '验证记录', en: 'Verification' },
+  conjecture: { zh: '猜想', en: 'Conjecture' },
+  'open-problem': { zh: '开放问题', en: 'Open problem' },
+  'failed-attempt': { zh: '失败尝试', en: 'Failed attempt' }
+};
+const evidenceLabels: Record<string, { zh: string; en: string }> = {
+  proof: { zh: '证明', en: 'Proof' },
+  'symbolic-check': { zh: '符号验证', en: 'Symbolic check' },
+  'numerical-check': { zh: '数值验证', en: 'Numerical check' },
+  literature: { zh: '文献依据', en: 'Literature' },
+  proposal: { zh: '研究计划 / 快照', en: 'Programme record' },
+  none: { zh: '未分类', en: 'Unclassified' }
+};
+const dateLabel = (value: Date) => value.toLocaleDateString(en ? 'en-US' : 'zh-CN', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' });
+---
+<section class="research-timeline section-block" id="research-timeline">
+  <div class="research-timeline-heading">
+    <div><p class="page-kicker">{en ? 'RESEARCH LOG' : 'RESEARCH LOG / 研究记录'}</p><h2>{en ? 'Research timeline' : '研究时间线'}</h2></div>
+    <p>{en ? 'Records are labelled by their actual evidence status. A snapshot or numerical check is not presented as a theorem.' : '每条记录都标明真实的证据状态。研究快照或数值检查不会被表述为定理。'}</p>
+  </div>
+  {entries.length > 0 ? (
+    <ol class="timeline-list">
+      {entries.map((entry) => (
+        <li class="timeline-item" id={'update-' + entry.data.translationKey}>
+          <span class="timeline-marker" aria-hidden="true"></span>
+          <article class="timeline-card">
+            <div class="timeline-meta">
+              <time datetime={entry.data.date.toISOString()}>{dateLabel(entry.data.date)}</time>
+              <span class:list={['timeline-status', 'record-' + entry.data.recordType]}>{labels[entry.data.recordType]?.[locale] ?? entry.data.recordType}</span>
+              <span class="timeline-evidence">{evidenceLabels[entry.data.evidence]?.[locale] ?? entry.data.evidence}</span>
+            </div>
+            <h3>{entry.data.title}</h3>
+            <p>{entry.data.description}</p>
+            <div class="timeline-footer">
+              <a class="timeline-project" href={(en ? '/en' : '') + '/research/' + entry.data.projectKey + '/'}>{projectNames[entry.data.projectKey] ?? entry.data.projectKey}</a>
+              {entry.data.sourceUrl && <a class="timeline-source" href={entry.data.sourceUrl} target="_blank" rel="noreferrer">{en ? 'Source ↗' : '相关材料 ↗'}</a>}
+            </div>
+          </article>
+        </li>
+      ))}
+    </ol>
+  ) : (
+    <div class="empty-state"><span class="empty-mark">∴</span><div><h2>{en ? 'No public research records yet' : '暂时没有公开研究记录'}</h2><p>{en ? 'New records will appear here when they are added to the research log.' : '新的研究记录发布后会自动出现在这里。'}</p></div></div>
+  )}
+</section>

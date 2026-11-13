@@ -10,12 +10,9 @@ const shared = {
   date: z.coerce.date(),
   draft: z.boolean().default(false)
 };
-
 const notes = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/notes' }),
-  schema: z.object({
-    ...shared, category: z.string(), updated: z.coerce.date().optional(), order: z.number().default(100)
-  })
+  schema: z.object({ ...shared, category: z.string(), updated: z.coerce.date().optional(), order: z.number().default(100) })
 });
 const journal = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/journal' }),
@@ -23,39 +20,41 @@ const journal = defineCollection({
 });
 const research = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/research' }),
+  schema: z.object({ ...shared, category: z.string(), status: z.enum(['active', 'exploratory', 'paused', 'completed']), updated: z.coerce.date().optional(), featured: z.boolean().default(false) })
+});
+const researchUpdates = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/updates' }),
   schema: z.object({
-    ...shared, category: z.string(),
-    status: z.enum(['active', 'exploratory', 'paused', 'completed']),
-    updated: z.coerce.date().optional(), featured: z.boolean().default(false)
+    translationKey: z.string().min(1), lang: z.enum(['zh', 'en']), projectKey: z.string().min(1),
+    title: z.string().min(1), description: z.string(), date: z.coerce.date(),
+    recordType: z.enum(['snapshot', 'result', 'verification', 'conjecture', 'open-problem', 'failed-attempt']),
+    evidence: z.enum(['proof', 'symbolic-check', 'numerical-check', 'literature', 'proposal', 'none']).default('none'),
+    tags: z.array(z.string()).default([]), sourceUrl: z.string().url().optional(), draft: z.boolean().default(false)
   })
 });
 const publications = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/publications' }),
   schema: z.object({
-    ...shared,
-    kind: z.enum(['journal-article', 'conference-paper', 'preprint', 'working-paper', 'thesis', 'other']),
+    ...shared, kind: z.enum(['journal-article', 'conference-paper', 'preprint', 'working-paper', 'thesis', 'other']),
     status: z.enum(['published', 'preprint', 'working-paper', 'draft', 'superseded']),
-    authors: z.array(z.string()).default([]), year: z.number(),
-    venue: z.string().optional(), doi: z.string().optional(), arxiv: z.string().optional(),
-    pdf: z.string().optional(), supplementary: z.string().optional(), repository: z.string().url().optional()
+    authors: z.array(z.string()).default([]), year: z.number(), venue: z.string().optional(),
+    doi: z.string().optional(), arxiv: z.string().optional(), pdf: z.string().optional(),
+    supplementary: z.string().optional(), repository: z.string().url().optional()
   })
 });
 const projects = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/projects' }),
   schema: z.object({
-    ...shared, category: z.string(),
-    status: z.enum(['active', 'maintained', 'prototype', 'archived']),
-    repository: z.string().url().optional(), homepage: z.string().url().optional(),
-    featured: z.boolean().default(false)
+    ...shared, category: z.string(), status: z.enum(['active', 'maintained', 'prototype', 'archived']),
+    repository: z.string().url().optional(), homepage: z.string().url().optional(), featured: z.boolean().default(false)
   })
 });
 const references = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/references' }),
   schema: z.object({
-    ...shared,
-    kind: z.enum(['paper', 'book', 'software', 'repository', 'website', 'dataset', 'notes']),
+    ...shared, kind: z.enum(['paper', 'book', 'software', 'repository', 'website', 'dataset', 'notes']),
     authors: z.array(z.string()).default([]), year: z.number().optional(),
     url: z.string().url(), doi: z.string().optional(), arxiv: z.string().optional()
   })
 });
-export const collections = { notes, journal, research, publications, projects, references };
+export const collections = { notes, journal, research, researchUpdates, publications, projects, references };

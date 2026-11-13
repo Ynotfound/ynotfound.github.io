@@ -7,5 +7,7 @@ export async function getStaticPaths() {
 }
 const { entry } = Astro.props;
 const { Content, headings } = await render(entry);
+const updates = (await getCollection('researchUpdates', ({ data }) => !data.draft && data.lang === 'zh' && data.projectKey === entry.data.translationKey))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 ---
-<CollectionDetail entry={entry} Content={Content} headings={headings} active="research" basePath="/research/" sectionLabel="研究" locale="zh" />
+<CollectionDetail entry={entry} Content={Content} headings={headings} updates={updates} active="research" basePath="/research/" sectionLabel="研究" locale="zh" />
