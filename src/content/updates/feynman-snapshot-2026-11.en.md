@@ -2,8 +2,8 @@
 translationKey: feynman-snapshot-2026-11
 lang: en
 projectKey: feynman-periods
-title: Programme snapshot: graph families, periods and physical closure
-description: Records four connected layers of the current programme: graph topology, period geometry, operational calculus and physical renormalization. This is a scope record, not a claim of a new theorem.
+title: 'Programme snapshot: graph families, periods and physical closure'
+description: 'Records four connected layers of the current programme: graph topology, period geometry, operational calculus and physical renormalization. This is a scope record, not a claim of a new theorem.'
 date: 2026-11-12
 recordType: snapshot
 evidence: proposal
