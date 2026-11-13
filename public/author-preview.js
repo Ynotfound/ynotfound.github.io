@@ -357,7 +357,7 @@
       $('author-reset').addEventListener('click', () => { $('author-source').value = sample; $('author-bib').value = sampleBib; update(); });
       $('author-copy').addEventListener('click', () => copyText($('author-source').value, '正文已复制'));
       $('author-download').addEventListener('click', () => { const f = makeMarkdownFile(true); download(f.filename, f.content, 'text/markdown;charset=utf-8'); $('author-status').textContent = '读者版 Markdown 草稿已生成'; });
-      $('author-source-download').addEventListener('click', () => { const f = makeMarkdownFile(false); f.filename = f.filename.replace(/\\.md$/, '.source.md'); download(f.filename, f.content, 'text/markdown;charset=utf-8'); $('author-status').textContent = '保留学术标记的源稿已生成'; });
+      $('author-source-download').addEventListener('click', () => { const f = makeMarkdownFile(false); f.filename = f.filename.slice(0, -3) + '.source.md'; download(f.filename, f.content, 'text/markdown;charset=utf-8'); $('author-status').textContent = '保留学术标记的源稿已生成'; });
       $('author-tex').addEventListener('click', () => { const f = makeTexFile(); download(f.filename, f.content, 'application/x-tex;charset=utf-8'); $('author-status').textContent = 'LaTeX 源文件已生成；如有引用，请同时导出 BibTeX'; });
       $('author-bib-download').addEventListener('click', () => { const key = $('author-key').value.trim().toLowerCase().replace(/[^a-z0-9-]+/g, '-') || 'references'; download(key + '.bib', $('author-bib').value.trim() + '\n', 'application/x-bibtex;charset=utf-8'); });
       $('author-print').addEventListener('click', () => window.print());
