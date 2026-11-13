@@ -1,5 +1,57 @@
     (() => {
       const $ = (id) => document.getElementById(id);
+      // Add the advanced authoring controls from JavaScript so Astro only has to render the stable reader/editor shell.
+      const metadata = document.querySelector('.author-metadata');
+      const bibPanel = document.createElement('section');
+      bibPanel.className = 'author-bib-panel';
+      bibPanel.innerHTML = '<div class="author-bib-heading"><strong>BibTeX Library</strong><span class="author-bib-count" id="author-bib-count">0 entries</span></div><label class="author-field"><span>BIBTEX SOURCE</span><textarea id="author-bib" class="author-bib-source" spellcheck="false" placeholder="Paste BibTeX entries here..."></textarea></label><p class="author-bib-help">粘贴真实 BibTeX 条目。正文使用 [@key] 或 [@key1; @key2]；预览会生成编号引用和文末参考文献。</p>';
+      metadata?.after(bibPanel);
+      const bibInput = bibPanel.querySelector('#author-bib');
+      bibInput.value = '@misc{sample-reference,\n  author = {Example Author},\n  title = {Replace with a verified reference},\n  year = {2026}\n}\n';
+      const sourceInput = $('author-source');
+      sourceInput.value = [
+        '## 1. 从图到参数积分',
+        '',
+        '第一 Symanzik 多项式由生成树求和：',
+        '',
+        '$',
+        '\\mathcal U_G(\\alpha) = \\sum_{T\\in\\mathcal T_1(G)} \\prod_{e\\notin T}\\alpha_e.',
+        '\\label{eq:symanzik}',
+        '$',
+        '',
+        '::: definition id=def:period title="图周期"',
+        '图周期是由图定义的参数积分；具体定义需要说明积分形式、参数区域和归一化。',
+        ':::',
+        '',
+        '::: theorem id=thm:structure title="结构信息的必要性"',
+        '周期类型的识别需要同时考察参数多项式、积分区域与奇点结构。',
+        ':::',
+        '',
+        '::: proof',
+        '这是研究方法层面的陈述，不是已经完成的普遍分类定理。',
+        ':::',
+        '',
+        '定义 @ref{def:period}、定理 @ref{thm:structure} 和公式 @ref{eq:symanzik} 构成一组交叉引用示例。',
+        '',
+        '文献示例：[@sample-reference]。'
+      ].join('\\n');
+
+      const actions = document.querySelector('.author-preview-actions');
+      const addAction = (id, label, primary = false) => {
+        const button = document.createElement('button');
+        button.type = 'button'; button.id = id;
+        button.className = 'button ' + (primary ? 'button-primary' : 'button-quiet');
+        button.textContent = label; actions?.append(button);
+      };
+      addAction('author-tex', '导出 LaTeX');
+      addAction('author-bib-download', '导出 BibTeX');
+      addAction('author-print', '打印 / 保存 PDF', true);
+
+      const syntax = document.createElement('section');
+      syntax.className = 'author-preview-help academic-syntax';
+      syntax.innerHTML = '<div><p class="page-kicker">ACADEMIC MARKUP</p><h2>学术写作语法</h2><p>这些标记只在作者预览和导出的 LaTeX 中解释。正式网站正文仍使用普通 Markdown / LaTeX。</p></div><div class="academic-syntax-list"><div><strong>定理 / 定义 / 引理 / 推论 / 证明</strong><code>::: theorem id=thm:main title="定理标题"</code><code>...内容...</code><code>:::</code></div><div><strong>公式标签</strong><code>\\label{eq:main}</code><span>放在独立公式内部；正文用 @ref{eq:main} 引用。</span></div><div><strong>交叉引用</strong><code>@ref{thm:main}</code><span>支持定理、定义和公式标签。</span></div><div><strong>文献引用</strong><code>[@key]</code><span>key 来自 BibTeX Library。</span></div></div>';
+      document.querySelector('.author-preview-help')?.before(syntax);
+
       const fields = ['author-title','author-description','author-kind','author-language','author-key','author-date','author-category','author-tags','author-source','author-bib'];
       const sample = $('author-source').value;
       const sampleBib = $('author-bib').value;

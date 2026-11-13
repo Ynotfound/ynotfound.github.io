@@ -24,56 +24,36 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       </div>
     </section>
 
-    <section class="author-bib-panel">
-      <div class="author-bib-heading"><strong>BibTeX Library</strong><span class="author-bib-count" id="author-bib-count">0 entries</span></div>
-      <label class="author-field"><span>BIBTEX SOURCE</span><textarea id="author-bib" class="author-bib-source" spellcheck="false" placeholder="Paste BibTeX entries here..."></textarea></label>
-      <p class="author-bib-help">粘贴真实 BibTeX 条目。正文使用 [&#64;key] 或 [&#64;key1; &#64;key2]；预览会生成编号引用和文末参考文献。</p>
-    </section>
-
-    <div class="author-preview-toolbar academic-toolbar">
-      <div class="author-preview-toolbar-label"><span class="page-kicker">COMPOSER / LIVE VALIDATION</span><span id="author-status" role="status" aria-live="polite">正在初始化写作引擎…</span></div>
+    <div class="author-preview-toolbar">
+      <div class="author-preview-toolbar-label"><span class="page-kicker">COMPOSER</span><span id="author-status" role="status" aria-live="polite">实时预览已就绪</span></div>
       <div class="author-preview-actions">
         <button class="button button-quiet" id="author-reset" type="button">恢复示例</button>
         <button class="button button-quiet" id="author-copy" type="button">复制正文</button>
-        <button class="button button-quiet" id="author-download" type="button">下载 Markdown</button>
-        <button class="button button-quiet" id="author-tex" type="button">导出 LaTeX</button>
-        <button class="button button-quiet" id="author-bib-download" type="button">导出 BibTeX</button>
-        <button class="button button-primary" id="author-print" type="button">打印 / 保存 PDF</button>
+        <button class="button button-primary" id="author-download" type="button">下载 Markdown ↧</button>
       </div>
     </div>
 
     <div class="author-preview-workspace">
       <section class="author-editor-panel">
         <div class="author-panel-heading"><div><span class="author-panel-kicker">01 / SOURCE</span><h2>Markdown & LaTeX</h2></div><span class="author-panel-hint">SOURCE MODE</span></div>
-        <textarea id="author-source" class="author-source" spellcheck="false" aria-label="Markdown and LaTeX source">## 1. 从图到参数积分
+        <textarea id="author-source" class="author-source" spellcheck="false" aria-label="Markdown and LaTeX source">## 从图到参数积分
 
 设 \(G\) 是一个连通图，边集为 \(E\)。为每条边引入 Schwinger 参数 \(\alpha_e\)。
+
+第一 Symanzik 多项式由生成树求和：
 
 $$
 \mathcal U_G(\alpha)
 =
-\sum_{T\in\mathcal T_1(G)}
-\prod_{e\notin T}\alpha_e.
-\label&#123;eq:symanzik&#125;
+\sum_&#123;T\in\mathcal T_1(G)&#125;
+\prod_&#123;e\notin T&#125;\alpha_e.
 $$
 
-::: definition id=def:period title="图周期"
-图周期是由图所定义的参数积分在适当收敛条件下得到的数值。具体定义必须同时说明积分形式、参数区域和归一化约定。
-:::
+例如，参数多项式的结构会直接反映图的生成树组合。
 
-::: theorem id=thm:structure title="结构信息的必要性"
-判断图的参数积分可能涉及的函数空间，需要同时考察参数多项式、积分区域与奇点结构；仅凭图的外观或多项式次数通常不足以完成分类。
-:::
+我们也可以写行内公式，例如 $\mathcal F_G(\alpha)$、$\zeta(3)$ 和 $\beta(g)$。
 
-::: proof
-这是一个研究方法层面的结构性陈述，不是关于所有图的周期分类定理。实际分类仍需对具体图族给出几何分析和独立验证。
-:::
-
-因此，定义 &#64;ref&#123;def:period&#125; 与定理 &#64;ref&#123;thm:structure&#125; 说明了为什么需要同时记录代数与几何信息。第一 Symanzik 多项式见公式 &#64;ref&#123;eq:symanzik&#125;。
-
-文献示例：[&#64;sample-reference]。
-
-## 2. 一个矩阵例子
+## 矩阵与分段公式
 
 $$
 M =
@@ -83,17 +63,17 @@ c & d
 \end&#123;pmatrix&#125;,
 \qquad
 \det M = ad-bc.
-\label&#123;eq:determinant&#125;
 $$
 
-## 3. 代码与计算记录
+## 代码
 
 &#96;&#96;&#96;python
 def symanzik_example(edges):
     return "graph data"
 &#96;&#96;&#96;
 
-> 数值验证可以帮助发现规律，但不能替代一般证明。</textarea>
+> 提醒：数值验证可以帮助发现规律，但不能替代一般证明。
+</textarea>
         <div class="author-editor-footer"><span>支持 Markdown、列表、引用、代码块与 LaTeX</span><span id="author-count">0 字符</span></div>
       </section>
 
@@ -109,17 +89,6 @@ def symanzik_example(edges):
       </section>
     </div>
 
-
-    <section class="author-preview-help academic-syntax">
-      <div><p class="page-kicker">ACADEMIC MARKUP</p><h2>学术写作语法</h2><p>这些标记只在作者预览和导出的 LaTeX 中解释。正式网站正文仍使用普通 Markdown / LaTeX。</p></div>
-      <div class="academic-syntax-list">
-        <div><strong>定理 / 定义 / 引理 / 推论 / 证明</strong><code>::: theorem id=thm:main title="定理标题"</code><code>...内容...</code><code>:::</code></div>
-        <div><strong>公式标签</strong><code>\label&#123;eq:main&#125;</code><span>放在独立公式内部；正文用 <code>&#64;ref&#123;eq:main&#125;</code> 引用。</span></div>
-        <div><strong>交叉引用</strong><code>&#64;ref&#123;thm:main&#125;</code><span>支持定理、定义和公式标签。</span></div>
-        <div><strong>文献引用</strong><code>[&#64;key]</code><span>key 来自上方 BibTeX Library。</span></div>
-      </div>
-    </section>
-
     <section class="author-preview-help">
       <div><p class="page-kicker">PUBLISHING WORKFLOW</p><h2>预览满意后，如何正式发布？</h2></div>
       <ol>
@@ -132,9 +101,10 @@ def symanzik_example(edges):
     </section>
   </div>
 
-  <script is:inline src="https://cdn.jsdelivr.net/npm/markdown-it&#64;14.1.0/dist/markdown-it.min.js"></script>
-  <script is:inline src="https://cdn.jsdelivr.net/npm/katex&#64;0.16.22/dist/katex.min.js"></script>
-  <script is:inline src="https://cdn.jsdelivr.net/npm/markdown-it-texmath&#64;1.0.0/texmath.min.js"></script>
-  <script is:inline src="https://cdn.jsdelivr.net/npm/dompurify&#64;3.2.6/dist/purify.min.js"></script>
+  <script is:inline src="https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/dist/markdown-it.min.js"></script>
+  <script is:inline src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"></script>
+  <script is:inline src="https://cdn.jsdelivr.net/npm/markdown-it-texmath@1.0.0/texmath.min.js"></script>
+  <script is:inline src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
   <script is:inline src="/author-preview.js"></script>
+
 </BaseLayout>
