@@ -150,7 +150,7 @@ def symanzik_example(edges):
       }
       const markdown = window.markdownit({ html: false, linkify: true, typographer: false })
         .use(window.texmath, { engine: window.katex, delimiters: 'dollars', katexOptions: { throwOnError: false, trust: false, strict: 'ignore' } });
-      const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+      const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&' + '#39;'}[c]));
       const idSafe = (v) => String(v ?? '').replace(/[^A-Za-z0-9:_-]/g, '-');
       const codePattern = /^\x60{3}[^\n]*\n[\s\S]*?^\x60{3}\s*$/gm;
       const envPattern = /^:::\s*(theorem|lemma|proposition|corollary|definition|example|remark|proof)(?:\s+id=([A-Za-z0-9:._-]+))?(?:\s+title="([^"]*)")?\s*\n([\s\S]*?)^:::\s*$/gm;
