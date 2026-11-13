@@ -25,9 +25,9 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     </section>
 
     <details class="author-bib-panel">
-      <summary><span><strong>BibTeX Library</strong><small>文献数据库 · 使用 [@citation-key] 引用</small></span><span class="author-bib-count" id="author-bib-count">0 entries</span></summary>
+      <summary><span><strong>BibTeX Library</strong><small>文献数据库 · 使用 [&#64;citation-key] 引用</small></span><span class="author-bib-count" id="author-bib-count">0 entries</span></summary>
       <label class="author-field"><span>BIBTEX SOURCE</span><textarea id="author-bib" class="author-bib-source" spellcheck="false" placeholder="Paste BibTeX entries here..."></textarea></label>
-      <p class="author-bib-help">粘贴真实 BibTeX 条目。正文使用 [@key] 或 [@key1; @key2]；预览会生成编号引用和文末参考文献。示例条目只是占位符。</p>
+      <p class="author-bib-help">粘贴真实 BibTeX 条目。正文使用 [&#64;key] 或 [&#64;key1; &#64;key2]；预览会生成编号引用和文末参考文献。示例条目只是占位符。</p>
     </details>
 
 
@@ -71,9 +71,9 @@ $$
 这是一个研究方法层面的结构性陈述，不是关于所有图的周期分类定理。实际分类仍需对具体图族给出几何分析和独立验证。
 :::
 
-因此，定义 @ref&#123;def:period&#125; 与定理 @ref&#123;thm:structure&#125; 说明了为什么需要同时记录代数与几何信息。第一 Symanzik 多项式见公式 @ref&#123;eq:symanzik&#125;。
+因此，定义 &#64;ref&#123;def:period&#125; 与定理 &#64;ref&#123;thm:structure&#125; 说明了为什么需要同时记录代数与几何信息。第一 Symanzik 多项式见公式 &#64;ref&#123;eq:symanzik&#125;。
 
-文献示例：[@sample-reference]。
+文献示例：[&#64;sample-reference]。
 
 ## 2. 一个矩阵例子
 
@@ -116,9 +116,9 @@ def symanzik_example(edges):
       <div><p class="page-kicker">ACADEMIC MARKUP</p><h2>学术写作语法</h2><p>这些标记只在作者预览和导出的 LaTeX 中解释。正式网站正文仍使用普通 Markdown / LaTeX。</p></div>
       <div class="academic-syntax-list">
         <div><strong>定理 / 定义 / 引理 / 推论 / 证明</strong><code>::: theorem id=thm:main title="定理标题"</code><code>...内容...</code><code>:::</code></div>
-        <div><strong>公式标签</strong><code>\label&#123;eq:main&#125;</code><span>放在独立公式内部；正文用 <code>@ref&#123;eq:main&#125;</code> 引用。</span></div>
-        <div><strong>交叉引用</strong><code>@ref&#123;thm:main&#125;</code><span>支持定理、定义和公式标签。</span></div>
-        <div><strong>文献引用</strong><code>[@key]</code><span>key 来自上方 BibTeX Library。</span></div>
+        <div><strong>公式标签</strong><code>\label&#123;eq:main&#125;</code><span>放在独立公式内部；正文用 <code>&#64;ref&#123;eq:main&#125;</code> 引用。</span></div>
+        <div><strong>交叉引用</strong><code>&#64;ref&#123;thm:main&#125;</code><span>支持定理、定义和公式标签。</span></div>
+        <div><strong>文献引用</strong><code>[&#64;key]</code><span>key 来自上方 BibTeX Library。</span></div>
       </div>
     </section>
 
@@ -134,10 +134,10 @@ def symanzik_example(edges):
     </section>
   </div>
 
-  <script is:inline src="https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/dist/markdown-it.min.js"></script>
-  <script is:inline src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"></script>
-  <script is:inline src="https://cdn.jsdelivr.net/npm/markdown-it-texmath@1.0.0/texmath.min.js"></script>
-  <script is:inline src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
+  <script is:inline src="https://cdn.jsdelivr.net/npm/markdown-it&#64;14.1.0/dist/markdown-it.min.js"></script>
+  <script is:inline src="https://cdn.jsdelivr.net/npm/katex&#64;0.16.22/dist/katex.min.js"></script>
+  <script is:inline src="https://cdn.jsdelivr.net/npm/markdown-it-texmath&#64;1.0.0/texmath.min.js"></script>
+  <script is:inline src="https://cdn.jsdelivr.net/npm/dompurify&#64;3.2.6/dist/purify.min.js"></script>
   <script is:inline>
     (() => {
       const $ = (id) => document.getElementById(id);
