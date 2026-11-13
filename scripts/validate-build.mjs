@@ -15,7 +15,7 @@ const required = [
   'reading/index.html', 'en/reading/index.html',
   'about/index.html', 'en/about/index.html',
   'search/index.html', 'en/search/index.html',
-  'search-index.json', 'sitemap.xml', 'rss.xml', 'cursor.png'
+  'search-index.json', 'sitemap.xml', 'rss.xml', 'cursor.png', 'author-preview/index.html'
 ];
 
 const failures = [];
@@ -23,6 +23,10 @@ for (const file of required) {
   try { await access(path.join(root, file)); }
   catch { failures.push('Missing generated output: ' + file); }
 }
+
+const previewHtml = await readFile(path.join(root, 'author-preview/index.html'), 'utf8');
+if (!previewHtml.includes('name=\"robots\" content=\"noindex, nofollow, noarchive\"')) failures.push('author-preview: expected noindex metadata');
+if (!previewHtml.includes('markdown-it-texmath') || !previewHtml.includes('dompurify')) failures.push('author-preview: missing live Markdown/LaTeX preview libraries');
 
 const mathPages = [
   'notes/feynman-periods/index.html', 'en/notes/feynman-periods/index.html',

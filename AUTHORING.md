@@ -11,6 +11,27 @@ This repository uses Pages CMS as a private, GitHub-backed writing interface. Th
 
 Pages CMS writes Markdown and media files back to this repository. A successful GitHub Actions build then republishes the public site.
 
+## Live article preview
+
+Open the companion [Author Preview workspace](https://ynotfound.github.io/author-preview/). It provides a split source/reader view for Markdown and LaTeX, updates as you type, and can copy the article body or download a complete draft Markdown file.
+
+The preview is a browser-side helper, not an authenticated CMS page. It does not save your draft to a server or publish it. Do not paste confidential material into a shared/public computer. The page is marked noindex, but noindex is not access control.
+
+Use Pages CMS for the actual GitHub-backed editing and publishing workflow. The preview tool uses the same dollar-delimited math convention as the site: `$...# Author Studio
+
+This repository uses Pages CMS as a private, GitHub-backed writing interface. The public site remains an Astro static site on GitHub Pages.
+
+## Open the authoring interface
+
+1. Visit https://app.pagescms.org/.
+2. Sign in with your GitHub account.
+3. Install the Pages CMS GitHub App for the Ynotfound/ynotfound.github.io repository only.
+4. Open this repository. Pages CMS reads .pages.yml and shows the configured writing, research, publication, project and reference collections.
+
+Pages CMS writes Markdown and media files back to this repository. A successful GitHub Actions build then republishes the public site.
+
+ inline and `$...$` for display equations.
+
 ## Publishing an article
 
 1. Open Writing → Articles & Journal.

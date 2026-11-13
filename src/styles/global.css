@@ -105,3 +105,71 @@ html[data-theme="dark"] .timeline-marker{border-color:#102438}
   .evidence-grid{grid-template-columns:1fr}
   .programme-card-bottom{align-items:flex-start;flex-direction:column}
 }
+
+
+/* Author preview workspace */
+.author-preview-shell{width:min(1440px,calc(100% - 48px))}
+.author-preview-notice{display:flex;align-items:center;gap:9px;padding:11px 14px;border:1px solid var(--line);background:var(--surface);font:9px var(--mono);letter-spacing:.08em;color:var(--gold);margin:0 0 18px}
+.author-preview-pulse{width:7px;height:7px;border-radius:50%;background:#5d9c78;box-shadow:0 0 0 4px color-mix(in srgb,#5d9c78 16%,transparent)}
+.author-preview-notice-detail{margin-left:auto;color:var(--muted);font:10px var(--body);letter-spacing:0}
+.author-metadata{display:grid;grid-template-columns:1fr;gap:13px;padding:20px;border:1px solid var(--line);background:var(--surface)}
+.author-field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.author-field[hidden]{display:none!important}
+.author-field>span{font:9px var(--mono);letter-spacing:.1em;color:var(--muted)}
+.author-field input,.author-field textarea,.author-field select{width:100%;min-width:0;border:1px solid var(--line);border-radius:2px;background:var(--paper);color:var(--ink);padding:10px 12px;font:12px var(--body);outline:none}
+.author-field input:focus,.author-field textarea:focus,.author-field select:focus{border-color:var(--gold);box-shadow:0 0 0 2px color-mix(in srgb,var(--gold) 14%,transparent)}
+.author-field-title input{font:500 17px var(--display)}
+.author-field-description textarea{resize:vertical;line-height:1.7}
+.author-field-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.author-preview-toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:22px 0 12px}
+.author-preview-toolbar-label{display:flex;flex-direction:column;gap:4px}
+.author-preview-toolbar-label .page-kicker{margin:0}
+#author-status{font-size:10px;color:var(--muted)}
+.author-preview-actions{display:flex;gap:8px;flex-wrap:wrap}
+.author-preview-actions .button{padding:8px 12px;cursor:pointer}
+.author-preview-workspace{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:stretch}
+.author-editor-panel,.author-reader-panel{min-width:0;border:1px solid var(--line);background:var(--surface)}
+.author-panel-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 17px;border-bottom:1px solid var(--line)}
+.author-panel-heading h2{font:500 17px var(--display);margin:3px 0 0}
+.author-panel-kicker{font:9px var(--mono);letter-spacing:.12em;color:var(--gold)}
+.author-panel-hint{font:8px var(--mono);letter-spacing:.1em;color:var(--muted-2)}
+.author-source{display:block;width:100%;min-height:720px;resize:vertical;border:0;border-radius:0;background:#0d1d2b;color:#e8edf2;padding:20px;font:12px/1.85 "SFMono-Regular",Consolas,"Liberation Mono",monospace;tab-size:2;outline:none}
+.author-source:focus{box-shadow:inset 0 0 0 1px var(--gold)}
+.author-editor-footer{display:flex;justify-content:space-between;gap:10px;padding:9px 13px;border-top:1px solid var(--line);font-size:9px;color:var(--muted)}
+.author-reader-paper{min-height:720px;padding:clamp(18px,3vw,34px);background:var(--paper)}
+.author-reader-meta{display:flex;gap:12px;flex-wrap:wrap;padding-bottom:13px;border-bottom:1px solid var(--line);font:9px var(--mono);letter-spacing:.08em;color:var(--muted-2)}
+.author-reader-meta span:first-child{color:var(--gold)}
+.author-reader-paper>h1{font:500 clamp(25px,3vw,36px)/1.4 var(--display);margin:22px 0 8px}
+.author-reader-description{font-size:12px;line-height:1.9;color:var(--muted);margin:0 0 15px}
+.author-reader-content{font-size:13px;line-height:1.95;margin-top:25px}
+.author-reader-content h1,.author-reader-content h2,.author-reader-content h3{font-family:var(--display);font-weight:500;line-height:1.5}
+.author-reader-content h1{font-size:25px}.author-reader-content h2{font-size:21px;margin:1.8em 0 .6em}.author-reader-content h3{font-size:17px;margin:1.5em 0 .5em}
+.author-reader-content .katex-display{overflow-x:auto;overflow-y:hidden;padding:12px 0}
+.author-reader-content pre{overflow:auto;background:#102438;color:#e8edf0;padding:15px;border-radius:3px;font:11px/1.7 var(--mono)}
+.author-reader-content pre code{background:transparent;color:inherit;padding:0}
+.author-reader-content code{font: .88em var(--mono);background:var(--paper-2);padding:.12em .3em;border-radius:2px}
+.author-reader-content blockquote{border-left:2px solid var(--gold);margin:1.2em 0;padding:4px 0 4px 14px;color:var(--muted)}
+.author-reader-content table{display:block;max-width:100%;overflow-x:auto;border-collapse:collapse}
+.author-reader-content th,.author-reader-content td{border:1px solid var(--line);padding:7px 10px}
+.author-preview-help{display:grid;grid-template-columns:minmax(200px,.7fr) 1.3fr;gap:12px 30px;align-items:start;margin-top:28px;padding:22px;border:1px solid var(--line);background:var(--surface)}
+.author-preview-help h2{font:500 21px/1.5 var(--display);margin:0}
+.author-preview-help ol{margin:0;padding-left:20px;color:var(--muted);font-size:11px;line-height:1.9}
+.author-preview-help .button{grid-column:2;justify-self:start}
+html[data-theme="dark"] .author-metadata,html[data-theme="dark"] .author-editor-panel,html[data-theme="dark"] .author-reader-panel,html[data-theme="dark"] .author-preview-notice,html[data-theme="dark"] .author-preview-help{background:#102438;border-color:#38536a}
+@media(max-width:900px){
+  .author-preview-workspace{grid-template-columns:1fr}
+  .author-source{min-height:520px}
+  .author-reader-paper{min-height:400px}
+}
+@media(max-width:650px){
+  .author-preview-shell{width:calc(100% - 30px)}
+  .author-field-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .author-preview-toolbar{align-items:flex-start;flex-direction:column}
+  .author-preview-actions{width:100%}
+  .author-preview-actions .button{flex:1}
+  .author-preview-notice{align-items:flex-start;flex-wrap:wrap}
+  .author-preview-notice-detail{width:100%;margin-left:16px}
+  .author-preview-help{grid-template-columns:1fr}
+  .author-preview-help .button{grid-column:1}
+}
+@media(max-width:420px){.author-field-grid{grid-template-columns:1fr}.author-preview-actions{display:grid;grid-template-columns:1fr 1fr}.author-preview-actions .button:last-child{grid-column:1/-1}}

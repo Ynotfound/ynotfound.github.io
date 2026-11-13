@@ -3,8 +3,8 @@ import '../styles/global.css';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import ExcaliburCursor from '../components/ExcaliburCursor.astro';
-interface Props { title: string; description?: string; active?: string; locale?: 'zh' | 'en'; }
-const { title, description = 'Yu Zhehao — Physics, Mathematics and AI.', active = '', locale = 'zh' } = Astro.props;
+interface Props { title: string; description?: string; active?: string; locale?: 'zh' | 'en'; noindex?: boolean; }
+const { title, description = 'Yu Zhehao — Physics, Mathematics and AI.', active = '', locale = 'zh', noindex = false } = Astro.props;
 const canonical = 'https://ynotfound.github.io' + Astro.url.pathname;
 const zhPath = Astro.url.pathname.replace(/^\/en(?=\/|$)/, '') || '/';
 const enPath = '/en' + (zhPath === '/' ? '/' : zhPath);
@@ -19,6 +19,7 @@ const languageTarget = locale === 'en' ? zhPath : enPath;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#f5f3ed" />
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow, noarchive" />}
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
