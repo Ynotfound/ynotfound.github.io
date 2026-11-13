@@ -24,13 +24,11 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       </div>
     </section>
 
-    <details class="author-bib-panel">
-      <summary><span><strong>BibTeX Library</strong><small>文献数据库 · 使用 [&#64;citation-key] 引用</small></span><span class="author-bib-count" id="author-bib-count">0 entries</span></summary>
+    <section class="author-bib-panel">
+      <div class="author-bib-heading"><strong>BibTeX Library</strong><span class="author-bib-count" id="author-bib-count">0 entries</span></div>
       <label class="author-field"><span>BIBTEX SOURCE</span><textarea id="author-bib" class="author-bib-source" spellcheck="false" placeholder="Paste BibTeX entries here..."></textarea></label>
-      <p class="author-bib-help">粘贴真实 BibTeX 条目。正文使用 [&#64;key] 或 [&#64;key1; &#64;key2]；预览会生成编号引用和文末参考文献。示例条目只是占位符。</p>
-    </details>
-
-
+      <p class="author-bib-help">粘贴真实 BibTeX 条目。正文使用 [&#64;key] 或 [&#64;key1; &#64;key2]；预览会生成编号引用和文末参考文献。</p>
+    </section>
 
     <div class="author-preview-toolbar academic-toolbar">
       <div class="author-preview-toolbar-label"><span class="page-kicker">COMPOSER / LIVE VALIDATION</span><span id="author-status" role="status" aria-live="polite">正在初始化写作引擎…</span></div>
