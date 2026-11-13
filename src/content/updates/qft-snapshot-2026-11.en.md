@@ -3,7 +3,7 @@ translationKey: qft-snapshot-2026-11
 lang: en
 projectKey: quantum-field-theory
 title: 'Computation snapshot: from integral reduction to physical assembly'
-description: Separates high-loop work into auditable stages: graph sets, integral reduction, master integrals, Laurent-pole assembly and physical projection.
+description: 'Separates high-loop work into auditable stages: graph sets, integral reduction, master integrals, Laurent-pole assembly and physical projection.'
 date: 2026-11-12
 recordType: snapshot
 evidence: proposal
