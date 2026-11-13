@@ -18,26 +18,31 @@ draft: false
 
 先引入一个控制发散的正则化参数。例如维数正规化把时空维数延拓为
 
-[
-D=4-2epsilon.
-]
+$$
+D=4-2\epsilon.
+$$
 
-积分通常变成关于 (epsilon) 的 Laurent 级数：
+积分通常变成关于 \(\epsilon\) 的 Laurent 级数：
 
-[
-I(epsilon)=rac{a_{-2}}{epsilon^2}
-+rac{a_{-1}}{epsilon}+a_0+O(epsilon).
-]
+$$
+I(\epsilon)
+=
+\frac{a_{-2}}{\epsilon^2}
++\frac{a_{-1}}{\epsilon}
++a_0+O(\epsilon).
+$$
 
 反项来自作用量中裸参数与重整化参数之间的关系。具体需要哪些反项，由理论的对称性和幂次计数决定；不能仅凭某个积分出现极点就独立决定物理反项。
 
 ## 重整化群
 
-改变重整化尺度 (mu) 时，重整化参数随之变化。对耦合常数 (g)，定义
+改变重整化尺度 \(\mu\) 时，重整化参数随之变化。对耦合常数 \(g\)，定义
 
-[
-eta(g)=murac{dg}{dmu}igg|_{	ext{bare fixed}}.
-]
+$$
+\beta(g)
+=
+\left.\mu\frac{dg}{d\mu}\right|_{\text{bare fixed}}.
+$$
 
 Beta 函数描述有效耦合随尺度的变化。它的系数依赖理论、规范化和重整化方案；在比较不同计算时，必须先统一这些约定。
 

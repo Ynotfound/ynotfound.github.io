@@ -18,26 +18,31 @@ Feynman diagrams in perturbation theory may contain ultraviolet divergences. Ren
 
 First introduce a parameter that controls the divergences. Dimensional regularization, for example, analytically continues spacetime dimension to
 
-[
-D=4-2epsilon.
-]
+$$
+D=4-2\epsilon.
+$$
 
-An integral then often becomes a Laurent series in (epsilon):
+An integral then often becomes a Laurent series in \(\epsilon\):
 
-[
-I(epsilon)=rac{a_{-2}}{epsilon^2}
-+rac{a_{-1}}{epsilon}+a_0+O(epsilon).
-]
+$$
+I(\epsilon)
+=
+\frac{a_{-2}}{\epsilon^2}
++\frac{a_{-1}}{\epsilon}
++a_0+O(\epsilon).
+$$
 
 Counterterms arise from the relation between bare and renormalized parameters in the action. The required counterterms are determined by the symmetries and power counting of the theory; a pole in an individual integral does not by itself determine the physical counterterm.
 
 ## The renormalization group
 
-When the renormalization scale (mu) changes, renormalized parameters run. For a coupling (g), define
+When the renormalization scale \(\mu\) changes, renormalized parameters run. For a coupling \(g\), define
 
-[
-eta(g)=murac{dg}{dmu}igg|_{	ext{bare fixed}}.
-]
+$$
+\beta(g)
+=
+\left.\mu\frac{dg}{d\mu}\right|_{\text{bare fixed}}.
+$$
 
 The beta function describes how the effective coupling changes with scale. Its coefficients depend on the theory, normalization and renormalization scheme, so these conventions must be aligned before comparing calculations.
 

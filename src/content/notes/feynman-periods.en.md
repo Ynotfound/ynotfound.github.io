@@ -16,37 +16,39 @@ A Feynman integral is often treated as an integral whose value must be computed.
 
 ## From graphs to parametric integrals
 
-Let (G) be a connected graph with edge set (E), and introduce Schwinger parameters (alpha_e). Under suitable assumptions on propagator powers and kinematics, momentum-space integrals can be rewritten as parametric integrals. Their denominators are controlled by the first and second Symanzik polynomials:
+Let \(G\) be a connected graph with edge set \(E\), and introduce Schwinger parameters \(\alpha_e\). Under suitable assumptions on propagator powers and kinematics, momentum-space integrals can be rewritten as parametric integrals. Their denominators are controlled by the first and second Symanzik polynomials:
 
-[
-mathcal U_G(alpha)=
-sum_{T mathrm{spanning tree}}
-prod_{e
-otin T}alpha_e,
-]
+$$
+\mathcal U_G(\alpha)
+=
+\sum_{T\ \mathrm{spanning\ tree}}
+\prod_{e\notin T}\alpha_e,
+$$
 
-[
-mathcal F_G(alpha)=
-sum_{F=T_1cup T_2}
-q_F^2prod_{e
-otin F}alpha_e
-+mathcal U_G(alpha)sum_{ein E}m_e^2alpha_e.
-]
+$$
+\mathcal F_G(\alpha)
+=
+\sum_{F=T_1\cup T_2}
+q_F^2\prod_{e\notin F}\alpha_e
++
+\mathcal U_G(\alpha)\sum_{e\in E}m_e^2\alpha_e.
+$$
 
-The first sum runs over spanning trees and the second over spanning two-forests. The momentum (q_F) is induced by the external momentum flow across the cut defined by the two-forest. Sign conventions depend on the Euclidean or Minkowski convention and on how the mass terms are defined.
+The first sum runs over spanning trees and the second over spanning two-forests. The momentum \(q_F\) is induced by the external momentum flow across the cut defined by the two-forest. Sign conventions depend on the Euclidean or Minkowski convention and on how the mass terms are defined.
 
 For a four-dimensional scalar theory, a parametric integral may schematically contain a factor such as
 
-[
-I_G sim int_{alpha_egeq 0}
-rac{Omega}{mathcal U_G^{,2}}.
-]
+$$
+I_G \sim
+\int_{\alpha_e\geq 0}
+\frac{\Omega}{\mathcal U_G^{\,2}}.
+$$
 
 This is only a schematic fragment: propagator powers, the overall scale, kinematic factors and subtraction terms have been suppressed. The actual exponents depend on the dimension, loop number and propagator indices.
 
 ## Why does geometry appear?
 
-The equations (mathcal U_G=0) and (mathcal F_G=0) define algebraic hypersurfaces in parameter space. The singularities, parameter dependence and analytic continuation of the integral are therefore related to the geometry of these algebraic varieties.
+The equations \(\mathcal U_G=0\) and \(\mathcal F_G=0\) define algebraic hypersurfaces in parameter space. The singularities, parameter dependence and analytic continuation of the integral are therefore related to the geometry of these algebraic varieties.
 
 A practical route of investigation is:
 

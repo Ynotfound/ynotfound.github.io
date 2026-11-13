@@ -16,37 +16,39 @@ draft: false
 
 ## 从图到参数积分
 
-对具有边集 (E) 的连通图 (G)，引入 Schwinger 参数 (alpha_e)。在合适的传播子指数与运动学条件下，动量空间积分可以转写为参数空间积分。其分母由第一、第二 Symanzik 多项式控制：
+对具有边集 \(E\) 的连通图 \(G\)，引入 Schwinger 参数 \(\alpha_e\)。在合适的传播子指数与运动学条件下，动量空间积分可以转写为参数空间积分。其分母由第一、第二 Symanzik 多项式控制：
 
-[
-mathcal U_G(alpha)=
-sum_{T mathrm{spanning tree}}
-prod_{e
-otin T}alpha_e,
-]
+$$
+\mathcal U_G(\alpha)
+=
+\sum_{T\ \mathrm{spanning\ tree}}
+\prod_{e\notin T}\alpha_e,
+$$
 
-[
-mathcal F_G(alpha)=
-sum_{F=T_1cup T_2}
-q_F^2prod_{e
-otin F}alpha_e
-+mathcal U_G(alpha)sum_{ein E}m_e^2alpha_e.
-]
+$$
+\mathcal F_G(\alpha)
+=
+\sum_{F=T_1\cup T_2}
+q_F^2\prod_{e\notin F}\alpha_e
++
+\mathcal U_G(\alpha)\sum_{e\in E}m_e^2\alpha_e.
+$$
 
-这里第一式对生成树求和，第二式对生成二森林求和；(q_F) 表示由二森林切分诱导的外部动量流。具体符号约定会随文献对 Euclidean/Minkowski 号差和质量项的定义而变化。
+这里第一式对生成树求和，第二式对生成二森林求和；\(q_F\) 表示由二森林切分诱导的外部动量流。具体符号约定会随文献对 Euclidean/Minkowski 号差和质量项的定义而变化。
 
 在四维标量理论中，参数积分常可写成形如
 
-[
-I_G sim int_{alpha_egeq 0}
-rac{Omega}{mathcal U_G^{,2}}
-]
+$$
+I_G \sim
+\int_{\alpha_e\geq 0}
+\frac{\Omega}{\mathcal U_G^{\,2}}
+$$
 
 的项目式表达；这里省略了传播子指数、整体尺度、运动学因子和可能的减除项。这个示意式不是任意图的完整公式，实际幂次由维数、圈数和指标决定。
 
 ## 为什么出现几何？
 
-(mathcal U_G=0) 与 (mathcal F_G=0) 在参数空间中定义代数超曲面。积分的奇点结构、参数变化和解析延拓因此与这些代数簇的几何有关。
+\(\mathcal U_G=0\) 与 \(\mathcal F_G=0\) 在参数空间中定义代数超曲面。积分的奇点结构、参数变化和解析延拓因此与这些代数簇的几何有关。
 
 一个实用的研究路线是：
 

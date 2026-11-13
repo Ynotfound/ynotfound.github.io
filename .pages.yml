@@ -76,6 +76,7 @@ content:
             description: "When enabled, this article is excluded from the public site."
           - name: body
             label: Article
+            description: "For LaTeX, use Source mode and write $...$ inline or $...$ for display equations."
             type: rich-text
             required: true
             options:
@@ -148,6 +149,7 @@ content:
             default: true
           - name: body
             label: Note content
+            description: "For LaTeX, use Source mode and write $...$ inline or $...$ for display equations."
             type: rich-text
             required: true
             options:
