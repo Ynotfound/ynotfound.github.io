@@ -2,7 +2,7 @@
 translationKey: rh-snapshot-2026-11
 lang: en
 projectKey: riemann-hypothesis
-title: Research snapshot: all-scale positivity of the Weil quadratic form
+title: 'Research snapshot: all-scale positivity of the Weil quadratic form'
 description: The current exploration focuses on positivity of the full Weil quadratic form, domain coverage, Schur reduction on common complements and analytic induction from finite base cases to all scales.
 date: 2026-11-12
 recordType: snapshot
