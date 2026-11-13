@@ -25,7 +25,8 @@ Features:
 - Automatic numbering for display equations and supported theorem-like environments.
 - Cross-references using @ref{label}.
 - BibTeX entries and citations using [@key] or [@key1; @key2].
-- Download a Markdown draft with frontmatter.
+- Download a reader-ready Markdown draft with frontmatter. The export resolves theorem labels, equation numbers, cross-references and citations into ordinary Markdown / KaTeX-compatible content for the public site.
+- Download a separate source Markdown file that preserves the authoring directives for later editing in this preview workspace.
 - Export a XeLaTeX .tex source and a separate .bib file.
 - Print the reader view and choose “Save as PDF” in the browser print dialog.
 
@@ -71,7 +72,8 @@ The preview numbers citations in order of first appearance and builds a referenc
 
 ### Export
 
-- **Markdown**: creates a draft file with draft: true.
+- **Reader Markdown**: creates a draft file with draft: true and converts custom theorem / reference syntax into content the public Astro reader can render.
+- **Source Markdown**: preserves the authoring directives and is intended for re-opening in this preview workspace, not direct publication.
 - **LaTeX**: creates a .tex source using the ctexart class, suitable for XeLaTeX. It supports common headings, paragraphs, lists, block quotes, code fences, display equations, theorem containers, cross-references and citations. Review complex tables, figures, custom macros and advanced environments manually before submission.
 - **BibTeX**: exports the contents of the BibTeX Library to a separate .bib file.
 - **PDF**: use the browser print dialog and choose “Save as PDF”. This prints the reader preview; it is not a TeX compilation.
@@ -91,7 +93,7 @@ xelatex article.tex
 2. Create a Chinese entry with a stable translationKey, for example my-first-essay, and choose zh.
 3. Keep **Keep as draft** enabled while writing.
 4. Create the matching English entry using the exact same translationKey and choose en.
-5. Paste the finished Markdown source into the CMS Source editor. The Author Preview workspace is a preview/export helper; it does not directly write into Pages CMS.
+5. Download the reader-ready Markdown export and paste it into the CMS Source editor. Keep the separate source Markdown file as your editable working copy. The Author Preview workspace is a preview/export helper; it does not directly write into Pages CMS.
 6. When both language versions are ready, turn off **Keep as draft** for both entries.
 7. Wait for GitHub Actions to validate and deploy the site.
 
