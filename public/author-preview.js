@@ -6,6 +6,10 @@
       bibPanel.className = 'author-bib-panel';
       bibPanel.innerHTML = '<div class="author-bib-heading"><strong>BibTeX Library</strong><span class="author-bib-count" id="author-bib-count">0 entries</span></div><label class="author-field"><span>BIBTEX SOURCE</span><textarea id="author-bib" class="author-bib-source" spellcheck="false" placeholder="Paste BibTeX entries here..."></textarea></label><p class="author-bib-help">粘贴真实 BibTeX 条目。正文使用 [@key] 或 [@key1; @key2]；预览会生成编号引用和文末参考文献。</p>';
       metadata?.after(bibPanel);
+      const vault = document.createElement('section');
+      vault.className = 'author-draft-vault';
+      vault.innerHTML = '<div class="author-draft-heading"><div><strong>本地草稿库</strong><span>LOCAL DRAFT VAULT</span></div><span class="author-draft-storage-mark">仅此浏览器</span></div><div class="author-draft-controls"><label class="author-field"><span>已保存的草稿</span><select id="author-draft-select"><option value="">暂无本地草稿</option></select></label><div class="author-draft-buttons"><button class="button button-quiet" id="author-draft-save" type="button">立即保存</button><button class="button button-quiet" id="author-draft-load" type="button">恢复所选</button><button class="button button-quiet" id="author-draft-delete" type="button">删除所选</button></div></div><p id="author-draft-status" class="author-draft-status" role="status" aria-live="polite">编辑时自动保存；不会上传到服务器。</p>';
+      bibPanel.after(vault);
       const bibInput = bibPanel.querySelector('#author-bib');
       bibInput.value = '@misc{sample-reference,\n  author = {Example Author},\n  title = {Replace with a verified reference},\n  year = {2026}\n}\n';
       const sourceInput = $('author-source');
@@ -14,10 +18,10 @@
         '',
         '第一 Symanzik 多项式由生成树求和：',
         '',
-        '$',
+        '$$',
         '\\mathcal U_G(\\alpha) = \\sum_{T\\in\\mathcal T_1(G)} \\prod_{e\\notin T}\\alpha_e.',
         '\\label{eq:symanzik}',
-        '$',
+        '$$',
         '',
         '::: definition id=def:period title="图周期"',
         '图周期是由图定义的参数积分；具体定义需要说明积分形式、参数区域和归一化。',
@@ -34,7 +38,7 @@
         '定义 @ref{def:period}、定理 @ref{thm:structure} 和公式 @ref{eq:symanzik} 构成一组交叉引用示例。',
         '',
         '文献示例：[@sample-reference]。'
-      ].join('\\n');
+      ].join('\n');
 
       const actions = document.querySelector('.author-preview-actions');
       const addAction = (id, label, primary = false) => {
@@ -56,6 +60,135 @@
       const fields = ['author-title','author-description','author-kind','author-language','author-key','author-date','author-category','author-tags','author-source','author-bib'];
       const sample = $('author-source').value;
       const sampleBib = $('author-bib').value;
+      const DRAFT_STORAGE_KEY = 'yz-author-studio-drafts-v1';
+      const MAX_LOCAL_DRAFTS = 30;
+      let autosaveTimer = null;
+      let autosaveDirty = false;
+      let draftStorageUnavailable = false;
+
+      function readLocalDrafts() {
+        try {
+          const value = JSON.parse(window.localStorage.getItem(DRAFT_STORAGE_KEY) || '[]');
+          return Array.isArray(value) ? value.filter((item) => item && typeof item.id === 'string') : [];
+        } catch (_) {
+          draftStorageUnavailable = true;
+          return [];
+        }
+      }
+
+      function currentDraftRecord() {
+        const key = $('author-key').value.trim().toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-+|-+$/g, '') || 'untitled';
+        const language = $('author-language').value;
+        const kind = $('author-kind').value;
+        return {
+          id: [kind, key, language].join('::'),
+          title: $('author-title').value.trim() || '未命名草稿',
+          description: $('author-description').value,
+          kind,
+          language,
+          key,
+          date: $('author-date').value,
+          category: $('author-category').value,
+          tags: $('author-tags').value,
+          source: $('author-source').value,
+          bib: $('author-bib').value,
+          savedAt: new Date().toISOString()
+        };
+      }
+
+      function refreshLocalDraftList(selectedId) {
+        const select = $('author-draft-select');
+        if (!select) return;
+        const drafts = readLocalDrafts().sort((a, b) => String(b.savedAt || '').localeCompare(String(a.savedAt || '')));
+        select.replaceChildren();
+        if (!drafts.length) {
+          const option = document.createElement('option');
+          option.value = '';
+          option.textContent = '暂无本地草稿';
+          select.append(option);
+        } else {
+          for (const draft of drafts) {
+            const option = document.createElement('option');
+            option.value = draft.id;
+            const stamp = draft.savedAt ? new Date(draft.savedAt).toLocaleString() : '';
+            option.textContent = (draft.title || draft.key || '未命名') + ' · ' + String(draft.language || '').toUpperCase() + (stamp ? ' · ' + stamp : '');
+            select.append(option);
+          }
+          select.value = selectedId && drafts.some((draft) => draft.id === selectedId) ? selectedId : drafts[0].id;
+        }
+        if (draftStorageUnavailable) {
+          $('author-draft-status').textContent = '浏览器存储不可用；请及时下载源稿备份。';
+        } else if (drafts.length) {
+          $('author-draft-status').textContent = '本地已有 ' + drafts.length + ' 份草稿；最近保存于 ' + new Date(drafts[0].savedAt).toLocaleString();
+        } else {
+          $('author-draft-status').textContent = '编辑时自动保存；不会上传到服务器。';
+        }
+      }
+
+      function saveLocalDraft(silent = false) {
+        if (autosaveTimer) window.clearTimeout(autosaveTimer);
+        autosaveTimer = null;
+        const record = currentDraftRecord();
+        try {
+          const drafts = readLocalDrafts();
+          const index = drafts.findIndex((draft) => draft.id === record.id);
+          if (index >= 0) drafts[index] = record;
+          else drafts.unshift(record);
+          drafts.sort((a, b) => String(b.savedAt || '').localeCompare(String(a.savedAt || '')));
+          window.localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(drafts.slice(0, MAX_LOCAL_DRAFTS)));
+          draftStorageUnavailable = false;
+          autosaveDirty = false;
+          refreshLocalDraftList(record.id);
+          $('author-draft-status').textContent = (silent ? '自动保存完成 · ' : '已保存 · ') + new Date(record.savedAt).toLocaleString();
+        } catch (_) {
+          draftStorageUnavailable = true;
+          $('author-draft-status').textContent = '本地保存失败；请使用源稿 Markdown 下载备份。';
+        }
+      }
+
+      function queueLocalAutosave() {
+        autosaveDirty = true;
+        $('author-draft-status').textContent = '检测到修改 · 正在等待自动保存…';
+        if (autosaveTimer) window.clearTimeout(autosaveTimer);
+        autosaveTimer = window.setTimeout(() => saveLocalDraft(true), 700);
+      }
+
+      function loadSelectedLocalDraft() {
+        const id = $('author-draft-select').value;
+        const draft = readLocalDrafts().find((item) => item.id === id);
+        if (!draft) {
+          $('author-draft-status').textContent = '请先选择一份已保存的草稿。';
+          return;
+        }
+        $('author-title').value = draft.title || '';
+        $('author-description').value = draft.description || '';
+        $('author-kind').value = draft.kind || 'journal';
+        $('author-language').value = draft.language || 'zh';
+        $('author-key').value = draft.key || '';
+        $('author-date').value = draft.date || '';
+        $('author-category').value = draft.category || '';
+        $('author-tags').value = draft.tags || '';
+        $('author-source').value = draft.source || '';
+        $('author-bib').value = draft.bib || '';
+        autosaveDirty = false;
+        update();
+        refreshLocalDraftList(id);
+        $('author-draft-status').textContent = '已恢复草稿 · ' + (draft.title || draft.key || '未命名');
+      }
+
+      function deleteSelectedLocalDraft() {
+        const id = $('author-draft-select').value;
+        if (!id) return;
+        if (!window.confirm('确定删除所选本地草稿吗？')) return;
+        const drafts = readLocalDrafts().filter((item) => item.id !== id);
+        try {
+          window.localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(drafts));
+          refreshLocalDraftList();
+          $('author-draft-status').textContent = '所选本地草稿已删除。';
+        } catch (_) {
+          $('author-draft-status').textContent = '无法更新浏览器本地存储。';
+        }
+      }
       const missing = ['markdownit','katex','texmath','DOMPurify'].filter((name) => !window[name]);
       if (missing.length) {
         $('author-status').textContent = '预览引擎加载失败：' + missing.join(', ') + '。请检查网络后刷新。';
@@ -353,7 +486,21 @@
         try { await navigator.clipboard.writeText(value); $('author-status').textContent = message; }
         catch (_) { $('author-status').textContent = '浏览器不允许自动复制，请手动选择文本。'; }
       }
-      fields.forEach((id) => $(id).addEventListener('input', update));
+      fields.forEach((id) => {
+        const field = $(id);
+        field.addEventListener('input', () => { update(); queueLocalAutosave(); });
+        field.addEventListener('change', () => { update(); queueLocalAutosave(); });
+      });
+      $('author-draft-save').addEventListener('click', () => saveLocalDraft(false));
+      $('author-draft-load').addEventListener('click', loadSelectedLocalDraft);
+      $('author-draft-delete').addEventListener('click', deleteSelectedLocalDraft);
+      document.addEventListener('keydown', (event) => {
+        if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') {
+          event.preventDefault();
+          saveLocalDraft(false);
+        }
+      });
+      window.addEventListener('beforeunload', () => { if (autosaveDirty) saveLocalDraft(true); });
       $('author-reset').addEventListener('click', () => { $('author-source').value = sample; $('author-bib').value = sampleBib; update(); });
       $('author-copy').addEventListener('click', () => copyText($('author-source').value, '正文已复制'));
       $('author-download').addEventListener('click', () => { const f = makeMarkdownFile(true); download(f.filename, f.content, 'text/markdown;charset=utf-8'); $('author-status').textContent = '读者版 Markdown 草稿已生成'; });
@@ -361,5 +508,6 @@
       $('author-tex').addEventListener('click', () => { const f = makeTexFile(); download(f.filename, f.content, 'application/x-tex;charset=utf-8'); $('author-status').textContent = 'LaTeX 源文件已生成；如有引用，请同时导出 BibTeX'; });
       $('author-bib-download').addEventListener('click', () => { const key = $('author-key').value.trim().toLowerCase().replace(/[^a-z0-9-]+/g, '-') || 'references'; download(key + '.bib', $('author-bib').value.trim() + '\n', 'application/x-bibtex;charset=utf-8'); });
       $('author-print').addEventListener('click', () => window.print());
+      refreshLocalDraftList();
       update();
     })();

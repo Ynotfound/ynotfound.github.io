@@ -17,11 +17,12 @@ Pages CMS writes Markdown and media files to GitHub. A successful GitHub Actions
 
 ## Article preview workspace
 
-The Author Preview workspace runs in the browser. It does not save drafts to a server, write to GitHub or publish content. It is marked noindex, but noindex is not access control; do not paste confidential material into a shared or public computer.
+The Author Preview workspace runs in the browser. It auto-saves edited drafts to this browser's local storage, and lets you list, restore and delete up to 30 local drafts. It does not save drafts to a server, write to GitHub or publish content. It is marked noindex, but noindex is not access control; do not paste confidential material into a shared or public computer.
 
 Features:
 
 - Live Markdown and KaTeX preview.
+- Debounced local autosave, a local draft list, restore and delete controls, plus Ctrl+S / Cmd+S to save immediately. Drafts remain in this browser only; export a source Markdown backup before switching browsers or devices.
 - Automatic numbering for display equations and supported theorem-like environments.
 - Cross-references using @ref{label}.
 - BibTeX entries and citations using [@key] or [@key1; @key2].

@@ -32,9 +32,15 @@ if (scriptCheck.status !== 0) failures.push('author-preview.js: JavaScript synta
 if (!previewHtml.includes('name=\"robots\" content=\"noindex, nofollow, noarchive\"')) failures.push('author-preview: expected noindex metadata');
 if (!previewHtml.includes('markdown-it-texmath') || !previewHtml.includes('dompurify')) failures.push('author-preview: missing live Markdown/LaTeX preview libraries');
 if (!previewHtml.includes('author-preview.js')) failures.push('author-preview: external writing script is not linked');
-for (const feature of ['BibTeX Library', 'academic-equation', 'academic-environment', 'author-tex', 'author-print', 'author-source-download', 'toPublicMarkdown', 'academic-bibliography']) {
+for (const feature of ['BibTeX Library', 'academic-equation', 'academic-environment', 'author-tex', 'author-print', 'author-source-download', 'toPublicMarkdown', 'academic-bibliography', 'author-draft-vault', 'queueLocalAutosave', 'DRAFT_STORAGE_KEY']) {
   if (!previewHtml.includes(feature) && !previewScript.includes(feature)) failures.push('author-preview: missing academic writing feature ' + feature);
 }
+
+const sampleStart = previewScript.indexOf('sourceInput.value = [');
+const sampleEnd = previewScript.indexOf('const actions', sampleStart);
+const sampleSource = sampleStart >= 0 && sampleEnd > sampleStart ? previewScript.slice(sampleStart, sampleEnd) : '';
+if (sampleSource.split("'$$'").length - 1 !== 2) failures.push('author-preview: sample must demonstrate a properly delimited display equation');
+if (!sampleSource.includes("].join('\\n');") || sampleSource.includes("].join('\\\\n');")) failures.push('author-preview: sample source lines must join with real newline characters');
 
 const mathPages = [
   'notes/feynman-periods/index.html', 'en/notes/feynman-periods/index.html',
