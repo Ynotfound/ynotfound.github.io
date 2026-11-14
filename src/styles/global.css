@@ -334,3 +334,17 @@ html[data-theme="dark"] .author-metadata,html[data-theme="dark"] .author-editor-
   .author-draft-buttons .button{width:100%;white-space:normal}
 }
 @media(max-width:460px){.author-draft-buttons{grid-template-columns:1fr}}
+
+
+/* Pre-publication structural checks */
+.author-preflight-panel{margin:14px 0 18px;padding:14px 17px;border:1px solid var(--line);background:var(--surface)}
+.author-preflight-heading{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.author-preflight-heading>div{display:flex;flex-direction:column;gap:3px}
+.author-preflight-heading>div>span{font:9px var(--mono);letter-spacing:.13em;color:var(--muted)}
+.author-preflight-heading strong{font:500 15px var(--display)}
+.author-preflight-count{font:9px var(--mono);color:var(--gold);white-space:nowrap}
+.author-preflight-list{display:grid;gap:6px;margin:10px 0 0;padding:0;list-style:none}
+.author-preflight-list li{font-size:10px;line-height:1.65;padding:6px 9px;border-left:2px solid var(--line);background:var(--paper-2)}
+.author-preflight-list .author-preflight-pass{border-left-color:#6f9b7e}
+.author-preflight-list .author-preflight-issue{border-left-color:#b66b54}
+.author-preflight-note{margin:9px 0 0;color:var(--muted);font-size:9px;line-height:1.6}

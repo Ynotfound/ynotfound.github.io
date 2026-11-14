@@ -70,6 +70,10 @@
       syntax.className = 'author-preview-help academic-syntax';
       syntax.innerHTML = '<div><p class="page-kicker">ACADEMIC MARKUP</p><h2>学术写作语法</h2><p>这些标记只在作者预览和导出的 LaTeX 中解释。正式网站正文仍使用普通 Markdown / LaTeX。</p></div><div class="academic-syntax-list"><div><strong>定理 / 定义 / 引理 / 推论 / 证明</strong><code>::: theorem id=thm:main title="定理标题"</code><code>...内容...</code><code>:::</code></div><div><strong>公式标签</strong><code>\\label{eq:main}</code><span>放在独立公式内部；正文用 @ref{eq:main} 引用。</span></div><div><strong>交叉引用</strong><code>@ref{thm:main}</code><span>支持定理、定义和公式标签。</span></div><div><strong>文献引用</strong><code>[@key]</code><span>key 来自 BibTeX Library。</span></div></div>';
       document.querySelector('.author-preview-help')?.before(syntax);
+      const preflightPanel = document.createElement('section');
+      preflightPanel.className = 'author-preflight-panel';
+      preflightPanel.innerHTML = '<div class="author-preflight-heading"><div><span>PUBLICATION PREFLIGHT</span><strong>发布前结构检查</strong></div><span id="author-preflight-count" class="author-preflight-count">CHECKING</span></div><ul id="author-preflight-list" class="author-preflight-list"></ul><p class="author-preflight-note">这里只检查文稿结构与引用完整性，不证明数学命题正确，也不能代替中英文配对及 GitHub 构建检查。</p>';
+      document.querySelector('.author-preview-toolbar')?.after(preflightPanel);
 
       const fields = ['author-title','author-description','author-kind','author-language','author-key','author-date','author-category','author-tags','author-source','author-bib'];
       const sample = $('author-source').value;
@@ -475,6 +479,48 @@
         const link = document.createElement('a'); link.href = url; link.download = filename;
         document.body.appendChild(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 1200);
       }
+      function renderPreflight(result) {
+        const source = $('author-source').value;
+        const title = $('author-title').value.trim();
+        const key = $('author-key').value.trim();
+        const kind = $('author-kind').value;
+        const issues = [];
+        if (!title) issues.push('文章标题为空。');
+        if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/i.test(key)) issues.push('文章 ID 应使用英文字母、数字和连字符。');
+        if (!source.trim()) issues.push('正文为空。');
+        const mathDelimiters = source.match(/^\$\$[ \t]*$/gm) || [];
+        if (mathDelimiters.length % 2 !== 0) issues.push('独立公式的 $ 分隔符数量不成对。');
+        const codeFences = source.match(/^\x60{3}/gm) || [];
+        if (codeFences.length % 2 !== 0) issues.push('代码块围栏未闭合。');
+        const supportedOpen = source.match(/^:::\s*(?:theorem|lemma|proposition|corollary|definition|example|remark|proof)\b/gm) || [];
+        const environmentClose = source.match(/^:::\s*$/gm) || [];
+        if (supportedOpen.length !== environmentClose.length) issues.push('定理类环境的开始与结束标记数量不一致。');
+        const allContainers = source.match(/^:::\s*\S+/gm) || [];
+        if (allContainers.length !== supportedOpen.length) issues.push('发现无法识别的学术环境标记。');
+        if (kind === 'note' && !$('author-category').value.trim()) issues.push('笔记分类尚未填写。');
+        if (result.missingCites.length) issues.push('BibTeX 缺少条目：' + result.missingCites.join(', ') + '。');
+        if (result.missingRefs.length) issues.push('交叉引用目标不存在：' + result.missingRefs.join(', ') + '。');
+        if (result.duplicate.length) issues.push('标签重复：' + result.duplicate.join(', ') + '。');
+        if (result.html.includes('katex-error')) issues.push('至少一个公式未能通过 KaTeX 解析，请检查 LaTeX 语法。');
+        const list = $('author-preflight-list');
+        list.replaceChildren();
+        if (!issues.length) {
+          const item = document.createElement('li');
+          item.className = 'author-preflight-pass';
+          item.textContent = '基础结构检查通过。仍需人工核对推导、文献真实性、事实陈述和中英文版本。';
+          list.append(item);
+          $('author-preflight-count').textContent = '0 ISSUES';
+        } else {
+          $('author-preflight-count').textContent = issues.length + ' ITEMS';
+          for (const issue of issues) {
+            const item = document.createElement('li');
+            item.className = 'author-preflight-issue';
+            item.textContent = issue;
+            list.append(item);
+          }
+        }
+      }
+
       function update() {
         const kind = $('author-kind').value, lang = $('author-language').value;
         $('reader-title').textContent = $('author-title').value.trim() || 'Untitled';
@@ -487,6 +533,7 @@
         }));
         const result = preview($('author-source').value, $('author-bib').value, lang);
         $('reader-content').innerHTML = result.html;
+        renderPreflight(result);
         $('author-count').textContent = $('author-source').value.length.toLocaleString() + ' 字符';
         $('author-bib-count').textContent = result.bibCount + ' entries';
         document.querySelectorAll('.author-note-only').forEach((node) => { node.hidden = kind !== 'note'; });

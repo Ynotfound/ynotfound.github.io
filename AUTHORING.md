@@ -29,6 +29,7 @@ Features:
 - Download a reader-ready Markdown draft with frontmatter. The export resolves theorem labels, equation numbers, cross-references and citations into ordinary Markdown / KaTeX-compatible content for the public site.
 - Download a separate source Markdown file that preserves the authoring directives for later editing in this preview workspace.
 - Import an existing Markdown file (including exported frontmatter) or a separate BibTeX `.bib` file to continue editing.
+- A live pre-publication preflight checks structural delimiters, supported environments, labels, citations, metadata and KaTeX parse errors. It does not certify mathematical correctness.
 - Export a XeLaTeX .tex source and a separate .bib file.
 - Print the reader view and choose “Save as PDF” in the browser print dialog.
 
