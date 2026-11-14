@@ -28,6 +28,7 @@ Features:
 - BibTeX entries and citations using [@key] or [@key1; @key2].
 - Download a reader-ready Markdown draft with frontmatter. The export resolves theorem labels, equation numbers, cross-references and citations into ordinary Markdown / KaTeX-compatible content for the public site.
 - Download a separate source Markdown file that preserves the authoring directives for later editing in this preview workspace.
+- Import an existing Markdown file (including exported frontmatter) or a separate BibTeX `.bib` file to continue editing.
 - Export a XeLaTeX .tex source and a separate .bib file.
 - Print the reader view and choose “Save as PDF” in the browser print dialog.
 
@@ -75,6 +76,7 @@ The preview numbers citations in order of first appearance and builds a referenc
 
 - **Reader Markdown**: creates a draft file with draft: true and converts custom theorem / reference syntax into content the public Astro reader can render.
 - **Source Markdown**: preserves the authoring directives and is intended for re-opening in this preview workspace, not direct publication.
+- **Import**: load an existing `.md` / `.markdown` file into the editor, or import a `.bib` file into the BibTeX Library. Imported edits are also saved to the local draft vault.
 - **LaTeX**: creates a .tex source using the ctexart class, suitable for XeLaTeX. It supports common headings, paragraphs, lists, block quotes, code fences, display equations, theorem containers, cross-references and citations. Review complex tables, figures, custom macros and advanced environments manually before submission.
 - **BibTeX**: exports the contents of the BibTeX Library to a separate .bib file.
 - **PDF**: use the browser print dialog and choose “Save as PDF”. This prints the reader preview; it is not a TeX compilation.

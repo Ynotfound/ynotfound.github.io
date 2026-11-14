@@ -51,6 +51,20 @@
       addAction('author-source-download', '下载源稿 Markdown');
       addAction('author-bib-download', '导出 BibTeX');
       addAction('author-print', '打印 / 保存 PDF', true);
+      addAction('author-import', '导入 Markdown');
+      addAction('author-bib-import', '导入 BibTeX');
+      const markdownFileInput = document.createElement('input');
+      markdownFileInput.type = 'file';
+      markdownFileInput.accept = '.md,.markdown,text/markdown,text/plain';
+      markdownFileInput.hidden = true;
+      markdownFileInput.id = 'author-import-file';
+      document.body.append(markdownFileInput);
+      const bibFileInput = document.createElement('input');
+      bibFileInput.type = 'file';
+      bibFileInput.accept = '.bib,text/plain';
+      bibFileInput.hidden = true;
+      bibFileInput.id = 'author-bib-import-file';
+      document.body.append(bibFileInput);
 
       const syntax = document.createElement('section');
       syntax.className = 'author-preview-help academic-syntax';
@@ -494,6 +508,67 @@
       $('author-draft-save').addEventListener('click', () => saveLocalDraft(false));
       $('author-draft-load').addEventListener('click', loadSelectedLocalDraft);
       $('author-draft-delete').addEventListener('click', deleteSelectedLocalDraft);
+      $('author-import').addEventListener('click', () => markdownFileInput.click());
+      $('author-bib-import').addEventListener('click', () => bibFileInput.click());
+
+      function parseFrontmatterFile(content) {
+        const match = /^---\s*\r?\n([\s\S]*?)\r?\n---\s*(?:\r?\n|$)/.exec(content);
+        if (!match) return { metadata: {}, body: content };
+        const metadata = {};
+        for (const line of match[1].split(/\r?\n/)) {
+          const colon = line.indexOf(':');
+          if (colon < 1) continue;
+          const key = line.slice(0, colon).trim();
+          const raw = line.slice(colon + 1).trim();
+          let value = raw;
+          if (raw.startsWith('"') || raw.startsWith('[')) {
+            try { value = JSON.parse(raw); } catch (_) {}
+          } else if (raw === 'true') value = true;
+          else if (raw === 'false') value = false;
+          metadata[key] = value;
+        }
+        return { metadata, body: content.slice(match[0].length) };
+      }
+
+      markdownFileInput.addEventListener('change', async () => {
+        const file = markdownFileInput.files?.[0];
+        if (!file) return;
+        try {
+          const imported = parseFrontmatterFile(await file.text());
+          const meta = imported.metadata;
+          if (meta.title !== undefined) $('author-title').value = String(meta.title);
+          if (meta.description !== undefined) $('author-description').value = String(meta.description);
+          if (meta.translationKey !== undefined) $('author-key').value = String(meta.translationKey);
+          else $('author-key').value = file.name.replace(/\.source\.md$|\.markdown$|\.md$/i, '').toLowerCase().replace(/[^a-z0-9-]+/g, '-');
+          if (meta.lang === 'zh' || meta.lang === 'en') $('author-language').value = meta.lang;
+          if (meta.date) $('author-date').value = String(meta.date).slice(0, 10);
+          if (Array.isArray(meta.tags)) $('author-tags').value = meta.tags.join(', ');
+          if (meta.category !== undefined) $('author-category').value = String(meta.category);
+          $('author-source').value = imported.body;
+          update();
+          queueLocalAutosave();
+          $('author-status').textContent = '已导入 Markdown：' + file.name;
+        } catch (_) {
+          $('author-status').textContent = 'Markdown 导入失败；请检查文件编码与 frontmatter 格式。';
+        } finally {
+          markdownFileInput.value = '';
+        }
+      });
+
+      bibFileInput.addEventListener('change', async () => {
+        const file = bibFileInput.files?.[0];
+        if (!file) return;
+        try {
+          $('author-bib').value = await file.text();
+          update();
+          queueLocalAutosave();
+          $('author-status').textContent = '已导入 BibTeX：' + file.name;
+        } catch (_) {
+          $('author-status').textContent = 'BibTeX 导入失败；请检查文件。';
+        } finally {
+          bibFileInput.value = '';
+        }
+      });
       document.addEventListener('keydown', (event) => {
         if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') {
           event.preventDefault();
